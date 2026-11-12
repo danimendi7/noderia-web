@@ -10,8 +10,9 @@ export default defineConfig({
   use: {
     baseURL,
     // Los previews de Vercel están protegidos: esta cabecera permite a las pruebas entrar.
+    // x-vercel-skip-toolbar evita la barra de comentarios de Vercel, que no es parte de la web.
     extraHTTPHeaders: bypass
-      ? { "x-vercel-protection-bypass": bypass, "x-vercel-set-bypass-cookie": "true" }
+      ? { "x-vercel-protection-bypass": bypass, "x-vercel-set-bypass-cookie": "true", "x-vercel-skip-toolbar": "1" }
       : {},
     trace: "retain-on-failure",
   },
