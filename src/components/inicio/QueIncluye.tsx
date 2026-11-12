@@ -38,7 +38,7 @@ export function QueIncluye() {
       id={ANCLAS.queIncluye}
       idTitulo="titulo-que-incluye"
       titulo="Qué incluye"
-      entradilla="Una web para tu taller y un programa de gestión conectados entre sí, hechos a tu medida. Y alguien que te acompaña después."
+      entradilla="Una web para tu taller mecánico o de neumáticos, con citas online, y un programa de gestión de taller conectado a ella. Todo hecho a tu medida, y con alguien que te acompaña después."
       fondo="blanco"
     >
       <div className="grid gap-6 lg:grid-cols-3">
