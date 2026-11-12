@@ -69,3 +69,25 @@
     outline-offset: 2px;
   }
 }
+
+/* Entrada de la escena del hero: se pinta transparente y aparece después,
+   para que no compita con el H1 por el LCP. */
+@keyframes escena-aparece {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.escena-entrada {
+  opacity: 0;
+  animation: escena-aparece 0.8s ease-out 0.4s forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .escena-entrada {
+    animation: escena-aparece 0.01s linear 0.4s forwards;
+  }
+}

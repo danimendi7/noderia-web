@@ -27,7 +27,7 @@ const PASOS = [
 /** Sección 4 de la home: los 5 pasos, contados al hacer scroll. El contenido se renderiza en el servidor. */
 export function ComoFunciona() {
   return (
-    <section id={ANCLAS.comoFunciona} aria-labelledby="titulo-como-funciona" className="bg-white text-midnight">
+    <section id={ANCLAS.comoFunciona} aria-labelledby="titulo-como-funciona" className="overflow-x-clip bg-white text-midnight">
       <AnimacionPasos className="mx-auto grid max-w-7xl gap-12 px-4 py-20 sm:px-6 md:py-28 lg:grid-cols-12 lg:px-8">
         <div className="lg:col-span-5">
           <div className="lg:sticky lg:top-32">
