@@ -62,6 +62,27 @@ test.describe("bucle de la escena", () => {
     await expect(bucle).toHaveAttribute("data-bucle", "pausado");
   });
 
+  test("se puede pausar y reanudar con un botón (WCAG 2.2.2)", async ({ page }) => {
+    await page.goto("/");
+    const bucle = page.locator("[data-bucle]");
+    await expect(bucle).toHaveAttribute("data-bucle", "en-marcha");
+
+    const boton = page.getByRole("button", { name: "Pausar animación" });
+    await expect(boton).toHaveAttribute("aria-pressed", "false");
+    await boton.click();
+    await expect(boton).toHaveAttribute("aria-pressed", "true");
+    await expect(bucle).toHaveAttribute("data-bucle", "pausado");
+
+    // Sigue en pausa aunque la escena salga y vuelva a la pantalla.
+    await page.locator("footer").scrollIntoViewIfNeeded();
+    await page.evaluate(() => window.scrollTo(0, 0));
+    await expect(bucle).toHaveAttribute("data-bucle", "pausado");
+
+    await boton.press("Enter");
+    await expect(boton).toHaveAttribute("aria-pressed", "false");
+    await expect(bucle).toHaveAttribute("data-bucle", "en-marcha");
+  });
+
   test.describe("con movimiento reducido", () => {
     test.use({ reducedMotion: "reduce" });
 
@@ -69,6 +90,7 @@ test.describe("bucle de la escena", () => {
       await page.goto("/");
       await expect(page.locator("[data-escena]")).toHaveCSS("opacity", "1");
       await expect(page.locator("[data-bucle]")).toHaveCount(0);
+      await expect(page.getByRole("button", { name: "Pausar animación" })).toHaveCount(0);
 
       const averiado = page.locator('[data-pieza="coche-averiado"]');
       await expect(averiado).toHaveCSS("opacity", "1");

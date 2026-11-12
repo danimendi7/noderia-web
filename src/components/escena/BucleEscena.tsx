@@ -3,7 +3,7 @@
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { MotionPathPlugin } from "gsap/MotionPathPlugin";
-import { type ReactNode, useRef } from "react";
+import { type ReactNode, useRef, useState } from "react";
 import { vigilarVisibilidad } from "@/lib/visibilidad";
 
 gsap.registerPlugin(useGSAP, MotionPathPlugin);
@@ -24,9 +24,26 @@ const EN_LA_PUERTA = { xPercent: 46, yPercent: -36 };
  * El final del ciclo deja todo como al principio, así que el siguiente empieza sin salto.
  * Solo transform y opacity. Se pausa con la pestaña oculta o la escena fuera de pantalla.
  * Con prefers-reduced-motion no se anima: queda la escena estática (paso 3).
+ * Mientras se anima, un botón permite pausarla y reanudarla (WCAG 2.2.2: movimiento de más de 5 s).
  */
 export function BucleEscena({ children }: { children: ReactNode }) {
   const raiz = useRef<HTMLDivElement>(null);
+  const bucle = useRef<gsap.core.Timeline | null>(null);
+  const visible = useRef(true);
+  const pausadoPorUsuario = useRef(false);
+  const [animado, setAnimado] = useState(false);
+  const [pausado, setPausado] = useState(false);
+
+  /** Se mueve solo si se ve y nadie lo ha pausado. */
+  const aplicar = () => {
+    const tl = bucle.current;
+    const elemento = raiz.current;
+    if (!tl || !elemento) return;
+    const enMarcha = visible.current && !pausadoPorUsuario.current;
+    if (enMarcha) tl.resume();
+    else tl.pause();
+    elemento.dataset.bucle = enMarcha ? "en-marcha" : "pausado";
+  };
 
   useGSAP(
     () => {
@@ -37,15 +54,18 @@ export function BucleEscena({ children }: { children: ReactNode }) {
 
         const tl = crearBucle(gsap.utils.selector(elemento));
         tl.seek(INICIO_ESTATICO);
+        bucle.current = tl;
+        setAnimado(true);
 
-        const dejarDeVigilar = vigilarVisibilidad(elemento, (visible) => {
-          if (visible) tl.resume();
-          else tl.pause();
-          elemento.dataset.bucle = visible ? "en-marcha" : "pausado";
+        const dejarDeVigilar = vigilarVisibilidad(elemento, (esVisible) => {
+          visible.current = esVisible;
+          aplicar();
         });
 
         return () => {
           dejarDeVigilar();
+          bucle.current = null;
+          setAnimado(false);
           delete elemento.dataset.bucle;
         };
       });
@@ -54,7 +74,31 @@ export function BucleEscena({ children }: { children: ReactNode }) {
     { scope: raiz },
   );
 
-  return <div ref={raiz}>{children}</div>;
+  const alternar = () => {
+    pausadoPorUsuario.current = !pausadoPorUsuario.current;
+    setPausado(pausadoPorUsuario.current);
+    aplicar();
+  };
+
+  return (
+    <div ref={raiz} className="relative">
+      {children}
+      {animado ? (
+        <button
+          type="button"
+          aria-pressed={pausado}
+          aria-label="Pausar animación"
+          title={pausado ? "Reanudar animación" : "Pausar animación"}
+          onClick={alternar}
+          className="absolute bottom-2 right-2 inline-flex size-11 items-center justify-center rounded-full border border-white/40 bg-midnight/80 text-white transition-colors hover:border-aqua hover:text-aqua"
+        >
+          <svg aria-hidden="true" viewBox="0 0 24 24" className="size-5" fill="currentColor">
+            {pausado ? <path d="M8 5.5v13l10.5-6.5z" /> : <path d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z" />}
+          </svg>
+        </button>
+      ) : null}
+    </div>
+  );
 }
 
 type Selector = (selector: string) => Element[];

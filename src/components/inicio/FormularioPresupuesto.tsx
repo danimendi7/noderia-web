@@ -37,7 +37,7 @@ const idCampo = (campo: string) => `presupuesto-${campo}`;
 const idError = (campo: string) => `presupuesto-${campo}-error`;
 
 const claseControl =
-  "mt-2 block w-full rounded-xl border border-midnight/20 bg-white px-4 py-3 text-base text-midnight placeholder:text-midnight/45 focus:border-electric focus:outline-2 focus:outline-offset-0 focus:outline-electric aria-[invalid=true]:border-[#C4002B]";
+  "mt-2 block w-full rounded-xl border border-midnight/50 bg-white px-4 py-3 text-base text-midnight placeholder:text-midnight/60 focus:border-electric focus:outline-2 focus:outline-offset-0 focus:outline-electric aria-[invalid=true]:border-[#C4002B]";
 
 /** Formulario de presupuesto (SPEC F4): valida en el navegador y en el servidor. */
 export function FormularioPresupuesto({ accion, origen = "home#presupuesto" }: Props) {
