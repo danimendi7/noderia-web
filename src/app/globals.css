@@ -1,26 +1,71 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
+/* Colores, tipografía y radios del manual de identidad de NoderIA (capítulo 02). */
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-midnight: #00102c;
+  --color-royal: #0030c0;
+  --color-electric: #0068e0;
+  --color-sky: #00b0f0;
+  --color-aqua: #00e5f0;
+  --color-mist: #f4f7fb;
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-outfit), ui-sans-serif, system-ui, sans-serif;
+
+  --radius-xl: 12px;
+  --radius-2xl: 20px;
+  --radius-3xl: 28px;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* Degradado de marca: Royal 0 % → Electric 40 % → Sky 75 % → Aqua 100 %, 120°.
+   Solo para botones principales, cifras, iconos clave y fondos de impacto. */
+@utility bg-marca {
+  background-image: linear-gradient(120deg, #0030c0 0%, #0068e0 40%, #00b0f0 75%, #00e5f0 100%);
+}
+
+@utility texto-marca {
+  background-image: linear-gradient(120deg, #0030c0 0%, #0068e0 40%, #00b0f0 75%, #00e5f0 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+/* Sobre Midnight el tramo Royal del degradado no contrasta: se empieza en Electric. */
+@utility texto-marca-oscuro {
+  background-image: linear-gradient(120deg, #0068e0 0%, #00b0f0 50%, #00e5f0 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 5rem;
   }
-}
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+
+  body {
+    background-color: var(--color-mist);
+    color: var(--color-midnight);
+    font-family: var(--font-sans);
+    line-height: 1.5;
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    line-height: 1.15;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-electric);
+    outline-offset: 2px;
+  }
 }

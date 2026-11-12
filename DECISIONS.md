@@ -4,6 +4,7 @@ Registro de lo que Claude decidió por su cuenta. Una entrada por decisión, la 
 
 | Fecha | Decisión | Alternativa descartada | Motivo |
 | --- | --- | --- | --- |
+| 2026-11-12 | Botón principal en Electric sólido con texto blanco (hover Royal) y foco visible en Electric | Botón con el degradado completo y texto blanco; foco en Sky | El tramo Sky/Aqua del degradado con texto blanco incumple la regla del manual "nunca texto blanco sobre Sky"; Sky sobre Mist no llega a 3:1 para el indicador de foco |
 | 2026-11-12 | La revisión final (T23) se hace con las skills `design:accessibility-review` y `design:design-critique` | Esperar a tener `web-design-guidelines` | Esa skill no está disponible en la cuenta de Skynet; las otras dos cubren lo mismo (accesibilidad, contraste, jerarquía) |
 | 2026-11-12 | Lighthouse (T22) como script `npm run lighthouse` contra `BASE_URL`, ejecutado en cada preview | Añadir un paso a `.github/workflows/ci.yml` | Skynet no puede modificar `.github/`; el script deja la puerta abierta a que Dani lo añada a la CI |
 | 2026-11-12 | El límite de 5 envíos/hora por IP se implementa en una función de Postgres `security definer` (`enviar_solicitud`) que el público puede ejecutar; la tabla no tiene permiso de lectura para nadie desde el cliente | Contar envíos desde el servidor de Next con la clave de servicio | No hay clave de servicio en `.env.local` y no hace falta: la función cuenta por `ip_hash` sin exponer datos y mantiene "nadie lee desde el cliente" |
