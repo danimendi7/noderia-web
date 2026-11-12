@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { evaluar, mediana, pasadaDesdeInforme, UMBRALES, type Pasada } from "./umbrales";
+import { auditoriasOmitidas, evaluar, mediana, pasadaDesdeInforme, UMBRALES, type Pasada } from "./umbrales";
 
 const pasada = (p: number | null, a: number | null, b: number | null, s: number | null): Pasada => ({
   performance: p,
@@ -44,5 +44,13 @@ describe("umbrales de Lighthouse", () => {
 
   it("falla sin pasadas", () => {
     expect(() => evaluar([])).toThrow();
+  });
+
+  it("solo omite is-crawlable fuera de producción", () => {
+    const prod = "https://noderia-web.vercel.app";
+    expect(auditoriasOmitidas("https://noderia-web.vercel.app/", prod)).toEqual([]);
+    expect(auditoriasOmitidas("https://noderia-web-git-feat-x.vercel.app/", prod)).toEqual(["is-crawlable"]);
+    expect(auditoriasOmitidas("http://localhost:3000/", prod)).toEqual(["is-crawlable"]);
+    expect(auditoriasOmitidas("https://noderia-web-git-feat-x.vercel.app/", undefined)).toEqual([]);
   });
 });

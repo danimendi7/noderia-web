@@ -1,22 +1,28 @@
 // Lighthouse en móvil contra BASE_URL (por defecto, la app local) con los umbrales de la SPEC.
 // Uso: BASE_URL=<url> npm run lighthouse   (opcional: LIGHTHOUSE_PASADAS=3, LIGHTHOUSE_RUTA=/)
-// Lanza el Chromium de Playwright (Lighthouse se conecta por el puerto de depuración) y, si existe VERCEL_AUTOMATION_BYPASS_SECRET, la cabecera de bypass de Vercel.
+// Lanza el Chromium de Playwright y Lighthouse se conecta por el puerto de depuración. Si existe
+// VERCEL_AUTOMATION_BYPASS_SECRET, añade la cabecera y la cookie de bypass de los previews de Vercel.
+// Fuera de PRODUCTION_URL se omite la auditoría is-crawlable (Vercel marca los previews como noindex).
 // Los informes HTML quedan en lighthouse-informes/ (no se suben al repo).
 import { mkdir, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { chromium } from "@playwright/test";
 import { createServer } from "node:net";
 import lighthouse from "lighthouse";
-import { evaluar, pasadaDesdeInforme } from "../src/lib/lighthouse/umbrales.ts";
+import { auditoriasOmitidas, evaluar, pasadaDesdeInforme } from "../src/lib/lighthouse/umbrales.ts";
 
 const base = process.env.BASE_URL ?? "http://localhost:3000";
 const url = new URL(process.env.LIGHTHOUSE_RUTA ?? "/", base).toString();
 const pasadas = Math.max(1, Number(process.env.LIGHTHOUSE_PASADAS ?? 3));
 const bypass = process.env.VERCEL_AUTOMATION_BYPASS_SECRET;
+const omitidas = auditoriasOmitidas(url, process.env.PRODUCTION_URL);
 const carpeta = join(process.cwd(), "lighthouse-informes");
 await mkdir(carpeta, { recursive: true });
 
 console.log(`Lighthouse móvil · ${url} · ${pasadas} pasada(s)`);
+if (omitidas.length) {
+  console.log(`  No es producción: se omite ${omitidas.join(", ")} (Vercel marca los previews como noindex).`);
+}
 /** Un puerto TCP libre para el protocolo de depuración de Chromium. */
 function puertoLibre() {
   return new Promise((resolve, reject) => {
@@ -38,8 +44,12 @@ for (let i = 1; i <= pasadas; i++) {
       port,
       output: "html",
       logLevel: "error",
+      skipAudits: omitidas,
       onlyCategories: ["performance", "accessibility", "best-practices", "seo"],
-      extraHeaders: bypass ? { "x-vercel-protection-bypass": bypass } : undefined,
+      // La cookie de bypass cubre también las peticiones que Lighthouse hace aparte (p. ej. robots.txt).
+      extraHeaders: bypass
+        ? { "x-vercel-protection-bypass": bypass, "x-vercel-set-bypass-cookie": "samesitenone" }
+        : undefined,
     });
     if (!resultado) throw new Error("Lighthouse no devolvió resultado");
     if (resultado.lhr.runtimeError) throw new Error(resultado.lhr.runtimeError.message);

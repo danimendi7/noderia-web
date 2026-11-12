@@ -55,3 +55,13 @@ export function evaluar(pasadas: Pasada[]): { filas: Fila[]; ok: boolean } {
   });
   return { filas, ok: filas.every((f) => f.ok) };
 }
+
+/**
+ * Auditorías que no tienen sentido fuera de producción. Vercel añade `X-Robots-Tag: noindex` a todos
+ * los previews (para que no se indexen), así que `is-crawlable` siempre fallaría en ellos.
+ * En producción (o si no se sabe cuál es) no se omite nada.
+ */
+export function auditoriasOmitidas(url: string, produccion: string | undefined): string[] {
+  if (!produccion) return [];
+  return new URL(url).host === new URL(produccion).host ? [] : ["is-crawlable"];
+}
