@@ -52,5 +52,6 @@ next-env.d.ts
 # informes de npm run lighthouse
 /lighthouse-informes/
 
-# material de marca que no se publica (orden 2026-11-12): manual en PDF
+# material de marca que no se sube al repo (órdenes 2026-11-12): manual en PDF y logo de Uría a color
 /docs/marca/**/*.pdf
+/docs/marca/clientes/logo-uria.png

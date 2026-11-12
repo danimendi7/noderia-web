@@ -1,6 +1,6 @@
 # Skills de Skynet en este proyecto
 
-Actualizado: 2026-11-12 (orden del material de marca).
+Actualizado: 2026-11-12 22:10 (orden del material de marca, segunda entrega). `web-design-guidelines` sigue sin aparecer en las skills de la sesión de Skynet.
 
 ## Las que uso y para qué
 
