@@ -1,3 +1,4 @@
+import { BucleEscena } from "@/components/escena/BucleEscena";
 import { Escena } from "@/components/escena/Escena";
 import { CasoUria } from "@/components/inicio/CasoUria";
 import { ComoFunciona } from "@/components/inicio/ComoFunciona";
@@ -15,7 +16,13 @@ import { datosEstructuradosEmpresa, urlDelSitio } from "@/lib/sitio";
 export default function Inicio() {
   return (
     <>
-      <Hero escena={<Escena />} />
+      <Hero
+        escena={
+          <BucleEscena>
+            <Escena />
+          </BucleEscena>
+        }
+      />
       <Problema />
 
       <ComoFunciona />

@@ -3,7 +3,8 @@ import type { CSSProperties } from "react";
 /**
  * Escena isométrica del taller (SPEC F2). Decorativa: oculta al lector de pantalla.
  * Coordenadas en un lienzo de 1000 × 820 (las del SVG de los nodos); las piezas se colocan en %.
- * Estado estático = final del paso 3 (coche dentro del taller): es lo que se ve sin animación.
+ * Estado estático = final del paso 3 (coche dentro del taller, puerta cerrada): es lo que se ve sin
+ * animación y el punto del bucle (BucleEscena) en el que arranca, para que no haya salto al hidratar.
  */
 
 const ANCHO = 1000;
@@ -46,6 +47,36 @@ export const NODOS = {
   monitorMovil: "M 905 268 C 960 560, 720 800, 430 792 S 130 720, 95 640",
 } as const;
 
+/**
+ * Hueco de la puerta del fondo, en unidades del lienzo (esquinas sup.-izq., sup.-der. e inf.-izq.).
+ * Se dibuja como un rectángulo 1×1 deformado con una matriz, para que "abrirla" sea solo un scaleY.
+ */
+const PUERTA = { si: [519, 192], sd: [660, 248], ii: [519, 342] } as const;
+const MATRIZ_PUERTA = [
+  PUERTA.sd[0] - PUERTA.si[0],
+  PUERTA.sd[1] - PUERTA.si[1],
+  PUERTA.ii[0] - PUERTA.si[0],
+  PUERTA.ii[1] - PUERTA.si[1],
+  PUERTA.si[0],
+  PUERTA.si[1],
+].join(" ");
+
+/** Casillas de la orden de trabajo, en % del monitor (se iluminan una a una en el paso 4). */
+const CHECKS = [
+  [52.3, 37.1],
+  [52.3, 43.8],
+  [52.3, 51],
+  [52, 58],
+] as const;
+
+/** Destellos alrededor del coche al repararse (paso 5), en unidades del lienzo. */
+const DESTELLOS = [
+  [360, 430, 1],
+  [520, 420, 0.8],
+  [440, 560, 0.9],
+  [580, 520, 0.7],
+] as const;
+
 function estiloPieza(p: { x: number; y: number; ancho: number }): CSSProperties {
   return {
     left: `${(p.x / ANCHO) * 100}%`,
@@ -82,6 +113,19 @@ export function Escena({ className = "" }: { className?: string }) {
     >
       <Imagen pieza={PIEZAS.taller} dato="taller" />
 
+      {/* Hueco oscuro de la puerta: invisible con la puerta cerrada; al abrirse crece desde el suelo. */}
+      <svg viewBox={`0 0 ${ANCHO} ${ALTO}`} className="pointer-events-none absolute inset-0 size-full">
+        <defs>
+          <linearGradient id="escena-hueco" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stopColor="#00102C" />
+            <stop offset="1" stopColor="#0030C0" />
+          </linearGradient>
+        </defs>
+        <g transform={`matrix(${MATRIZ_PUERTA})`}>
+          <rect data-puerta width="1" height="1" fill="url(#escena-hueco)" opacity="0" />
+        </g>
+      </svg>
+
       <Imagen pieza={PIEZAS.cocheReparado} dato="coche-reparado" className="opacity-0" />
       <Imagen pieza={PIEZAS.cocheAveriado} dato="coche-averiado" />
 
@@ -117,12 +161,38 @@ export function Escena({ className = "" }: { className?: string }) {
         ))}
         {/* Esferitas de luz que recorren los nodos (se animan en el bucle). */}
         {Object.keys(NODOS).map((id) => (
-          <circle key={id} data-luz={id} r="11" cx="-100" cy="-100" fill="url(#escena-luz)" opacity="0" />
+          <circle key={id} data-luz={id} r="11" fill="url(#escena-luz)" opacity="0" />
+        ))}
+        {/* Pulso que emite el móvil al pedir cita (paso 1). */}
+        <circle data-pulso cx="75" cy="560" r="70" stroke="#00E5F0" strokeWidth="3" opacity="0" />
+        {/* Destellos del coche reparado (paso 5). */}
+        {DESTELLOS.map(([x, y, e]) => (
+          <g key={`${x}-${y}`} transform={`translate(${x} ${y}) scale(${e})`}>
+            <path
+              data-destello
+              d="M0 -16 L4 -4 L16 0 L4 4 L0 16 L-4 4 L-16 0 L-4 -4 Z"
+              fill="#FFFFFF"
+              opacity="0"
+            />
+          </g>
         ))}
       </svg>
 
       <Imagen pieza={PIEZAS.burbuja} dato="burbuja" />
       <Imagen pieza={PIEZAS.monitor} dato="monitor" />
+      <div
+        className="pointer-events-none absolute"
+        style={{ ...estiloPieza(PIEZAS.monitor), aspectRatio: `${PIEZAS.monitor.px[0]} / ${PIEZAS.monitor.px[1]}` }}
+      >
+        {CHECKS.map(([x, y]) => (
+          <span
+            key={y}
+            data-check
+            className="absolute size-[7%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,#ffffff_0%,#00E5F0_45%,transparent_72%)] opacity-0"
+            style={{ left: `${x}%`, top: `${y}%` }}
+          />
+        ))}
+      </div>
       <Imagen pieza={PIEZAS.movil} dato="movil" />
     </div>
   );
