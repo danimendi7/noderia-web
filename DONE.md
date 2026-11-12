@@ -22,7 +22,8 @@ Fecha: 2026-11-12 · Producción: **https://noderia-web.vercel.app/**
 | F6 Calidad | Sin scroll horizontal en 320, 360, 768, 1024, 1440 y 1920 px con capturas; axe sin fallos WCAG 2.1 AA en las 6 páginas; todo alcanzable con Tab y con foco visible; Lighthouse en móvil con umbrales | `e2e/responsive.spec.ts`, `e2e/accesibilidad.spec.ts`, `npm run lighthouse` |
 
 ## Órdenes atendidas
-Ninguna: `docs/ORDENES.md` no tiene entradas.
+- **2026-11-12 21:35 — material de marca: [bloqueada].** `docs/marca/` llegó vacía, así que T02, T18 y T19 siguen
+  bloqueadas. Hecho: `.gitignore` excluye los PDF de `docs/marca/`. Detalle y qué hacer en `docs/ORDENES.md`.
 
 ## Tareas bloqueadas
 - **T02 (material de marca), T18 (pantalla de carga con la N) y T19 (test visual del loader).** Falta la carpeta

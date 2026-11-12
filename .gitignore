@@ -51,3 +51,6 @@ next-env.d.ts
 
 # informes de npm run lighthouse
 /lighthouse-informes/
+
+# material de marca que no se publica (orden 2026-11-12): manual en PDF
+/docs/marca/**/*.pdf
