@@ -42,7 +42,7 @@ Estados: pendiente · en curso · hecha · bloqueada · PR lista para fusionar
 
 ## Bloqueos
 
-- **Migración a producción (GitHub Action `migrate-prod`) — necesita a Dani.** Al fusionar T08 (#8) la acción falló: `failed to parse connection string: ***` (run 2026-11-12 18:43). El secreto `PROD_DB_URL` no es una URL de Postgres válida (lo habitual: contraseña con caracteres especiales sin codificar, p. ej. `@`, `#`, `/` → `%40`, `%23`, `%2F`; o falta el prefijo `postgresql://`). Skynet no puede tocar secretos ni `.github/`. **Qué hacer:** corregir el secreto `PROD_DB_URL` en GitHub (entorno *production*) y volver a lanzar el workflow `migrate-prod` (Actions → migrate-prod → Re-run). Hasta entonces la tabla `solicitudes_presupuesto` solo existe en staging y el formulario en producción mostrará el error genérico.
+- Ninguno abierto. La migración a producción (`migrate-prod`), que falló al fusionar T08, se relanzó con éxito el 2026-11-12 a las 21:13 (`gh run list --workflow migrate-prod`).
 
 ## Cambios de alcance
 
