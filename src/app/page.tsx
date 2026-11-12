@@ -3,6 +3,7 @@ import { Comparacion } from "@/components/inicio/Comparacion";
 import { ComoTrabajamos } from "@/components/inicio/ComoTrabajamos";
 import { Hero } from "@/components/inicio/Hero";
 import { Preguntas } from "@/components/inicio/Preguntas";
+import { Presupuesto } from "@/components/inicio/Presupuesto";
 import { Problema } from "@/components/inicio/Problema";
 import { QueIncluye } from "@/components/inicio/QueIncluye";
 import { ANCLAS } from "@/lib/navegacion";
@@ -27,12 +28,7 @@ export default function Inicio() {
       <ComoTrabajamos />
 
       <Preguntas />
-
-      <section id={ANCLAS.presupuesto} aria-labelledby="titulo-presupuesto" className="min-h-[60vh] px-4 py-20">
-        <div className="mx-auto max-w-7xl">
-          <h2 id="titulo-presupuesto" className="text-3xl font-bold">Cuéntanos cómo es tu taller</h2>
-        </div>
-      </section>
+      <Presupuesto />
     </>
   );
 }
