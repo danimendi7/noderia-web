@@ -1,5 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Outfit } from "next/font/google";
+import { Cabecera } from "@/components/layout/Cabecera";
+import { Pie } from "@/components/layout/Pie";
 import "./globals.css";
 
 const inter = Inter({
@@ -33,7 +35,19 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="es" className={`${inter.variable} ${outfit.variable} h-full antialiased`}>
-      <body className="flex min-h-full flex-col">{children}</body>
+      <body className="flex min-h-full flex-col">
+        <a
+          href="#contenido"
+          className="sr-only z-[60] rounded-xl bg-electric px-4 py-3 font-semibold text-white focus:not-sr-only focus:fixed focus:left-4 focus:top-4"
+        >
+          Saltar al contenido
+        </a>
+        <Cabecera />
+        <main id="contenido" className="flex-1 pt-16">
+          {children}
+        </main>
+        <Pie />
+      </body>
     </html>
   );
 }
