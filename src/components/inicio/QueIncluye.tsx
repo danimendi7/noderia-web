@@ -39,11 +39,11 @@ export function QueIncluye() {
       idTitulo="titulo-que-incluye"
       titulo="Qué incluye"
       entradilla="Una web para tu taller mecánico o de neumáticos, con citas online, y un programa de gestión de taller conectado a ella. Todo hecho a tu medida, y con alguien que te acompaña después."
-      fondo="blanco"
+      fondo="mist"
     >
       <div className="grid gap-6 lg:grid-cols-3">
         {BLOQUES.map((bloque) => (
-          <article key={bloque.titulo} className="rounded-3xl bg-mist p-7 lg:p-9">
+          <article key={bloque.titulo} className="rounded-3xl bg-white p-7 lg:p-9">
             <span className="text-electric">
               <Icono nombre={bloque.icono} className="size-9" />
             </span>
