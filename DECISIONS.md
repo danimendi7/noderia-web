@@ -4,6 +4,8 @@ Registro de lo que Claude decidió por su cuenta. Una entrada por decisión, la 
 
 | Fecha | Decisión | Alternativa descartada | Motivo |
 | --- | --- | --- | --- |
+| 2026-11-12 | La orden del 2026-11-12 21:35 (material de marca) se marca [bloqueada] y no se borra DONE.md: se actualiza su apartado de órdenes | Planificar T02/T18/T19 como pendientes y borrar DONE.md | `docs/marca/` está vacía; sin archivos no hay tareas que hacer y DONE.md sigue describiendo el estado real de producción |
+| 2026-11-12 | No se usa el logo de Uría de `~/proyectos/_referencias/neumaticos-uria` | Copiarlo para avanzar T02 | Los límites prohíben copiar la marca de otros proyectos; la orden dice que Dani lo aporta en `docs/marca/` |
 | 2026-11-12 | La escena del hero tiene un botón "Pausar animación" (conmutador con `aria-pressed`) mientras se anima; la pausa del usuario manda sobre la de visibilidad | Confiar solo en `prefers-reduced-motion` | WCAG 2.2.2 (nivel A) exige poder parar el movimiento automático de más de 5 s; la preferencia del sistema no cuenta como mecanismo |
 | 2026-11-12 | Bordes de los campos del formulario en Midnight al 50 % (3,6:1) y texto de ejemplo al 60 % (5:1) | Mantener el 20 % / 45 % | WCAG 1.4.11 pide 3:1 para el contorno de los campos y 1.4.3 pide 4,5:1 para el texto de ejemplo |
 | 2026-11-12 | Revisión automática de accesibilidad con `@axe-core/playwright` (WCAG 2.1 A/AA) dentro del e2e | Solo revisión manual | Es la herramienta estándar; deja la comprobación fija para cambios futuros |

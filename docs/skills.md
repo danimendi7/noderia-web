@@ -1,6 +1,6 @@
 # Skills de Skynet en este proyecto
 
-Actualizado: 2026-11-12 (cierre del MVP).
+Actualizado: 2026-11-12 (orden del material de marca).
 
 ## Las que uso y para qué
 
@@ -22,6 +22,6 @@ Actualizado: 2026-11-12 (cierre del MVP).
 
 | Skill | Fuente | Qué aportaría | Riesgo |
 | --- | --- | --- | --- |
-| `web-design-guidelines` | La SPEC la cita como disponible en el PC de Dani (Vercel Labs, `vercel-labs/agent-skills`) | Revisión final de UI que pide la SPEC (F6) | Bajo: solo lee código y propone cambios |
+| `web-design-guidelines` | La SPEC y la orden del 2026-11-12 la dan por instalada, pero sigue sin aparecer en las skills de la sesión de Skynet (quizá se instaló solo en el PC de Dani y no en su cuenta) (Vercel Labs, `vercel-labs/agent-skills`) | Revisión final de UI que pide la SPEC (F6) | Bajo: solo lee código y propone cambios |
 | `vercel-react-best-practices` | Misma fuente (`vercel-labs/agent-skills`) | Reglas de rendimiento de React/Next al escribir componentes (LCP, bundle) | Bajo |
 | `supabase/agent-skills` | Supabase (`npx skills add supabase/agent-skills`) | Guía específica de RLS y migraciones | Bajo |
