@@ -37,3 +37,50 @@ test("el LCP de la home es el texto del hero (H1 o subtítulo), no las imágenes
   );
   expect(lcp).toMatch(/^(H1|SPAN|P) \(hero\)$/);
 });
+
+test.describe("bucle de la escena", () => {
+  test("se anima y se pausa fuera de pantalla o con la pestaña oculta", async ({ page }) => {
+    await page.goto("/");
+    const bucle = page.locator("[data-bucle]");
+    await expect(bucle).toHaveAttribute("data-bucle", "en-marcha");
+
+    // El bucle arranca en el paso 4: en pocos segundos el coche averiado empieza a fundirse.
+    const averiado = page.locator('[data-pieza="coche-averiado"]');
+    await expect
+      .poll(() => averiado.evaluate((el) => Number(getComputedStyle(el).opacity)), { timeout: 8000 })
+      .toBeLessThan(1);
+
+    await page.locator("footer").scrollIntoViewIfNeeded();
+    await expect(bucle).toHaveAttribute("data-bucle", "pausado");
+    await page.evaluate(() => window.scrollTo(0, 0));
+    await expect(bucle).toHaveAttribute("data-bucle", "en-marcha");
+
+    await page.evaluate(() => {
+      Object.defineProperty(document, "visibilityState", { value: "hidden", configurable: true });
+      document.dispatchEvent(new Event("visibilitychange"));
+    });
+    await expect(bucle).toHaveAttribute("data-bucle", "pausado");
+  });
+
+  test.describe("con movimiento reducido", () => {
+    test.use({ reducedMotion: "reduce" });
+
+    test("la escena queda quieta con el coche averiado dentro del taller (paso 3)", async ({ page }) => {
+      await page.goto("/");
+      await expect(page.locator("[data-escena]")).toHaveCSS("opacity", "1");
+      await expect(page.locator("[data-bucle]")).toHaveCount(0);
+
+      const averiado = page.locator('[data-pieza="coche-averiado"]');
+      await expect(averiado).toHaveCSS("opacity", "1");
+      await expect(averiado).toHaveCSS("transform", "none");
+      await expect(page.locator('[data-pieza="coche-reparado"]')).toHaveCSS("opacity", "0");
+
+      const coche = (await averiado.boundingBox())!;
+      const taller = (await page.locator('[data-pieza="taller"]').boundingBox())!;
+      expect(coche.x).toBeGreaterThan(taller.x);
+      expect(coche.y).toBeGreaterThan(taller.y);
+      expect(coche.x + coche.width).toBeLessThan(taller.x + taller.width);
+      expect(coche.y + coche.height).toBeLessThan(taller.y + taller.height);
+    });
+  });
+});
