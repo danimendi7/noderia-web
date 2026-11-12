@@ -2,6 +2,7 @@ import { CasoUria } from "@/components/inicio/CasoUria";
 import { Comparacion } from "@/components/inicio/Comparacion";
 import { ComoTrabajamos } from "@/components/inicio/ComoTrabajamos";
 import { Hero } from "@/components/inicio/Hero";
+import { Preguntas } from "@/components/inicio/Preguntas";
 import { Problema } from "@/components/inicio/Problema";
 import { QueIncluye } from "@/components/inicio/QueIncluye";
 import { ANCLAS } from "@/lib/navegacion";
@@ -25,11 +26,7 @@ export default function Inicio() {
       <CasoUria />
       <ComoTrabajamos />
 
-      <section id={ANCLAS.preguntas} aria-labelledby="titulo-preguntas" className="min-h-[60vh] px-4 py-20">
-        <div className="mx-auto max-w-7xl">
-          <h2 id="titulo-preguntas" className="text-3xl font-bold">Preguntas frecuentes</h2>
-        </div>
-      </section>
+      <Preguntas />
 
       <section id={ANCLAS.presupuesto} aria-labelledby="titulo-presupuesto" className="min-h-[60vh] px-4 py-20">
         <div className="mx-auto max-w-7xl">
