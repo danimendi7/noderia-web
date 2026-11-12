@@ -70,6 +70,8 @@ test("el último fotograma de la pantalla de carga es idéntico al PNG oficial d
     if (diferencia > TOLERANCIA_PIXEL) distintos++;
   }
   const proporcion = distintos / (a.ancho * a.alto);
+  info.annotations.push({ type: "píxeles distintos", description: `${distintos} de ${a.ancho * a.alto}` });
+  console.log(`Último fotograma frente al PNG oficial: ${distintos} píxeles distintos de ${a.ancho * a.alto}`);
   await info.attach("fotograma-final.png", { body: fotograma, contentType: "image/png" });
   await info.attach("png-oficial.png", { body: referencia, contentType: "image/png" });
   expect(proporcion, `${distintos} píxeles distintos de ${a.ancho * a.alto}`).toBeLessThanOrEqual(MAXIMO_DISTINTOS);
