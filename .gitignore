@@ -48,3 +48,6 @@ next-env.d.ts
 /blob-report/
 /supabase/.temp/
 /supabase/.branches/
+
+# informes de npm run lighthouse
+/lighthouse-informes/
