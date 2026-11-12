@@ -1,3 +1,4 @@
+import { Escena } from "@/components/escena/Escena";
 import { CasoUria } from "@/components/inicio/CasoUria";
 import { ComoFunciona } from "@/components/inicio/ComoFunciona";
 import { Comparacion } from "@/components/inicio/Comparacion";
@@ -14,7 +15,7 @@ import { datosEstructuradosEmpresa, urlDelSitio } from "@/lib/sitio";
 export default function Inicio() {
   return (
     <>
-      <Hero />
+      <Hero escena={<Escena />} />
       <Problema />
 
       <ComoFunciona />
