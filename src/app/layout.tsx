@@ -45,7 +45,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="es" className={`${inter.variable} ${outfit.variable} h-full antialiased`}>
+    <html lang="es" data-scroll-behavior="smooth" className={`${inter.variable} ${outfit.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col">
         <a
           href="#contenido"
