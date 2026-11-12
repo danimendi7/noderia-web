@@ -1,6 +1,6 @@
 # Skills de Skynet en este proyecto
 
-Actualizado: 2026-11-12 (creación del plan).
+Actualizado: 2026-11-12 (cierre del MVP).
 
 ## Las que uso y para qué
 
@@ -15,6 +15,7 @@ Actualizado: 2026-11-12 (creación del plan).
 | marketing:seo-audit | Revisión de títulos, metadatos y datos estructurados (T11) |
 | design:accessibility-review, design:design-critique | Revisión final de la UI (T23), en lugar de `web-design-guidelines` |
 | design:ux-copy | Pulir mensajes de error y textos del formulario sin cambiar su sentido |
+| `@axe-core/playwright` (no es skill: dependencia de desarrollo) | Escaneo WCAG 2.1 AA automático en el e2e (T23) |
 | Context7 (MCP) | Documentación actual de GSAP, Next.js 16 y Supabase |
 
 ## Las que echo en falta
