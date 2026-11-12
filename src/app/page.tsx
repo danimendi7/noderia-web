@@ -1,14 +1,11 @@
+import { Hero } from "@/components/inicio/Hero";
 import { ANCLAS } from "@/lib/navegacion";
 
 /** Home. Las secciones se van completando tarea a tarea (ver PROGRESS.md). */
 export default function Inicio() {
   return (
     <>
-      <section className="bg-midnight px-4 py-24 text-white">
-        <div className="mx-auto max-w-7xl">
-          <h1 className="text-4xl font-bold md:text-6xl">Tu taller, conectado de punta a punta</h1>
-        </div>
-      </section>
+      <Hero />
 
       <section id={ANCLAS.comoFunciona} aria-labelledby="titulo-como-funciona" className="min-h-[60vh] px-4 py-20">
         <div className="mx-auto max-w-7xl">
