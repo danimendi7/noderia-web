@@ -9,7 +9,7 @@ export function Cabecera() {
   return (
     <header className="fixed inset-x-0 top-0 z-50 border-b border-white/10 bg-midnight">
       <div className="relative mx-auto flex h-16 max-w-7xl items-center justify-between gap-6 px-4 sm:px-6 lg:px-8">
-        <Logo fondo="oscuro" />
+        <Logo />
 
         <nav aria-label="Principal" className="hidden lg:block">
           <ul className="flex items-center gap-1 xl:gap-2">

@@ -10,9 +10,11 @@ const DEGRADADO = "linear-gradient(120deg, #0068E0 0%, #00B0F0 50%, #00E5F0 100%
 
 /** Imagen para compartir (Open Graph) con los colores y la tipografía de la marca. */
 export default async function Imagen() {
-  const [extraBold, semiBold] = await Promise.all([
+  const [extraBold, semiBold, logo] = await Promise.all([
     readFile(join(process.cwd(), "src/assets/fuentes/Outfit-ExtraBold.ttf")),
     readFile(join(process.cwd(), "src/assets/fuentes/Outfit-SemiBold.ttf")),
+    // Logo oficial para fondo oscuro (480 × 102), sin redibujar.
+    readFile(join(process.cwd(), "public/marca/logo-noderia-fondo-oscuro.png")),
   ]);
 
   return new ImageResponse(
@@ -32,7 +34,8 @@ export default async function Imagen() {
           fontFamily: "Outfit",
         }}
       >
-        <div style={{ display: "flex", fontSize: 40, fontWeight: 800, letterSpacing: -1 }}>NoderIA</div>
+        {/* eslint-disable-next-line @next/next/no-img-element -- ImageResponse solo admite <img> */}
+        <img src={`data:image/png;base64,${logo.toString("base64")}`} alt="NoderIA" width={282} height={60} />
         <div style={{ display: "flex", flexDirection: "column" }}>
           <div style={{ display: "flex", fontSize: 26, fontWeight: 600, letterSpacing: 5, color: "#00E5F0" }}>
             SOFTWARE PARA TALLERES
