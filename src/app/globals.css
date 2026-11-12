@@ -91,3 +91,68 @@
     animation: escena-aparece 0.01s linear 0.4s forwards;
   }
 }
+
+/* Pantalla de carga (SPEC F1, T18). Oculta salvo que el script inicial la active (data-activa). */
+.pantalla-carga {
+  display: none;
+}
+
+.pantalla-carga[data-activa] {
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  background:
+    radial-gradient(45% 55% at 50% 50%, rgb(0 70 210 / 0.55) 0%, rgb(0 35 120 / 0.28) 45%, rgb(0 16 44 / 0) 80%),
+    var(--color-midnight);
+  /* Red de seguridad: si el JavaScript no llega, la pantalla se quita sola. */
+  animation: pantalla-carga-seguridad 0s linear 6s forwards;
+}
+
+@keyframes pantalla-carga-seguridad {
+  to {
+    visibility: hidden;
+  }
+}
+
+.pantalla-carga-halo {
+  position: absolute;
+  width: 60vmin;
+  height: 60vmin;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgb(0 229 240 / 0.18) 0%, rgb(0 104 224 / 0) 65%);
+  opacity: 0;
+}
+
+.pantalla-carga-marca {
+  position: relative;
+  width: min(34vmin, 320px);
+  height: auto;
+  overflow: visible;
+}
+
+.pantalla-carga-saltar {
+  position: absolute;
+  right: 1.75rem;
+  bottom: 1.5rem;
+  min-height: 2.75rem;
+  border: 1px solid rgb(255 255 255 / 0.35);
+  border-radius: 12px;
+  padding: 0.5rem 1rem;
+  color: rgb(255 255 255 / 0.85);
+  font: 500 0.875rem var(--font-sans);
+  cursor: pointer;
+}
+
+.pantalla-carga-saltar:hover {
+  border-color: rgb(255 255 255 / 0.6);
+  color: white;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pantalla-carga[data-activa] {
+    display: none;
+  }
+}
