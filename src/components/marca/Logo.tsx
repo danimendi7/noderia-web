@@ -1,26 +1,30 @@
+import Image from "next/image";
 import Link from "next/link";
 
-type LogoProps = {
-  /** Fondo sobre el que va: el manual pide la versión clara u oscura del logo. */
-  fondo?: "claro" | "oscuro";
-  className?: string;
-};
+/** PNG oficial "Logo NoderIA fondo oscuro", recortado y reducido con scripts/optimizar-marca.mjs (480 × 102). */
+const LOGO = { src: "/marca/logo-noderia-fondo-oscuro.png", ancho: 480, alto: 102 };
+/** Ancho en pantalla: por encima del mínimo del manual para el logo horizontal (140 px). */
+const ANCHO = 160;
 
 /**
- * Logo de NoderIA enlazado a la home.
- *
- * PROVISIONAL (ver DECISIONS.md, 2026-11-12): mientras no llegue el material de marca,
- * se muestra el nombre en texto. En T02 se sustituye por el PNG oficial, sin redibujarlo.
+ * Logo de NoderIA enlazado a la home, en su versión para fondo oscuro: la cabecera y el pie son Midnight.
+ * Es el PNG oficial: no se redibuja, no se recolorea y se escala en proporción.
+ * El margen alrededor (zona de seguridad) lo dan la altura de la cabecera y el hueco del pie.
  */
-export function Logo({ fondo = "claro", className = "" }: LogoProps) {
-  const color = fondo === "oscuro" ? "text-white" : "text-midnight";
+export function Logo({ className = "" }: { className?: string }) {
   return (
     <Link
       href="/"
       aria-label="NoderIA, ir al inicio"
-      className={`inline-flex min-h-11 min-w-[140px] items-center font-display text-2xl font-bold tracking-tight ${color} ${className}`}
+      className={`inline-flex min-h-11 shrink-0 items-center ${className}`}
     >
-      <span aria-hidden="true">NoderIA</span>
+      <Image
+        src={LOGO.src}
+        alt="NoderIA"
+        width={ANCHO}
+        height={Math.round((ANCHO * LOGO.alto) / LOGO.ancho)}
+        loading="eager"
+      />
     </Link>
   );
 }

@@ -8,7 +8,7 @@ export function Pie() {
     <footer className="bg-midnight text-white/80">
       <div className="mx-auto grid max-w-7xl gap-10 px-4 py-14 sm:px-6 md:grid-cols-[1.4fr_1fr_1fr] lg:px-8">
         <div className="flex flex-col gap-3">
-          <Logo fondo="oscuro" />
+          <Logo />
           <p className="max-w-sm">
             Tu web y tu sistema de gestión, a medida de tu taller y conectados entre sí.
           </p>
