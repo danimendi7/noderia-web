@@ -1,3 +1,4 @@
+import { Analytics } from "@vercel/analytics/next";
 import type { Metadata, Viewport } from "next";
 import { Inter, Outfit } from "next/font/google";
 import { Cabecera } from "@/components/layout/Cabecera";
@@ -58,6 +59,8 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           {children}
         </main>
         <Pie />
+        {/* Vercel Web Analytics: sin cookies, no necesita banner. */}
+        <Analytics />
       </body>
     </html>
   );
