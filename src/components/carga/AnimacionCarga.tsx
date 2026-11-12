@@ -220,6 +220,9 @@ function crearAnimacion(pantalla: HTMLDivElement, alTerminar: () => void) {
     .to(q(".carga-aura"), { opacity: 0, duration: 0.5 }, 0.9)
     // 3. Logo oficial completo, sin máscara, y destello en diagonal.
     .set(q(".carga-cinta"), { attr: { mask: "" } }, 1.56)
+    // La imagen completa ya incluye las esferas: se ocultan sus copias para que no se pinten dos veces
+    // (el PNG oficial es semitransparente) y quede el logo oficial exacto (T19).
+    .set(q(".carga-esfera-inferior, .carga-esfera-superior"), { opacity: 0 }, 1.56)
     .to(q(".carga-brillo-barra"), { opacity: 1, duration: 0.01 }, 1.5)
     .to(q(".carga-brillo-barra"), { x: 2000, duration: 0.7, ease: "power1.inOut" }, 1.5)
     .addLabel("logo-completo", LOGO_COMPLETO)
