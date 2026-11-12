@@ -17,7 +17,8 @@ export function Pie() {
 
         <nav aria-label="Secciones">
           <p className="mb-3 font-display text-sm font-semibold uppercase tracking-widest text-aqua">
-            NoderIA
+            {/* No se pone el nombre: en mayúsculas sería "NODERIA" y el manual pide escribir siempre NoderIA. */}
+            Secciones
           </p>
           <ul className="flex flex-col">
             {ENLACES_MENU.map((enlace) => (

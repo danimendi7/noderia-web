@@ -20,7 +20,7 @@ test("en la primera visita se ve la animación y el hero aparece solo, sin clic"
 test("«Saltar» muestra el hero al instante", async ({ page }) => {
   await page.goto("/");
   await expect(pantalla(page)).toHaveAttribute("data-estado", /cargando|animando/);
-  await page.getByRole("button", { name: "Saltar" }).click();
+  await page.getByRole("button", { name: "Saltar animación" }).click();
   await expect(pantalla(page)).toBeHidden({ timeout: 300 });
 });
 

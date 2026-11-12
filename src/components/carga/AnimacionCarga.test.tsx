@@ -6,7 +6,7 @@ import { AnimacionCarga } from "./AnimacionCarga";
 describe("Pantalla de carga", () => {
   it("tiene un botón Saltar accesible y el dibujo es decorativo", () => {
     const { container } = render(<AnimacionCarga />);
-    expect(screen.getByRole("button", { name: "Saltar" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Saltar animación" })).toBeInTheDocument();
     expect(container.querySelector("svg")).toHaveAttribute("aria-hidden", "true");
   });
 

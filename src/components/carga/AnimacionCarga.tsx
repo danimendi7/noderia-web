@@ -187,7 +187,13 @@ export function AnimacionCarga() {
           </g>
         </g>
       </svg>
-      <button type="button" className="pantalla-carga-saltar" onClick={() => saltar.current?.()}>
+      <button
+        type="button"
+        className="pantalla-carga-saltar"
+        // El nombre accesible incluye el texto visible (WCAG 2.5.3) y dice qué se salta (2.4.6).
+        aria-label="Saltar animación"
+        onClick={() => saltar.current?.()}
+      >
         Saltar
       </button>
     </div>
