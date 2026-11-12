@@ -1,4 +1,7 @@
+import { Comparacion } from "@/components/inicio/Comparacion";
 import { Hero } from "@/components/inicio/Hero";
+import { Problema } from "@/components/inicio/Problema";
+import { QueIncluye } from "@/components/inicio/QueIncluye";
 import { ANCLAS } from "@/lib/navegacion";
 
 /** Home. Las secciones se van completando tarea a tarea (ver PROGRESS.md). */
@@ -6,6 +9,7 @@ export default function Inicio() {
   return (
     <>
       <Hero />
+      <Problema />
 
       <section id={ANCLAS.comoFunciona} aria-labelledby="titulo-como-funciona" className="min-h-[60vh] px-4 py-20">
         <div className="mx-auto max-w-7xl">
@@ -13,11 +17,8 @@ export default function Inicio() {
         </div>
       </section>
 
-      <section id={ANCLAS.queIncluye} aria-labelledby="titulo-que-incluye" className="min-h-[60vh] px-4 py-20">
-        <div className="mx-auto max-w-7xl">
-          <h2 id="titulo-que-incluye" className="text-3xl font-bold">Qué incluye</h2>
-        </div>
-      </section>
+      <QueIncluye />
+      <Comparacion />
 
       <section id={ANCLAS.casoUria} aria-labelledby="titulo-caso-uria" className="min-h-[60vh] px-4 py-20">
         <div className="mx-auto max-w-7xl">
