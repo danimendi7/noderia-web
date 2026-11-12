@@ -2,6 +2,7 @@
 
 import { createClient } from "@supabase/supabase-js";
 import { headers } from "next/headers";
+import { crearAviso } from "@/lib/presupuesto/aviso";
 import {
   type Dependencias,
   type EstadoFormulario,
@@ -38,5 +39,10 @@ export async function enviarSolicitud(
     ip: ipDeCabeceras(await headers()),
     sal: process.env.IP_HASH_SALT || SAL_POR_DEFECTO,
     guardar,
+    avisar: crearAviso({
+      RESEND_API_KEY: process.env.RESEND_API_KEY,
+      AVISO_EMAIL_PARA: process.env.AVISO_EMAIL_PARA,
+      AVISO_EMAIL_DE: process.env.AVISO_EMAIL_DE,
+    }),
   });
 }
