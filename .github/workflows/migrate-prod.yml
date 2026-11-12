@@ -1,0 +1,24 @@
+name: migrate-prod
+on:
+  push:
+    branches: [main]
+    paths: ['supabase/migrations/**']
+
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+      - name: Aplicar migraciones a producción
+        env:
+          PROD_DB_URL: ${{ secrets.PROD_DB_URL }}
+        run: |
+          if [ -z "$PROD_DB_URL" ]; then
+            echo "No hay secreto PROD_DB_URL: nada que migrar."
+            exit 0
+          fi
+          supabase db push --yes --db-url "$PROD_DB_URL"
