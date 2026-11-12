@@ -2,7 +2,7 @@
 // Uso: node scripts/optimizar-marca.mjs
 // Solo recorta los bordes transparentes y reduce el tamaño: nunca se recolorea ni se deforma (manual de marca).
 // No toca el PDF del manual ni el logo de Uría a color, que no se publican.
-import { mkdir, stat, writeFile } from "node:fs/promises";
+import { copyFile, mkdir, stat, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import sharp from "sharp";
 
@@ -88,3 +88,12 @@ await (await cuadrado(isotipo, 192, 0.04)).toFile(join(app, "icon.png"));
 // En iOS el fondo transparente se vuelve negro: el isotipo va sobre Midnight con su zona de seguridad.
 await (await cuadrado(isotipo, 180, 0.14, MIDNIGHT)).toFile(join(app, "apple-icon.png"));
 console.log(`favicon.ico ${await kb(join(app, "favicon.ico"))} · icon.png ${await kb(join(app, "icon.png"))} · apple-icon.png ${await kb(join(app, "apple-icon.png"))}`);
+
+// Pantalla de carga (T18): isotipo a 800 px (se muestra a ≤ 320 px) y el mapa de distancias tal cual,
+// porque comprimirlo cambiaría la forma en que se revela la cinta.
+const carga = join(raiz, "public/carga");
+await mkdir(carga, { recursive: true });
+const rutaN = join(carga, "isotipo-n.webp");
+const iN = await isotipo.clone().resize({ width: 800 }).webp({ quality: 90, alphaQuality: 100, effort: 6 }).toFile(rutaN);
+await copyFile(join(marca, "pantalla-carga/mapa-distancias-N.png"), join(carga, "mapa-distancias-n.png"));
+console.log(`carga: isotipo-n.webp ${iN.width}x${iN.height} · ${await kb(rutaN)} · mapa-distancias-n.png ${await kb(join(carga, "mapa-distancias-n.png"))}`);

@@ -34,7 +34,6 @@ export default async function Imagen() {
           fontFamily: "Outfit",
         }}
       >
-        {/* eslint-disable-next-line @next/next/no-img-element -- ImageResponse solo admite <img> */}
         <img src={`data:image/png;base64,${logo.toString("base64")}`} alt="NoderIA" width={282} height={60} />
         <div style={{ display: "flex", flexDirection: "column" }}>
           <div style={{ display: "flex", fontSize: 26, fontWeight: 600, letterSpacing: 5, color: "#00E5F0" }}>

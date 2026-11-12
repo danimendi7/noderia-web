@@ -1,3 +1,4 @@
+import { PantallaCarga } from "@/components/carga/PantallaCarga";
 import { BucleEscena } from "@/components/escena/BucleEscena";
 import { Escena } from "@/components/escena/Escena";
 import { CasoUria } from "@/components/inicio/CasoUria";
@@ -16,6 +17,7 @@ import { datosEstructuradosEmpresa, urlDelSitio } from "@/lib/sitio";
 export default function Inicio() {
   return (
     <>
+      <PantallaCarga />
       <Hero
         escena={
           <BucleEscena>
