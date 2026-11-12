@@ -1,5 +1,6 @@
 import AxeBuilder from "@axe-core/playwright";
 import { test, expect, type Page } from "@playwright/test";
+import { CLAVE_CARGA_VISTA } from "../src/lib/pantallaCarga";
 
 // Revisión final de accesibilidad (T23): escaneo WCAG 2.1 AA con axe y recorrido completo con teclado.
 const PAGINAS = ["/", "/casos/neumaticos-uria", "/aviso-legal", "/privacidad", "/cookies", "/pagina-que-no-existe"];
@@ -34,6 +35,9 @@ async function describir(page: Page, selector?: string) {
 // Con animaciones activas: así también se recorre el botón de pausa de la escena.
 for (const ruta of ["/", "/casos/neumaticos-uria"]) {
   test(`con Tab se llega a todos los enlaces y botones de ${ruta} con foco visible`, async ({ page }) => {
+    // La pantalla de carga se quita con cualquier tecla y tiene su propio test (pantalla-carga.spec.ts):
+    // aquí se recorre la página como la ve quien ya la vio en esta sesión.
+    await page.addInitScript((clave) => sessionStorage.setItem(clave, "1"), CLAVE_CARGA_VISTA);
     await page.goto(ruta);
     await expect(page.locator("h1")).toBeVisible();
 
