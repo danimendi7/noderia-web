@@ -6,7 +6,9 @@ import { Preguntas } from "@/components/inicio/Preguntas";
 import { Presupuesto } from "@/components/inicio/Presupuesto";
 import { Problema } from "@/components/inicio/Problema";
 import { QueIncluye } from "@/components/inicio/QueIncluye";
+import { JsonLd } from "@/components/ui/JsonLd";
 import { ANCLAS } from "@/lib/navegacion";
+import { datosEstructuradosEmpresa, urlDelSitio } from "@/lib/sitio";
 
 /** Home. Las secciones se van completando tarea a tarea (ver PROGRESS.md). */
 export default function Inicio() {
@@ -29,6 +31,7 @@ export default function Inicio() {
 
       <Preguntas />
       <Presupuesto />
+      <JsonLd datos={datosEstructuradosEmpresa(urlDelSitio())} />
     </>
   );
 }
