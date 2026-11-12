@@ -27,8 +27,9 @@ function solicitudFicticia(ipHash: string) {
 const nuevoHash = () => `test-${randomBytes(16).toString("hex")}`;
 
 describe.skipIf(!url || !clave)("RLS de solicitudes_presupuesto (staging)", () => {
-  const supabase = createClient(url!, clave!, { auth: { persistSession: false } });
-  const tabla = () => supabase.from("solicitudes_presupuesto");
+  // Perezoso: el cuerpo de un describe saltado también se ejecuta y sin URL fallaría.
+  const tabla = () =>
+    createClient(url!, clave!, { auth: { persistSession: false } }).from("solicitudes_presupuesto");
 
   it("el público puede insertar una solicitud válida", async () => {
     const { error } = await tabla().insert(solicitudFicticia(nuevoHash()));
