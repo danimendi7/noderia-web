@@ -2,6 +2,7 @@ import type { CSSProperties } from "react";
 import { Acordeon } from "@/components/inicio/Acordeon";
 import { Presupuesto } from "@/components/inicio/Presupuesto";
 import { LogoUria } from "@/components/marca/LogoUria";
+import { HiloConductor } from "@/components/inicio/HiloConductor";
 import { EntradasAlScroll } from "@/components/movimiento/EntradasAlScroll";
 import { Boton } from "@/components/ui/Boton";
 import { CabeceraSeccion } from "@/components/ui/CabeceraSeccion";
@@ -66,7 +67,7 @@ export function PaginaServicio({ clave }: { clave: ClaveServicio }) {
                 </Boton>
               </div>
             </div>
-            <div className="mx-auto w-full max-w-[18rem] sm:max-w-[22rem] lg:col-span-5 lg:max-w-[26rem]">
+            <div data-cinta-inicio className="mx-auto w-full max-w-[18rem] sm:max-w-[22rem] lg:col-span-5 lg:max-w-[26rem]">
               <Ilustracion nombre={servicio.ilustracion.nombre} alt={servicio.ilustracion.alt} className="drop-shadow-[0_24px_48px_rgb(0_104_224/0.35)]" />
             </div>
           </div>
@@ -90,7 +91,7 @@ export function PaginaServicio({ clave }: { clave: ClaveServicio }) {
       {sinIlustracion.length ? (
         <section aria-label="Y además" data-fondo="blanco" className="relative isolate bg-white text-midnight">
           <div className={`${CONTENEDOR} ${ESPACIADO_SECCION}`}>
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-electric sm:text-sm">Y además</p>
+            <p data-cinta-parada className="text-xs font-semibold uppercase tracking-[0.2em] text-electric sm:text-sm">Y además</p>
             <ul className={`mt-8 grid gap-5 ${COLUMNAS[sinIlustracion.length] ?? "md:grid-cols-2"}`}>
               {sinIlustracion.map((bloque, indice) => (
                 <li
@@ -165,6 +166,8 @@ export function PaginaServicio({ clave }: { clave: ClaveServicio }) {
       <Presupuesto desde="blanco" origen={servicio.pagina.ruta} />
       <JsonLd datos={datosServicio(base, servicio.pagina, servicio.tipo)} />
       <EntradasAlScroll />
+      {/* Versión corta de la cinta de la home (SPEC v3 §6). */}
+      <HiloConductor />
     </>
   );
 }

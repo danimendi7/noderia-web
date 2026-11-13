@@ -107,3 +107,47 @@ test("la cinta empieza en la escena del hero y la primera esfera se enciende al 
   await page.evaluate(() => scrollBy(0, 300));
   await expect(primera).toHaveAttribute("data-encendida", "");
 });
+
+// SPEC v3 §6: una versión más corta de la cinta acompaña las secciones de los servicios y de Quiénes somos.
+for (const ruta of ["/software-gestion-talleres", "/diseno-web-talleres", "/automatizaciones-talleres", "/quienes-somos"]) {
+  test(`${ruta} lleva la cinta: decorativa, una esfera por sección y quieta con movimiento reducido`, async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await page.goto(ruta);
+    const cinta = page.locator("svg[data-cinta]");
+    await expect(cinta).toHaveAttribute("data-estado", "completo", { timeout: 10_000 });
+    await expect(cinta).toHaveAttribute("aria-hidden", "true");
+    await expect(cinta).toHaveCSS("pointer-events", "none");
+    const secciones = await page.locator("main section[data-fondo]").count();
+    await expect(cinta.locator("[data-parada]")).toHaveCount(secciones);
+    await expect(cinta.locator('[data-cinta-trazo="principal"]')).toHaveCSS("stroke-dasharray", "none");
+    expect(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth)).toBe(false);
+  });
+}
+
+// La cinta va por los márgenes: nunca por encima de un titular ni de un párrafo.
+for (const ruta of ["/", "/software-gestion-talleres", "/quienes-somos"]) {
+  test(`en ${ruta} la cinta no pasa por encima de titulares ni párrafos`, async ({ page }, info) => {
+    test.skip(info.project.name === "movil", "en móvil va por el margen izquierdo");
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto(ruta);
+    await expect(page.locator("svg[data-cinta]")).toHaveAttribute("data-estado", "completo", { timeout: 10_000 });
+    const choques = await page.evaluate(() => {
+      const trazo = document.querySelector<SVGPathElement>('[data-cinta-trazo="principal"]')!;
+      const total = trazo.getTotalLength();
+      const textos = [...document.querySelectorAll<HTMLElement>("main h1, main h2, main h3, main p")]
+        .filter((el) => el.checkVisibility({ visibilityProperty: true, opacityProperty: true }) && el.getBoundingClientRect().height > 0)
+        .map((el) => {
+        const r = el.getBoundingClientRect();
+        return { el: el.textContent!.slice(0, 30), x1: r.left, x2: r.right, y1: r.top + scrollY, y2: r.bottom + scrollY };
+      });
+      const encontrados = new Set<string>();
+      for (let l = 0; l < total; l += 8) {
+        const p = trazo.getPointAtLength(l);
+        for (const t of textos) if (p.x > t.x1 && p.x < t.x2 && p.y > t.y1 && p.y < t.y2) encontrados.add(t.el);
+      }
+      return [...encontrados];
+    });
+    expect(choques).toEqual([]);
+  });
+}

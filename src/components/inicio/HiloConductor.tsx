@@ -12,21 +12,36 @@ type Geometria = Hilo & { alto: number; ancho: number; movil: boolean };
 /** Altura de la pantalla (desde arriba) a la que va la punta del hilo mientras se hace scroll. */
 const ALTURA_PUNTA = 0.62;
 
-/** Mide la home y calcula el trazo: sale de la escena del hero, para en la etiqueta de cada sección y acaba en el logo del pie. */
+/**
+ * Punto de parada de una sección: lo marcado con `data-cinta-parada` o, si no, la etiqueta que va encima del primer
+ * H2 (o el propio H2 si no lleva etiqueta).
+ */
+function paradaDe(seccion: HTMLElement): HTMLElement | null {
+  const marcada = seccion.querySelector<HTMLElement>("[data-cinta-parada]");
+  if (marcada) return marcada;
+  const h2 = seccion.querySelector<HTMLElement>("h2");
+  return (h2?.previousElementSibling as HTMLElement | null) ?? h2;
+}
+
+/**
+ * Mide la página y calcula el trazo: sale de la pieza del hero (`data-cinta-inicio`; en la home, la escena del taller),
+ * para en cada sección y acaba en el logo del pie.
+ */
 function medir(): Geometria | null {
   const secciones = [...document.querySelectorAll<HTMLElement>("main section[data-fondo]")];
-  const escena = document.querySelector<HTMLElement>('[data-pieza="taller"]');
+  const escena = document.querySelector<HTMLElement>('[data-cinta-inicio], [data-pieza="taller"]');
   const logoPie = document.querySelector<HTMLElement>("footer img");
   if (secciones.length < 2 || !escena || !logoPie) return null;
 
   const y0 = window.scrollY;
   const ancho = document.documentElement.clientWidth;
   const movil = ancho < 768;
-  const etiquetas = secciones.slice(1).map((s) => s.querySelector<HTMLElement>("h2")?.previousElementSibling as HTMLElement | null);
+  const etiquetas = secciones.slice(1).map(paradaDe);
   if (etiquetas.some((e) => !e)) return null;
 
   const rEscena = escena.getBoundingClientRect();
-  const izquierdaContenido = etiquetas[0]!.getBoundingClientRect().left;
+  // Borde izquierdo del contenido: la parada más a la izquierda (algunas van en la columna derecha).
+  const izquierdaContenido = Math.min(...etiquetas.map((e) => e!.getBoundingClientRect().left));
   const { izquierda, derecha } = margenesHilo(ancho, izquierdaContenido);
   const rLogo = logoPie.getBoundingClientRect();
   const pie = logoPie.closest("footer")!.getBoundingClientRect();
