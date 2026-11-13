@@ -18,11 +18,12 @@ describe("urlDelSitio", () => {
 });
 
 describe("datosEstructuradosEmpresa", () => {
-  it("incluye Organization y LocalBusiness en Donostia (Gipuzkoa)", () => {
+  it("incluye WebSite, Organization (con logo) y LocalBusiness en Donostia (Gipuzkoa)", () => {
     const datos = datosEstructuradosEmpresa(new URL("https://noderia.es"));
     const tipos = datos["@graph"].map((n) => n["@type"]);
-    expect(tipos).toEqual(["Organization", "LocalBusiness"]);
-    const negocio = datos["@graph"][1]!;
+    expect(tipos).toEqual(["WebSite", "Organization", "LocalBusiness"]);
+    expect(datos["@graph"][1]).toMatchObject({ logo: "https://noderia.es/marca/isotipo.png" });
+    const negocio = datos["@graph"][2]!;
     expect(negocio.address).toMatchObject({
       addressLocality: "Donostia / San Sebastián",
       addressRegion: "Gipuzkoa",

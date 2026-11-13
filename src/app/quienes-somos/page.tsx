@@ -200,7 +200,6 @@ function IsotipoConNodos() {
           </radialGradient>
         </defs>
         <circle cx="200" cy="200" r="190" fill="url(#qs-halo)" />
-        <circle cx="200" cy="200" r="168" stroke="url(#qs-nodos)" strokeOpacity="0.35" strokeDasharray="2 10" strokeLinecap="round" />
         <path d="M20 300 C 90 260, 120 330, 200 300 S 330 230, 390 260" stroke="url(#qs-nodos)" strokeOpacity="0.45" strokeWidth="1.2" />
         <path d="M10 110 C 80 140, 140 70, 220 90 S 340 60, 395 120" stroke="url(#qs-nodos)" strokeOpacity="0.35" strokeWidth="1" />
         {[

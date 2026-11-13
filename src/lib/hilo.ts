@@ -138,6 +138,8 @@ export function medidasCinta(anchoVentana: number) {
     reflejo: Math.max(1.5, grosor * 0.26),
     desplazamientoReflejo: anchoVentana < 768 ? 1.5 : 2.5,
     /** Radio de las esferas de las paradas. */
-    esfera: anchoVentana < 768 ? 6 : grosor * 0.8 + 1,
+    esfera: anchoVentana < 768 ? 4.5 : grosor * 0.8 + 1,
+    /** Radio del halo de la esfera: en móvil más corto para no rozar las etiquetas (que empiezan a 16 px). */
+    halo: anchoVentana < 768 ? 4.5 * 1.9 : (grosor * 0.8 + 1) * 2.4,
   };
 }

@@ -208,7 +208,7 @@ export function HiloConductor() {
       />
       {esferas.map((p) => (
         <g key={`${p.x}-${p.y}`} data-parada className="cinta-esfera" transform={`translate(${p.x} ${p.y})`}>
-          <circle className="cinta-esfera-halo" r={m.esfera * 2.4} fill="url(#hilo-halo)" />
+          <circle className="cinta-esfera-halo" r={m.halo} fill="url(#hilo-halo)" />
           <circle r={m.esfera} fill="url(#cinta-esfera)" />
           <circle cx={-m.esfera * 0.32} cy={-m.esfera * 0.36} r={m.esfera * 0.3} fill="#FFFFFF" fillOpacity="0.85" />
         </g>

@@ -1,26 +1,12 @@
 import { enviarSolicitud } from "@/app/acciones/presupuesto";
 import { FormularioPresupuesto } from "@/components/inicio/FormularioPresupuesto";
+import { RazonesPresupuesto } from "@/components/inicio/RazonesPresupuesto";
 import { TituloPagina } from "@/components/paginas/TituloPagina";
-import { Icono, type NombreIcono } from "@/components/ui/Icono";
 import { Migas } from "@/components/ui/Migas";
 import { CONTENEDOR } from "@/components/ui/Seccion";
 import { metadatosPagina, migasDe, PAGINAS } from "@/lib/seo";
 
 export const metadata = metadatosPagina(PAGINAS.presupuesto);
-
-const RAZONES: { titulo: string; texto: string; icono: NombreIcono }[] = [
-  { titulo: "A tu medida", texto: "El sistema se adapta a cómo trabajas tú, no al revés.", icono: "panel" },
-  {
-    titulo: "Base probada en un taller real",
-    texto: "Partimos de un sistema que ya funciona en un taller de verdad.",
-    icono: "check",
-  },
-  {
-    titulo: "Equipo cercano en Gipuzkoa",
-    texto: "Trato directo con quien construye tu sistema.",
-    icono: "acompanamiento",
-  },
-];
 
 /** Página de presupuesto (SPEC v3 §3): el mismo formulario de la home, solo, con tres razones al lado. */
 export default function PaginaPresupuesto() {
@@ -45,19 +31,7 @@ export default function PaginaPresupuesto() {
             intro="Cuéntanos cómo trabajas y qué te gustaría mejorar. Te llamamos en menos de 24 horas laborables."
           />
           <h2 className="sr-only">Por qué NoderIA</h2>
-          <ul className="mt-12 flex flex-col gap-6">
-            {RAZONES.map((razon) => (
-              <li key={razon.titulo} className="flex gap-4">
-                <span className="grid size-12 shrink-0 place-items-center rounded-xl border border-white/15 bg-white/5 text-aqua">
-                  <Icono nombre={razon.icono} className="size-6" />
-                </span>
-                <div>
-                  <h3 className="font-display text-lg font-semibold">{razon.titulo}</h3>
-                  <p className="mt-1 text-white/70">{razon.texto}</p>
-                </div>
-              </li>
-            ))}
-          </ul>
+          <RazonesPresupuesto className="mt-12" />
         </div>
         <div className="lg:col-span-7 lg:pt-16">
           <h2 className="sr-only">Formulario de presupuesto</h2>

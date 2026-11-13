@@ -30,14 +30,12 @@ export const metadata: Metadata = {
   },
   description: DESCRIPCION,
   applicationName: NOMBRE,
-  alternates: { canonical: "/" },
+  // Sin canonical ni og:url/og:title aquí: cada página pone los suyos (la 404 y las legales no heredan los de la home).
   openGraph: {
     type: "website",
     locale: "es_ES",
     siteName: NOMBRE,
-    title: "Tu taller, conectado de punta a punta | NoderIA",
     description: DESCRIPCION,
-    url: "/",
   },
   twitter: { card: "summary_large_image" },
 };

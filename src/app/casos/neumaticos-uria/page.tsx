@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { LogoUria } from "@/components/marca/LogoUria";
 import { Boton } from "@/components/ui/Boton";
 import { Icono } from "@/components/ui/Icono";
@@ -12,6 +13,16 @@ import { Migas } from "@/components/ui/Migas";
 import { metadatosPagina, migasDe, PAGINAS } from "@/lib/seo";
 
 export const metadata = metadatosPagina(PAGINAS.casoUria);
+
+/** Solución de la web que desarrolla cada pieza implantada en Uría. */
+const SOLUCION_DE: Record<(typeof IMPLANTADO_URIA)[number], string> = {
+  "Web pública con reservas online": PAGINAS.web.ruta,
+  "Panel de citas": PAGINAS.software.ruta,
+  "Clientes y vehículos": PAGINAS.software.ruta,
+  Recordatorios: PAGINAS.automatizaciones.ruta,
+  Métricas: PAGINAS.software.ruta,
+  Comunicaciones: PAGINAS.automatizaciones.ruta,
+};
 
 const RETOS = [
   "Las citas llegaban por canales distintos y dependían de otros para gestionarlas.",
@@ -39,7 +50,9 @@ export default function CasoNeumaticosUria() {
           <h1 className="mt-5 max-w-3xl text-4xl font-extrabold leading-[1.05] tracking-[-0.02em] sm:text-6xl">
             Caso de éxito: software y web para Neumáticos Uría
           </h1>
-          <p className="mt-6 max-w-2xl text-lg text-white/80 sm:text-xl">{RESULTADO_URIA}</p>
+          <p className="mt-6 max-w-2xl text-lg text-white/80 sm:text-xl">
+            Cómo este taller de neumáticos de Hernani gestiona sus citas con su propia web y su propio panel de gestión.
+          </p>
         </div>
       </header>
 
@@ -73,9 +86,16 @@ export default function CasoNeumaticosUria() {
           </p>
           <ul className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {IMPLANTADO_URIA.map((punto) => (
-              <li key={punto} className="flex items-center gap-3 rounded-2xl bg-mist p-5 font-medium">
-                <Icono nombre="check" className="size-6 shrink-0 text-electric" />
-                {punto}
+              <li key={punto}>
+                {/* Cada pieza enlaza a la solución que la desarrolla (enlazado interno, SPEC v3 §1). */}
+                <Link
+                  href={SOLUCION_DE[punto]}
+                  className="group flex items-center gap-3 rounded-2xl bg-mist p-5 font-medium hover:text-electric focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-electric"
+                >
+                  <Icono nombre="check" className="size-6 shrink-0 text-electric" />
+                  {punto}
+                  <span aria-hidden="true" className="ml-auto text-electric transition-transform group-hover:translate-x-1 motion-reduce:transition-none">→</span>
+                </Link>
               </li>
             ))}
           </ul>

@@ -38,7 +38,8 @@ describe("Qué incluye", () => {
     const { container } = render(<QueIncluye />);
     expect(container.querySelector("section#que-incluye")).not.toBeNull();
     expect(screen.getByRole("heading", { level: 2, name: "Software, web y automatizaciones para tu taller" })).toBeInTheDocument();
-    expect(screen.getByText("Estos son los bloques principales. Cada proyecto se adapta a tu taller.")).toBeInTheDocument();
+    expect(screen.getByText(/Tres soluciones que funcionan juntas/)).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "programa de gestión para talleres" })).toHaveAttribute("href", "/software-gestion-talleres");
     const bloques = container.querySelectorAll("[data-bloque]");
     expect(bloques).toHaveLength(9);
     BLOQUES.forEach(([titulo, texto], i) => {

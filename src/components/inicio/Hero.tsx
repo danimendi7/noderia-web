@@ -63,7 +63,7 @@ export function Hero({ escena }: HeroProps) {
           </div>
         </div>
         {/* Escena más grande (sobresale hacia la derecha) y en capas con parallax (SPEC v3 §7). */}
-        <div className="relative lg:col-span-6 lg:-mr-4 xl:-mr-12"> 
+        <div className="relative lg:col-span-6 xl:-mr-6">
           <div className="parallax-capa lg:scale-[1.04] xl:scale-[1.08]" style={{ "--profundidad": 10 } as CSSProperties}>
             {escena}
           </div>

@@ -54,4 +54,11 @@ describe("MenuMovil", () => {
     fireEvent.click(screen.getByRole("link", { name: "Caso de éxito" }));
     expect(boton()).toHaveAttribute("aria-expanded", "false");
   });
+
+  it("se cierra al tocar fuera del menú", () => {
+    render(<MenuMovil />);
+    fireEvent.click(boton());
+    fireEvent.pointerDown(document.body);
+    expect(boton()).toHaveAttribute("aria-expanded", "false");
+  });
 });

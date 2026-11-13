@@ -101,3 +101,10 @@ describe("medidasCinta", () => {
     expect(12 + m.brillo / 2).toBeLessThanOrEqual(24);
   });
 });
+
+describe("medidasCinta en móvil", () => {
+  it("la esfera y su halo no llegan a las etiquetas, que empiezan a 16 px (la cinta va a 6 px)", () => {
+    const m = medidasCinta(390);
+    expect(6 + m.halo).toBeLessThan(16);
+  });
+});

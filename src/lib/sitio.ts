@@ -41,10 +41,19 @@ export function datosEstructuradosEmpresa(base: URL) {
     "@context": "https://schema.org",
     "@graph": [
       {
+        "@type": "WebSite",
+        "@id": `${url}#web`,
+        url,
+        name: NOMBRE,
+        inLanguage: "es",
+        publisher: { "@id": `${url}#organizacion` },
+      },
+      {
         "@type": "Organization",
         "@id": `${url}#organizacion`,
         name: NOMBRE,
         url,
+        logo: new URL("/marca/isotipo.png", base).toString(),
         description: DESCRIPCION,
         address: direccion,
       },
@@ -53,6 +62,7 @@ export function datosEstructuradosEmpresa(base: URL) {
         "@id": `${url}#negocio`,
         name: NOMBRE,
         url,
+        image: new URL("/marca/isotipo.png", base).toString(),
         description:
           "Software para talleres mecánicos y de neumáticos: web y sistema de gestión a medida, implantación y acompañamiento.",
         address: direccion,

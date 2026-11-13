@@ -95,3 +95,27 @@ test("el pie enlaza las soluciones y las páginas legales", async ({ page }) => 
   }
   await expect(pie).toContainText("Donostia / San Sebastián");
 });
+
+// Revisión final (T48): en móvil el botón "Presupuesto" y el de menú caben enteros en la cabecera.
+for (const ancho of [380, 390, 414]) {
+  test(`a ${ancho} px la cabecera muestra Presupuesto y el botón de menú enteros`, async ({ page }, info) => {
+    test.skip(info.project.name === "movil", "Los anchos se fijan a mano: basta con una pasada");
+    await page.setViewportSize({ width: ancho, height: 800 });
+    await page.goto("/");
+    const cabecera = page.getByRole("banner");
+    for (const control of [cabecera.getByRole("link", { name: "Presupuesto", exact: true }), cabecera.getByRole("button", { name: "Abrir menú" })]) {
+      const caja = (await control.boundingBox())!;
+      expect(caja.x).toBeGreaterThanOrEqual(0);
+      expect(caja.x + caja.width).toBeLessThanOrEqual(ancho);
+    }
+  });
+}
+
+test("en móvil el menú se cierra al navegar desde fuera de él (logo)", async ({ page, isMobile }) => {
+  test.skip(!isMobile, "solo móvil");
+  await page.goto("/quienes-somos");
+  await page.getByRole("button", { name: "Abrir menú" }).click();
+  await page.getByRole("banner").getByRole("link", { name: /NoderIA/ }).first().click();
+  await expect(page).toHaveURL(/\/$/);
+  await expect(page.getByRole("navigation", { name: "Menú principal" })).toBeHidden();
+});
