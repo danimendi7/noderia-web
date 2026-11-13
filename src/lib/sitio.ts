@@ -18,6 +18,7 @@ export const DESCRIPCION =
 export const RUTAS_PUBLICAS = [
   "/",
   "/casos/neumaticos-uria",
+  "/presupuesto",
   "/aviso-legal",
   "/privacidad",
   "/cookies",

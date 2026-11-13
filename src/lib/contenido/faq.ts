@@ -1,3 +1,5 @@
+import { datosFaq } from "@/lib/seo";
+
 /** Preguntas frecuentes de la home (SPEC F3.9). Se usan en el acordeón y en los datos estructurados FAQPage. */
 export const PREGUNTAS_FRECUENTES = [
   {
@@ -23,13 +25,5 @@ export const PREGUNTAS_FRECUENTES = [
 ] as const;
 
 export function datosEstructuradosFaq() {
-  return {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: PREGUNTAS_FRECUENTES.map(({ pregunta, respuesta }) => ({
-      "@type": "Question",
-      name: pregunta,
-      acceptedAnswer: { "@type": "Answer", text: respuesta },
-    })),
-  };
+  return datosFaq(PREGUNTAS_FRECUENTES);
 }
