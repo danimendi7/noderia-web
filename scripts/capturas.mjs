@@ -3,7 +3,8 @@
 //   BASE_URL=<url> node scripts/capturas.mjs T27 antes '#que-incluye'
 // Sin selector captura la página completa. Se guardan en docs/capturas/<tarea>/<fase>-<ancho>-<nombre>.jpg.
 // Se omite la pantalla de carga (sessionStorage) y se emula movimiento reducido: así cada captura muestra
-// el estado final de las animaciones y es reproducible.
+// el estado final de las animaciones y es reproducible. Con MOVIMIENTO=1 se captura con animaciones
+// (lo que se ve en pantalla con el elemento centrado), para efectos que solo existen con movimiento.
 import { mkdir } from "node:fs/promises";
 import { join } from "node:path";
 import { chromium } from "@playwright/test";
@@ -33,7 +34,7 @@ try {
       deviceScaleFactor: 1,
       isMobile: movil,
       hasTouch: movil,
-      reducedMotion: "reduce",
+      reducedMotion: process.env.MOVIMIENTO ? "no-preference" : "reduce",
       extraHTTPHeaders: bypass
         ? { "x-vercel-protection-bypass": bypass, "x-vercel-set-bypass-cookie": "true", "x-vercel-skip-toolbar": "1" }
         : {},
@@ -55,7 +56,14 @@ try {
     for (const selector of selectores.length ? selectores : [null]) {
       const archivo = join(carpeta, `${fase}-${ancho}-${nombreDe(selector)}.jpg`);
       const opciones = { path: archivo, type: "jpeg", quality: 70 };
-      if (selector) await pagina.locator(selector).first().screenshot(opciones);
+      if (selector && process.env.MOVIMIENTO) {
+        await pagina.locator(selector).first().evaluate((el) => {
+          const r = el.getBoundingClientRect();
+          window.scrollBy(0, r.top + r.height / 2 - innerHeight * 0.55);
+        });
+        await pagina.waitForTimeout(1200);
+        await pagina.screenshot({ ...opciones, path: archivo.replace(".jpg", "-movimiento.jpg") });
+      } else if (selector) await pagina.locator(selector).first().screenshot(opciones);
       else await pagina.screenshot({ ...opciones, fullPage: true });
       console.log(archivo);
     }
