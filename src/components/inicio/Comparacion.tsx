@@ -8,8 +8,8 @@ export function Comparacion() {
     <Seccion
       idTitulo="titulo-comparacion"
       etiqueta="La diferencia"
-      titulo="No es otro programa más"
-      destacado="otro programa"
+      titulo="No es otro programa de taller más"
+      destacado="otro programa de taller"
       fondo="midnight"
       desde="mist"
     >

@@ -1,6 +1,7 @@
 import { PantallaCarga } from "@/components/carga/PantallaCarga";
 import { BucleEscena } from "@/components/escena/BucleEscena";
 import { Escena } from "@/components/escena/Escena";
+import { AnclaInicial } from "@/components/movimiento/AnclaInicial";
 import { EntradasAlScroll } from "@/components/movimiento/EntradasAlScroll";
 import { CasoUria } from "@/components/inicio/CasoUria";
 import { ComoFunciona } from "@/components/inicio/ComoFunciona";
@@ -12,6 +13,9 @@ import { Preguntas } from "@/components/inicio/Preguntas";
 import { Presupuesto } from "@/components/inicio/Presupuesto";
 import { Problema } from "@/components/inicio/Problema";
 import { QueIncluye } from "@/components/inicio/QueIncluye";
+import { metadatosPagina, PAGINAS } from "@/lib/seo";
+
+export const metadata = metadatosPagina(PAGINAS.inicio);
 
 /** Home. Las secciones se van completando tarea a tarea (ver PROGRESS.md). */
 export default function Inicio() {
@@ -38,6 +42,7 @@ export default function Inicio() {
       <Presupuesto />
       <HiloConductor />
       <EntradasAlScroll />
+      <AnclaInicial />
     </>
   );
 }

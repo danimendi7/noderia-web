@@ -4,17 +4,17 @@ test("el H1 del hero llega en el HTML del servidor", async ({ request }) => {
   const respuesta = await request.get("/");
   const html = await respuesta.text();
   const h1 = html.match(/<h1[^>]*>([\s\S]*?)<\/h1>/)?.[1] ?? "";
-  // El titular va partido en palabras (SPEC v2, S1), pero el texto es el mismo y "punta a punta" lleva el degradado.
+  // El titular va partido en palabras (SPEC v2, S1), pero el texto es el mismo y "talleres mecánicos" lleva el degradado (SPEC v3 §2).
   const texto = h1.replace(/<!--.*?-->/g, "").replace(/<[^>]+>/g, "").replace(/\s+/g, " ").trim();
-  expect(texto).toBe("Tu taller, conectado de punta a punta");
-  expect(h1).toMatch(/<span[^>]*texto-marca-oscuro[^>]*>punta a punta<\/span>/);
+  expect(texto).toBe("Programa de gestión y web a medida para talleres mecánicos");
+  expect(h1).toMatch(/<span[^>]*texto-marca-oscuro[^>]*>talleres mecánicos<\/span>/);
 });
 
 test("el hero tiene un único H1 y sus dos llamadas a la acción", async ({ page }) => {
   await page.goto("/");
   await expect(page.getByRole("heading", { level: 1 })).toHaveCount(1);
   const hero = page.locator("section", { has: page.getByRole("heading", { level: 1 }) });
-  await expect(hero.getByRole("link", { name: "Pide presupuesto" })).toHaveAttribute("href", "/#presupuesto");
+  await expect(hero.getByRole("link", { name: "Pide presupuesto" })).toHaveAttribute("href", "/presupuesto");
   await hero.getByRole("link", { name: "Ver cómo funciona" }).click();
   await expect(page.locator("#como-funciona")).toBeInViewport();
 });
@@ -31,7 +31,7 @@ test("el titular entra por palabras al acabar la carga y el H1 sigue siendo el L
   });
   await page.goto("/");
   const palabras = page.locator("h1 .hero-palabra");
-  await expect(palabras).toHaveCount(5);
+  await expect(palabras).toHaveCount(9);
   await expect(page.locator("#pantalla-carga")).toHaveAttribute("data-estado", "terminada", { timeout: 8_000 });
   await expect(page.locator("html")).toHaveAttribute("data-carga", "saliendo");
   // Cada palabra tiene su animación y termina visible y en su sitio.

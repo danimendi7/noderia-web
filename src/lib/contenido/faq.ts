@@ -22,6 +22,19 @@ export const PREGUNTAS_FRECUENTES = [
     pregunta: "¿Tengo que cambiar mi forma de trabajar?",
     respuesta: "No, el sistema se adapta a ti.",
   },
+  {
+    pregunta: "¿Sirve para talleres de neumáticos?",
+    respuesta: "Sí. Lo adaptamos a talleres mecánicos, de neumáticos y de otros servicios del automóvil.",
+  },
+  {
+    pregunta: "¿Mis clientes pueden pedir cita online?",
+    respuesta: "Sí. La web incluye un formulario de cita que llega directamente a tu agenda.",
+  },
+  {
+    pregunta: "¿Cómo funcionan los recordatorios de ITV y revisiones?",
+    respuesta:
+      "El sistema detecta cuándo le toca a cada vehículo y avisa al cliente automáticamente, sin que tengas que acordarte tú.",
+  },
 ] as const;
 
 export function datosEstructuradosFaq() {

@@ -9,11 +9,14 @@ test("robots.txt y sitemap.xml responden", async ({ request }) => {
   const xml = await sitemap.text();
   expect(xml).toContain("/casos/neumaticos-uria");
   expect(xml).toContain("/privacidad");
+  for (const ruta of ["/software-gestion-talleres", "/diseno-web-talleres", "/automatizaciones-talleres", "/presupuesto"]) {
+    expect(xml).toContain(ruta);
+  }
 });
 
 test("la home tiene title, description, Open Graph con imagen y datos estructurados", async ({ page, request }) => {
   await page.goto("/");
-  await expect(page).toHaveTitle(/programa de gestión de taller/i);
+  await expect(page).toHaveTitle("Programa de gestión y web para talleres mecánicos | NoderIA");
   const descripcion = await page.locator('meta[name="description"]').getAttribute("content");
   expect(descripcion?.length).toBeGreaterThan(80);
   const ogImagen = await page.locator('meta[property="og:image"]').getAttribute("content");

@@ -58,7 +58,7 @@ describe("Caso real: Neumáticos Uría", () => {
 describe("Cómo trabajamos", () => {
   it("son 4 pasos en orden", () => {
     render(<ComoTrabajamos />);
-    expect(screen.getByRole("heading", { level: 2, name: "Así lo ponemos en marcha" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { level: 2, name: "Así implantamos tu software, paso a paso" })).toBeInTheDocument();
     const lista = screen.getByRole("list");
     expect(lista.tagName).toBe("OL");
     const pasos = within(lista).getAllByRole("listitem");

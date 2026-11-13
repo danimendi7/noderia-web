@@ -16,5 +16,6 @@ test("el caso tiene la cita exacta y lleva a pedir presupuesto", async ({ page }
   await expect(page.locator("blockquote")).toHaveText(`«${CITA}»`);
   await expect(page.locator("figcaption")).toHaveText("Mónica, Neumáticos Uría (Hernani)");
   await page.getByRole("main").getByRole("link", { name: "Pide presupuesto" }).last().click();
-  await expect(page.locator("#presupuesto")).toBeInViewport();
+  await expect(page).toHaveURL(/\/presupuesto$/);
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("Pide presupuesto para tu taller");
 });

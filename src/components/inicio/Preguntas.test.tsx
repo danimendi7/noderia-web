@@ -48,15 +48,15 @@ describe("Acordeon", () => {
 });
 
 describe("Preguntas frecuentes", () => {
-  it("tiene ancla, H2, las 5 preguntas y JSON-LD FAQPage", () => {
+  it("tiene ancla, H2, las 8 preguntas (5 + 3 de la SPEC v3) y JSON-LD FAQPage", () => {
     const { container } = render(<Preguntas />);
     expect(container.querySelector("section#preguntas")).not.toBeNull();
-    expect(screen.getByRole("heading", { level: 2, name: "Preguntas frecuentes" })).toBeInTheDocument();
-    expect(screen.getAllByRole("button")).toHaveLength(5);
+    expect(screen.getByRole("heading", { level: 2, name: "Preguntas sobre nuestro programa para talleres" })).toBeInTheDocument();
+    expect(screen.getAllByRole("button")).toHaveLength(8);
     const script = container.querySelector('script[type="application/ld+json"]');
     const datos = JSON.parse(script!.textContent!);
     expect(datos["@type"]).toBe("FAQPage");
-    expect(datos.mainEntity).toHaveLength(5);
+    expect(datos.mainEntity).toHaveLength(8);
     expect(datos.mainEntity[0]).toEqual({
       "@type": "Question",
       name: "¿Cuánto cuesta?",
@@ -69,7 +69,7 @@ describe("Preguntas frecuentes", () => {
 
   it("el H2 va en la columna izquierda, fijo en escritorio", () => {
     render(<Preguntas />);
-    const titulo = screen.getByRole("heading", { level: 2, name: "Preguntas frecuentes" });
+    const titulo = screen.getByRole("heading", { level: 2, name: "Preguntas sobre nuestro programa para talleres" });
     expect(titulo.closest(".lg\\:sticky")).not.toBeNull();
   });
 

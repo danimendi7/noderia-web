@@ -50,7 +50,7 @@ export function ComoFunciona() {
       <AnimacionPasos className={`${CONTENEDOR} ${ESPACIADO_SECCION}`}>
         <CabeceraSeccion
           etiqueta="Cómo funciona"
-          titulo="De la cita a la próxima revisión, todo conectado"
+          titulo="De la cita online a la próxima revisión, todo conectado"
           destacado="todo conectado"
           idTitulo="titulo-como-funciona"
           entradilla="Así es un día con tu taller en marcha."

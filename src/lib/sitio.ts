@@ -13,7 +13,7 @@ export function urlDelSitio(): URL {
 export const NOMBRE = "NoderIA";
 
 export const DESCRIPCION =
-  "Programa de gestión de taller y web a medida para talleres mecánicos y de neumáticos: citas online, órdenes de trabajo, avisos y clientes en un solo sistema. Desde Donostia / San Sebastián. Pide presupuesto.";
+  "Software de gestión y web a medida para talleres mecánicos y de neumáticos: citas online, agenda, recordatorios de ITV y avisos automáticos. Desde Donostia / San Sebastián.";
 
 export const RUTAS_PUBLICAS = [
   "/",

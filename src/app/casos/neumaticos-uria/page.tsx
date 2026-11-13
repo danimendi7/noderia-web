@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import { LogoUria } from "@/components/marca/LogoUria";
 import { Boton } from "@/components/ui/Boton";
 import { Icono } from "@/components/ui/Icono";
@@ -7,16 +6,12 @@ import {
   CITA_URIA,
   IMPLANTADO_URIA,
   RESULTADO_URIA,
-  RUTA_CASO_URIA,
 } from "@/lib/contenido/uria";
 import { ENLACE_PRESUPUESTO } from "@/lib/navegacion";
+import { Migas } from "@/components/ui/Migas";
+import { metadatosPagina, migasDe, PAGINAS } from "@/lib/seo";
 
-export const metadata: Metadata = {
-  title: "Caso real: Neumáticos Uría (Hernani)",
-  description:
-    "Cómo Neumáticos Uría, taller de neumáticos de Hernani, pasó a gestionar sus citas con su propia web y su propio programa de gestión de taller, sin depender de terceros.",
-  alternates: { canonical: RUTA_CASO_URIA },
-};
+export const metadata = metadatosPagina(PAGINAS.casoUria);
 
 const RETOS = [
   "Las citas llegaban por canales distintos y dependían de otros para gestionarlas.",
@@ -38,10 +33,11 @@ export default function CasoNeumaticosUria() {
           aria-hidden="true"
           className="absolute -right-40 top-1/2 -z-10 size-[40rem] -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgb(0_104_224/0.35)_0%,transparent_65%)]"
         />
-        <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 md:py-24 lg:px-8">
-          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-aqua">Caso real · Hernani</p>
+        <div className="mx-auto max-w-7xl px-4 pb-16 pt-10 sm:px-6 md:pb-24 md:pt-14 lg:px-8">
+          <Migas migas={migasDe(PAGINAS.casoUria)} />
+          <p className="mt-10 text-sm font-semibold uppercase tracking-[0.2em] text-aqua">Caso de éxito · Hernani</p>
           <h1 className="mt-5 max-w-3xl text-4xl font-extrabold leading-[1.05] tracking-[-0.02em] sm:text-6xl">
-            Neumáticos Uría: sus citas, en su propio sistema
+            Caso de éxito: software y web para Neumáticos Uría
           </h1>
           <p className="mt-6 max-w-2xl text-lg text-white/80 sm:text-xl">{RESULTADO_URIA}</p>
         </div>

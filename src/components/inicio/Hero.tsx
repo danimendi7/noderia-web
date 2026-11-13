@@ -7,8 +7,9 @@ type HeroProps = {
   escena?: ReactNode;
 };
 
-/** Palabras del titular antes de "punta a punta", que entra como un solo bloque para no partir el degradado. */
-const PALABRAS_TITULAR = ["Tu", "taller,", "conectado", "de"];
+/** Palabras del titular antes de "talleres mecánicos", que entra como un solo bloque para no partir el degradado. */
+const PALABRAS_TITULAR = ["Programa", "de", "gestión", "y", "web", "a", "medida", "para"];
+const DESTACADO_TITULAR = "talleres mecánicos";
 
 /** Posición en la entrada escalonada (la usa el CSS para el retraso). */
 function orden(i: number) {
@@ -31,11 +32,11 @@ export function Hero({ escena }: HeroProps) {
       <div className="mx-auto grid max-w-7xl items-center gap-12 px-4 pb-20 pt-14 sm:px-6 md:pt-20 lg:min-h-[calc(100svh-4rem)] lg:grid-cols-12 lg:px-8 lg:py-16">
         <div className="lg:col-span-6">
           <p className="hero-entra font-sans text-sm font-semibold uppercase tracking-[0.2em] text-aqua" style={orden(0)}>
-            Software para talleres
+            Tu taller, conectado de punta a punta
           </p>
           <h1
             id="titulo-hero"
-            className="mt-5 text-[2.6rem] font-extrabold leading-[1.02] tracking-[-0.02em] sm:text-6xl lg:text-[4.5rem]"
+            className="mt-5 text-[2.35rem] font-extrabold leading-[1.04] tracking-[-0.02em] sm:text-[3.4rem] lg:text-[3.6rem] xl:text-[4rem]"
           >
             {PALABRAS_TITULAR.map((palabra, i) => (
               <Fragment key={palabra}>
@@ -46,12 +47,12 @@ export function Hero({ escena }: HeroProps) {
               </Fragment>
             ))}{" "}
             <span className="hero-palabra texto-marca-oscuro" style={orden(PALABRAS_TITULAR.length)}>
-              punta a punta
+              {DESTACADO_TITULAR}
             </span>
           </h1>
           <p className="hero-entra mt-6 max-w-[34rem] text-lg text-white/80 sm:text-xl" style={orden(1)}>
-            Citas, órdenes de trabajo, avisos y clientes en un solo sistema, hecho a medida para tu
-            taller. Y con una web nueva que te trae las citas directamente.
+            Citas online, agenda en tiempo real, recordatorios de ITV y revisiones y avisos automáticos
+            por email y WhatsApp. Todo conectado y hecho a la medida de tu taller.
           </p>
           <div className="hero-entra mt-9 flex flex-wrap items-center gap-x-8 gap-y-4" style={orden(2)}>
             <Boton href={ENLACE_PRESUPUESTO}>Pide presupuesto</Boton>

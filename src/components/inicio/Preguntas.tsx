@@ -21,9 +21,9 @@ export function Preguntas() {
       <div className={`${CONTENEDOR} ${ESPACIADO_SECCION} grid gap-12 md:gap-16 lg:grid-cols-12`}>
         <div className="lg:col-span-5">
           <CabeceraSeccion
-            etiqueta="Antes de empezar"
-            titulo="Preguntas frecuentes"
-            destacado="frecuentes"
+            etiqueta="Preguntas frecuentes"
+            titulo="Preguntas sobre nuestro programa para talleres"
+            destacado="programa para talleres"
             idTitulo="titulo-preguntas"
             tono="claro"
             className="lg:sticky lg:top-28"
