@@ -21,7 +21,7 @@ test.describe("con movimiento reducido", () => {
   });
 });
 
-test("en escritorio la escena fija cambia de ilustración con el paso activo", async ({ page }, info) => {
+test("en escritorio la escena fija cambia de vídeo con el paso activo y solo reproduce ese", async ({ page }, info) => {
   test.skip(info.project.name === "movil", "La escena fija solo existe en escritorio");
   await page.addInitScript((clave) => sessionStorage.setItem(clave, "1"), CLAVE_CARGA_VISTA);
   await page.setViewportSize({ width: 1440, height: 900 });
@@ -36,7 +36,11 @@ test("en escritorio la escena fija cambia de ilustración con el paso activo", a
     await expect(raiz).toHaveAttribute("data-paso-activo", paso);
     await expect(escena.locator(`[data-escena-paso="${paso}"]`)).toHaveCSS("opacity", "1");
     // La escena sigue a la vista (sticky) mientras se recorren los pasos.
-    await expect(escena.locator(`[data-escena-paso="${paso}"] img`).first()).toBeInViewport();
+    const video = escena.locator(`[data-escena-paso="${paso}"] video`);
+    await expect(video).toBeInViewport();
+    // Solo se reproduce el vídeo del paso activo (T36).
+    await expect.poll(() => video.evaluate((v: HTMLVideoElement) => !v.paused)).toBe(true);
+    expect(await escena.locator("video").evaluateAll((vs) => vs.filter((v) => !(v as HTMLVideoElement).paused).length)).toBe(1);
   }
 });
 

@@ -1,11 +1,12 @@
 import { CabeceraSeccion } from "@/components/ui/CabeceraSeccion";
 import { Ilustracion } from "@/components/ui/Ilustracion";
+import { GrupoVideos, type NombreVideo, VideoBucle } from "@/components/movimiento/VideoBucle";
 import { CONTENEDOR, ESPACIADO_SECCION, Fundido } from "@/components/ui/Seccion";
 import type { NombreIlustracion } from "@/lib/ilustraciones";
 import { ANCLAS } from "@/lib/navegacion";
 import { AnimacionPasos } from "./AnimacionPasos";
 
-const PASOS: { titulo: string; texto: string; ilustracion: NombreIlustracion }[] = [
+const PASOS: { titulo: string; texto: string; ilustracion: NombreIlustracion & NombreVideo }[] = [
   {
     titulo: "El cliente pide cita desde tu web, a cualquier hora",
     texto: "Elige el día y lo que necesita su coche, aunque sean las once de la noche.",
@@ -57,19 +58,20 @@ export function ComoFunciona() {
         />
 
         <div className="mt-12 grid gap-12 md:mt-16 lg:grid-cols-12 lg:gap-16">
-          {/* Escenario fijo (solo escritorio y con movimiento): una ilustración por paso. */}
-          <div aria-hidden="true" className="escena-fija hidden lg:col-span-6 lg:block">
-            <div className="sticky top-[max(6rem,calc(50vh+2rem-14.4rem))] aspect-[5/4] max-h-[min(34rem,calc(100vh-9rem))] w-full overflow-hidden rounded-3xl bg-mist">
-              <div className="absolute inset-0 bg-[radial-gradient(60%_55%_at_50%_55%,rgb(0_176_240/0.16)_0%,rgb(0_104_224/0.06)_45%,transparent_75%)]" />
+          {/* Escenario fijo (solo escritorio y con movimiento): un vídeo en bucle de Higgsfield por paso (T36); solo se
+              reproduce el del paso activo y hay un botón de pausa común. Cada capa lleva el fondo detrás del vídeo
+              porque su transform crea un grupo aislado y el blanco del vídeo se funde (multiply) con ese fondo. */}
+          <div className="escena-fija hidden lg:col-span-6 lg:block">
+            <GrupoVideos etiqueta="Pausar vídeo de cómo funciona" className="sticky top-[max(6rem,calc(50vh+2rem-14.4rem))] aspect-[5/4] max-h-[min(34rem,calc(100vh-9rem))] w-full overflow-hidden rounded-3xl bg-mist">
               {PASOS.map((paso, indice) => (
-                <div key={paso.ilustracion} data-escena-paso={indice + 1} className="escena-paso absolute inset-0 grid place-items-center p-12">
-                  <Ilustracion nombre={paso.ilustracion} className="h-[78%] w-[70%]" />
+                <div key={paso.ilustracion} aria-hidden="true" data-escena-paso={indice + 1} className="escena-paso absolute inset-0 bg-mist bg-[radial-gradient(60%_55%_at_50%_55%,rgb(0_176_240/0.16)_0%,rgb(0_104_224/0.06)_45%,transparent_75%)]">
+                  <VideoBucle nombre={paso.ilustracion} paso={indice + 1} className="size-full object-cover" />
                   {indice === PASOS.length - 1 ? (
                     <Ilustracion nombre="llave-entrega" className="escena-llave absolute bottom-[12%] right-[10%] w-[22%]" />
                   ) : null}
                 </div>
               ))}
-            </div>
+            </GrupoVideos>
           </div>
 
           <div className="relative lg:col-span-6">
