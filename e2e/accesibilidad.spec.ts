@@ -3,7 +3,7 @@ import { test, expect, type Page } from "@playwright/test";
 import { CLAVE_CARGA_VISTA } from "../src/lib/pantallaCarga";
 
 // Revisión final de accesibilidad (T23): escaneo WCAG 2.1 AA con axe y recorrido completo con teclado.
-const PAGINAS = ["/", "/casos/neumaticos-uria", "/aviso-legal", "/privacidad", "/cookies", "/pagina-que-no-existe"];
+const PAGINAS = ["/", "/casos/neumaticos-uria", "/presupuesto", "/aviso-legal", "/privacidad", "/cookies", "/pagina-que-no-existe"];
 
 test.describe("axe", () => {
   // Con movimiento reducido, para medir el estado final y no un fotograma a mitad de animación.
