@@ -1,3 +1,4 @@
+import AxeBuilder from "@axe-core/playwright";
 import { test, expect } from "@playwright/test";
 
 test("sin datos no se envía y los errores aparecen junto a cada campo", async ({ page }) => {
@@ -50,4 +51,27 @@ test("un envío válido se guarda y muestra el mensaje de gracias", async ({ pag
 test("la casilla de consentimiento enlaza la política de privacidad", async ({ page }) => {
   await page.goto("/#presupuesto");
   await expect(page.getByRole("link", { name: "política de privacidad" })).toHaveAttribute("href", "/privacidad");
+});
+
+test.describe("formulario oscuro (SPEC v2, S9)", () => {
+  test.use({ reducedMotion: "reduce" });
+
+  test("sin fallos de contraste de axe con los errores a la vista", async ({ page }) => {
+    await page.goto("/#presupuesto");
+    await page.getByLabel("Teléfono").fill("123");
+    await page.getByRole("button", { name: "Pide tu presupuesto" }).click();
+    await expect(page.getByText("Escribe tu nombre.")).toBeVisible();
+    const { violations } = await new AxeBuilder({ page })
+      .include("#presupuesto")
+      .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])
+      .analyze();
+    expect(violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`)).toEqual([]);
+  });
+
+  test("el campo con el foco se ilumina en Aqua", async ({ page }) => {
+    await page.goto("/#presupuesto");
+    const nombre = page.getByLabel("Tu nombre");
+    await nombre.focus();
+    await expect(nombre).toHaveCSS("outline-color", "rgb(0, 229, 240)");
+  });
 });

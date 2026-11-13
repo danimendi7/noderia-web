@@ -9,4 +9,11 @@ describe("Pie", () => {
       expect(el.textContent?.toLowerCase()).not.toContain("noderia");
     });
   });
+
+  it("lleva una textura de nodos decorativa y el logo es la primera imagen (ahí acaba el hilo conductor)", () => {
+    const { container } = render(<Pie />);
+    const textura = container.querySelector("[data-textura-nodos]");
+    expect(textura).toHaveAttribute("aria-hidden", "true");
+    expect(container.querySelector("footer img")).toHaveAttribute("alt", expect.stringMatching(/NoderIA/));
+  });
 });
