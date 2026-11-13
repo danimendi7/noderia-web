@@ -21,6 +21,7 @@ export const RUTAS_PUBLICAS = [
   "/diseno-web-talleres",
   "/automatizaciones-talleres",
   "/casos/neumaticos-uria",
+  "/quienes-somos",
   "/presupuesto",
   "/aviso-legal",
   "/privacidad",

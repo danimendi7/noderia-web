@@ -656,3 +656,25 @@
     transform: none;
   }
 }
+
+/* Quiénes somos (SPEC v3 §4): los nodos de la red se encienden en cadena. Solo opacidad y transform. */
+@media (prefers-reduced-motion: no-preference) {
+  .qs-red-nodo {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: qs-pulso 3.6s ease-in-out infinite;
+    animation-delay: calc(var(--i) * 0.45s);
+  }
+}
+
+@keyframes qs-pulso {
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: scale(0.92);
+  }
+  45% {
+    opacity: 1;
+    transform: scale(1.08);
+  }
+}

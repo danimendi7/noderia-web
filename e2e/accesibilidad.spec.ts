@@ -9,6 +9,7 @@ const PAGINAS = [
   "/diseno-web-talleres",
   "/automatizaciones-talleres",
   "/casos/neumaticos-uria",
+  "/quienes-somos",
   "/presupuesto", "/aviso-legal", "/privacidad", "/cookies", "/pagina-que-no-existe"];
 
 test.describe("axe", () => {
