@@ -1,6 +1,5 @@
 import { LogoUria } from "@/components/marca/LogoUria";
 import { Boton } from "@/components/ui/Boton";
-import { Icono } from "@/components/ui/Icono";
 import { Seccion } from "@/components/ui/Seccion";
 import {
   AUTORA_CITA_URIA,
@@ -24,32 +23,42 @@ export function CasoUria() {
       fondo="blanco"
       desde="midnight"
     >
-      <div className="grid gap-10 lg:grid-cols-12 lg:gap-16">
+      <div className="grid gap-12 lg:grid-cols-12 lg:gap-16">
         <figure className="lg:col-span-7">
-          <blockquote className="font-display text-2xl font-semibold leading-snug text-midnight sm:text-3xl">
-            <p>«{CITA_URIA}»</p>
+          <span
+            aria-hidden="true"
+            data-comillas
+            className="texto-marca -mb-6 block select-none font-display text-[7rem] font-bold leading-none sm:-mb-8 sm:text-[9rem]"
+          >
+            “
+          </span>
+          <blockquote className="font-display text-[1.75rem] font-semibold leading-[1.3] tracking-[-0.01em] text-midnight text-pretty sm:text-[2rem]">
+            <p>{CITA_URIA}</p>
           </blockquote>
-          <figcaption className="mt-6 flex items-center gap-3 text-midnight/75">
-            <span aria-hidden="true" className="h-px w-10 bg-electric" />
-            {AUTORA_CITA_URIA}
+          <figcaption className="mt-10 flex flex-wrap items-center gap-x-6 gap-y-4">
+            <LogoUria className="h-auto w-[148px]" />
+            <span aria-hidden="true" className="hidden h-10 w-px bg-midnight/15 sm:block" />
+            <span className="text-midnight/75">{AUTORA_CITA_URIA}</span>
           </figcaption>
         </figure>
 
-        <div className="flex flex-col gap-8 rounded-3xl bg-mist p-7 sm:p-9 lg:col-span-5">
-          <LogoUria />
+        <div className="flex flex-col gap-8 self-start rounded-3xl border border-midnight/[0.06] bg-mist p-7 sm:p-9 lg:col-span-5">
           <div>
-            <h3 className="text-lg font-bold">Qué les implantamos</h3>
-            <ul className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
+            <h3 className="font-display text-xl font-bold">Qué les implantamos</h3>
+            <ul className="mt-5 flex flex-wrap gap-2.5">
               {IMPLANTADO_URIA.map((punto) => (
-                <li key={punto} className="flex gap-3 text-midnight/85">
-                  <Icono nombre="check" className="mt-0.5 size-5 shrink-0 text-electric" />
+                <li
+                  key={punto}
+                  className="inline-flex items-center gap-2 rounded-full border border-electric/15 bg-white px-3.5 py-1.5 text-sm font-medium text-midnight shadow-[0_1px_2px_rgb(0_16_44/0.05)]"
+                >
+                  <span aria-hidden="true" className="bg-marca size-1.5 rounded-full" />
                   {punto}
                 </li>
               ))}
             </ul>
           </div>
-          <div>
-            <h3 className="text-lg font-bold">Resultado</h3>
+          <div className="border-t border-midnight/10 pt-6">
+            <h3 className="font-display text-xl font-bold">Resultado</h3>
             <p className="mt-2 text-midnight/85">{RESULTADO_URIA}</p>
           </div>
           <Boton href={RUTA_CASO_URIA} variante="enlace" className="self-start">

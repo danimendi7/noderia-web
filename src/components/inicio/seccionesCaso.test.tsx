@@ -16,6 +16,35 @@ describe("Caso real: Neumáticos Uría", () => {
     expect(container.querySelector("figcaption")).toHaveTextContent("Mónica, Neumáticos Uría (Hernani)");
   });
 
+  it("maqueta editorial: comillas decorativas en degradado y el logo de Uría junto a la autora", () => {
+    const { container } = render(<CasoUria />);
+    const comillas = container.querySelector("[data-comillas]");
+    expect(comillas).toHaveAttribute("aria-hidden", "true");
+    expect(comillas?.closest("blockquote")).toBeNull();
+    const pie = container.querySelector("figcaption") as HTMLElement;
+    expect(within(pie).getByRole("img", { name: "Neumáticos Uría" })).toHaveAttribute(
+      "src",
+      expect.stringContaining("logo-uria-midnight"),
+    );
+  });
+
+  it("los chips de lo implantado solo cuentan lo que Uría tiene", () => {
+    render(<CasoUria />);
+    const tarjeta = screen.getByRole("heading", { level: 3, name: "Qué les implantamos" }).parentElement as HTMLElement;
+    const chips = within(tarjeta).getAllByRole("listitem").map((c) => c.textContent ?? "");
+    expect(chips).toEqual([
+      "Web pública con reservas online",
+      "Panel de citas",
+      "Clientes y vehículos",
+      "Recordatorios",
+      "Métricas",
+      "Comunicaciones",
+    ]);
+    for (const chip of chips) {
+      expect(chip).not.toMatch(/whatsapp|área de clientes|b2b|newsletter/i);
+    }
+  });
+
   it("cuenta el resultado y enlaza al caso completo", () => {
     render(<CasoUria />);
     expect(screen.getByText(/sin depender de terceros/)).toBeInTheDocument();
