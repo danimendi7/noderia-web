@@ -1,27 +1,28 @@
 # Skills de Skynet en este proyecto
 
-Actualizado: 2026-11-12 22:10 (orden del material de marca, segunda entrega). `web-design-guidelines` sigue sin aparecer en las skills de la sesión de Skynet.
+Actualizado: 2026-11-13 (orden del rediseño V2). Ya aparecen en la sesión `web-design-guidelines`, `vercel-react-best-practices`, `ui-ux-pro-max`, `design-taste-frontend`, `motion` y los MCP `magic` (21st.dev) e Higgsfield.
 
 ## Las que uso y para qué
 
-| Skill | Para qué |
+| Skill / herramienta | Para qué |
 | --- | --- |
-| superpowers:test-driven-development | Tests antes del código en cada tarea (validación del formulario, menú, acordeón) |
-| superpowers:systematic-debugging | Cuando falle un test o el e2e contra el preview |
-| superpowers:verification-before-completion | Antes de abrir cada PR: `npm run verify` y e2e en verde |
-| frontend-design | Dirección visual de las secciones siguiendo el manual de marca |
-| supabase-postgres-best-practices | Migración de `solicitudes_presupuesto`, RLS y función con límite de envíos |
-| security-review | Revisión del formulario, la Server Action y la función de Postgres |
-| marketing:seo-audit | Revisión de títulos, metadatos y datos estructurados (T11) |
-| design:accessibility-review, design:design-critique | Revisión final de la UI (T23), en lugar de `web-design-guidelines` |
-| design:ux-copy | Pulir mensajes de error y textos del formulario sin cambiar su sentido |
-| `@axe-core/playwright` (no es skill: dependencia de desarrollo) | Escaneo WCAG 2.1 AA automático en el e2e (T23) |
-| Context7 (MCP) | Documentación actual de GSAP, Next.js 16 y Supabase |
+| ui-ux-pro-max | Criterio de jerarquía, espaciado, color y patrones de UI en cada sección V2 |
+| design-taste-frontend | Acabado premium y evitar lo genérico (sus fuentes y colores se ignoran: manda el manual) |
+| frontend-design | Dirección visual de cada sección |
+| motion | Microinteracciones con `motion/react` (bento, interruptor, acordeón, formulario) |
+| vercel-react-best-practices | Al escribir componentes: carga diferida, tamaño del JS, LCP |
+| MCP magic (21st.dev) | Componentes de referencia (spotlight, bento, interruptor segmentado, texto por palabras), adaptados a la marca |
+| MCP Higgsfield | Vídeos en bucle desde las piezas isométricas (T36), con presupuesto de 150 créditos |
+| web-design-guidelines, design:design-critique, design:accessibility-review | Revisión final (T38) |
+| superpowers:test-driven-development, systematic-debugging, verification-before-completion | Tests primero, depuración y comprobar antes de abrir cada PR |
+| supabase-postgres-best-practices, security-review | Base de datos y formulario (MVP) |
+| marketing:seo-audit | Títulos, metadatos y datos estructurados |
+| `@axe-core/playwright` (dependencia, no skill) | Escaneo WCAG 2.1 AA en el e2e |
+| Context7 (MCP) | Documentación al día de GSAP, Motion y Next.js 16 |
 
 ## Las que echo en falta
 
 | Skill | Fuente | Qué aportaría | Riesgo |
 | --- | --- | --- | --- |
-| `web-design-guidelines` | La SPEC y la orden del 2026-11-12 la dan por instalada, pero sigue sin aparecer en las skills de la sesión de Skynet (quizá se instaló solo en el PC de Dani y no en su cuenta) (Vercel Labs, `vercel-labs/agent-skills`) | Revisión final de UI que pide la SPEC (F6) | Bajo: solo lee código y propone cambios |
-| `vercel-react-best-practices` | Misma fuente (`vercel-labs/agent-skills`) | Reglas de rendimiento de React/Next al escribir componentes (LCP, bundle) | Bajo |
 | `supabase/agent-skills` | Supabase (`npx skills add supabase/agent-skills`) | Guía específica de RLS y migraciones | Bajo |
+| Una skill de vídeo para web (p. ej. compresión con ffmpeg y comprobación de peso/códec) | No conozco una fuente fiable; hoy se hace con un script propio | Repetir siempre igual la conversión a mp4 H.264 + webm < 2,5 MB | Bajo |

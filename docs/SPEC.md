@@ -180,3 +180,12 @@ Seguir el manual de identidad al pie de la letra:
 - Las imágenes de la escena son de Higgsfield (cuenta de NoderIA); si alguna URL caducara, avisar a Dani en lugar de sustituirlas por otras.
 - Skills disponibles en el PC de Dani: `vercel-react-best-practices` (al escribir código), `web-design-guidelines` (revisión final) y `find-skills`.
 - Los textos de esta SPEC son la base aprobada; pueden pulirse en redacción, pero cualquier dato nuevo (cifras, clientes, plazos, garantías) requiere confirmación de Dani.
+
+## 10. Fase V2: rediseño estético (orden del 2026-11-13 09:04)
+
+La dirección de arte está en `docs/SPEC-v2-diseno.md`. Cambios de producto respecto a este documento:
+- "Qué incluye" pasa de 3 bloques a 8 + 1 (bento de la SPEC v2 §S4). **Solo en ese bloque** se permite mencionar WhatsApp automatizado, área de clientes, B2B y newsletter como servicios que se desarrollan a medida; en el resto de la web (y en el caso Uría) sigue la regla de la sección 7.
+- "No es otro programa más" deja de ser una tabla: pasa a un interruptor accesible con los 4 pares de textos en el HTML.
+- Se permiten vídeos cortos generados con Higgsfield (mp4 H.264 + webm, < 2,5 MB, sin sonido, `autoplay muted loop playsinline`, con poster, diferidos bajo el primer pantallazo, nunca LCP, sin reproducir con `prefers-reduced-motion`).
+- Umbrales: Lighthouse móvil Rendimiento ≥ 90, Accesibilidad/Buenas prácticas/SEO ≥ 95 y CLS < 0,05; sin scroll horizontal de 320 a 1920 px.
+- Se mantiene: solo Outfit + Inter, la paleta NoderIA y los logos oficiales sin tocar; nada de cifras, clientes ni testimonios inventados.
