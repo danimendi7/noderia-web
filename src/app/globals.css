@@ -225,6 +225,82 @@
   display: none;
 }
 
+/* Interruptor segmentado (ControlSegmentado, adaptado de Klyv / 21st.dev). */
+.control-segmentado-pildora {
+  background-color: var(--color-electric);
+  box-shadow: 0 8px 24px -8px rgb(0 104 224 / 0.7);
+  transition:
+    transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    background-color 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.control-segmentado[data-seleccion="0"] .control-segmentado-pildora {
+  background-color: rgb(255 255 255 / 0.14);
+  box-shadow: none;
+}
+
+.control-segmentado[data-seleccion="1"] .control-segmentado-pildora {
+  transform: translateX(100%);
+}
+
+/* "No es otro programa más" (SPEC v2, S5): ✕ apagados en genérico, ✓ Aqua con brillo en NoderIA. */
+.comparacion-fila > *,
+.comparacion-generico,
+.comparacion-noderia,
+.comparacion-cruz,
+.comparacion-check,
+.comparacion-icono {
+  transition:
+    opacity 0.35s ease var(--retraso, 0ms),
+    transform 0.45s cubic-bezier(0.22, 1, 0.36, 1) var(--retraso, 0ms),
+    background-color 0.35s ease var(--retraso, 0ms),
+    box-shadow 0.35s ease var(--retraso, 0ms);
+}
+
+.comparacion-icono {
+  background-color: rgb(0 229 240 / 0.16);
+  box-shadow: 0 0 28px -4px rgb(0 229 240 / 0.6);
+  color: var(--color-aqua);
+}
+
+.comparacion-cruz,
+.comparacion-generico {
+  opacity: 0;
+  transform: translateY(8px);
+}
+
+.comparacion[data-modo="generico"] .comparacion-icono {
+  background-color: rgb(255 255 255 / 0.06);
+  box-shadow: none;
+  color: rgb(255 255 255 / 0.45);
+}
+
+.comparacion[data-modo="generico"] .comparacion-cruz,
+.comparacion[data-modo="generico"] .comparacion-generico {
+  opacity: 1;
+  transform: none;
+}
+
+.comparacion[data-modo="generico"] .comparacion-check,
+.comparacion[data-modo="generico"] .comparacion-noderia {
+  opacity: 0;
+  transform: translateY(-8px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .control-segmentado-pildora,
+  .comparacion-fila > *,
+  .comparacion-generico,
+  .comparacion-noderia,
+  .comparacion-cruz,
+  .comparacion-check,
+  .comparacion-icono {
+    transition-duration: 0.01ms;
+    transition-delay: 0ms;
+  }
+}
+
 @layer base {
   html {
     scroll-behavior: smooth;
