@@ -4,6 +4,7 @@ Registro de lo que Claude decidió por su cuenta. Una entrada por decisión, la 
 
 | Fecha | Decisión | Alternativa descartada | Motivo |
 | --- | --- | --- | --- |
+| 2026-11-13 | Transiciones entre fondo oscuro y claro (T42): corte en arco amplio del color de la sección anterior con una línea de horizonte fina en el degradado de marca; entre dos fondos claros se mantiene el degradado corto | Degradado más largo / onda | El degradado de Midnight a transparente sobre claro es lo que producía la franja lechosa; el arco es limpio, deliberado y recuerda a la curva del hilo |
 | 2026-11-13 | Todos los "Pide presupuesto" de la web llevan a `/presupuesto` (también los de dentro de la home); el formulario sigue al final de la home y de cada servicio | Mantener `/#presupuesto` en la home | La SPEC v3 lo pide para el hero y el menú; un único destino es coherente y fácil de medir. `/#presupuesto` sigue funcionando |
 | 2026-11-13 | "Quiénes somos" entra en el menú y en el pie con su página (T44), no antes | Enlazarla ya desde T41 | Un enlace a una página que aún no existe daría un 404 en producción entre tareas |
 | 2026-11-13 | H1 del caso Uría: "Caso de éxito: software y web para Neumáticos Uría" | Mantener "Neumáticos Uría: sus citas, en su propio sistema" | La SPEC v3 pide un único H1 con la búsqueda principal de cada página ("caso de éxito software taller") |

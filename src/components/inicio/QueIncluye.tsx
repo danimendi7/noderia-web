@@ -132,7 +132,7 @@ function Bloque({ titulo, texto, ilustracion, forma, href }: (typeof BLOQUES)[nu
       <TarjetaSpotlight como="div" className={`${TARJETA} flex-col gap-6 p-7 sm:p-9`}>
         {textos}
         {/* Vídeo en bucle de Higgsfield (T36) con poster; con movimiento reducido se queda en el poster. */}
-        <GrupoVideos etiqueta="Pausar vídeo de la web" className="relative z-20 mx-auto mt-auto w-full max-w-[24rem] lg:max-w-[26rem]">
+        <GrupoVideos etiqueta="Pausar vídeo de la web" className="relative z-20 order-first mx-auto md:order-none md:mt-auto w-full max-w-[24rem] lg:max-w-[26rem]">
           <Flotante>
             <VideoBucle nombre="web-taller" className="aspect-square w-full" />
           </Flotante>
@@ -144,18 +144,19 @@ function Bloque({ titulo, texto, ilustracion, forma, href }: (typeof BLOQUES)[nu
     return (
       <TarjetaSpotlight
         como="div"
-        className={`${TARJETA} flex-row items-center gap-5 p-6 sm:gap-8 sm:p-8`}
+        className={`${TARJETA} flex-col items-start gap-5 p-6 md:flex-row md:items-center md:gap-8 md:p-8`}
       >
-        <div className="flex-1">{textos}</div>
-        <Flotante className="order-first w-20 shrink-0 sm:order-last sm:w-36 lg:w-40">
-          <Ilustracion nombre={ilustracion} className="w-full" />
+        {/* En móvil, ilustración arriba y texto a todo el ancho (SPEC v3 §5.5). */}
+        <div className="w-full min-w-0 md:flex-1">{textos}</div>
+        <Flotante className="order-first h-32 w-full shrink-0 md:order-last md:h-auto md:w-36 lg:w-40">
+          <Ilustracion nombre={ilustracion} className="size-full md:h-auto [&_img]:object-left md:[&_img]:object-center" />
         </Flotante>
       </TarjetaSpotlight>
     );
   }
   return (
-    <TarjetaSpotlight como="div" className={`${TARJETA} flex-row items-center gap-5 p-6 md:flex-col md:items-start md:p-7`}>
-      <Flotante className="size-20 shrink-0 md:h-32 md:w-full">
+    <TarjetaSpotlight como="div" className={`${TARJETA} flex-col items-start gap-5 p-6 md:p-7`}>
+      <Flotante className="h-32 w-full shrink-0">
         <Ilustracion nombre={ilustracion} className="size-full [&_img]:object-left" />
       </Flotante>
       {textos}

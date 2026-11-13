@@ -74,7 +74,7 @@ export function PaginaServicio({ clave }: { clave: ClaveServicio }) {
       </section>
 
       <section aria-label="Qué incluye" data-fondo="mist" className="relative isolate bg-mist text-midnight">
-        <Fundido desde="midnight" />
+        <Fundido desde="midnight" hacia="mist" />
         <div className={`${CONTENEDOR} ${ESPACIADO_SECCION} flex flex-col gap-16 md:gap-24`}>
           {conIlustracion.map((bloque, indice) => (
             <div key={bloque.titulo} data-entra="" className="grid items-center gap-8 md:grid-cols-2 md:gap-16">
@@ -115,7 +115,7 @@ export function PaginaServicio({ clave }: { clave: ClaveServicio }) {
         data-fondo="mist"
         className="relative isolate scroll-mt-20 bg-mist text-midnight"
       >
-        <Fundido desde={servicio.conCaso ? "midnight" : "blanco"} />
+        <Fundido desde={servicio.conCaso ? "midnight" : "blanco"} hacia="mist" />
         <div className={`${CONTENEDOR} ${ESPACIADO_SECCION} grid gap-12 md:gap-16 lg:grid-cols-12`}>
           <div className="lg:col-span-5">
             <CabeceraSeccion

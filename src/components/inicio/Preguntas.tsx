@@ -17,7 +17,7 @@ export function Preguntas() {
       data-fondo="mist"
       className="relative isolate bg-mist text-midnight"
     >
-      <Fundido desde="blanco" />
+      <Fundido desde="blanco" hacia="mist" />
       <div className={`${CONTENEDOR} ${ESPACIADO_SECCION} grid gap-12 md:gap-16 lg:grid-cols-12`}>
         <div className="lg:col-span-5">
           <CabeceraSeccion
