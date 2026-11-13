@@ -14,23 +14,26 @@ export function Comparacion() {
       desde="mist"
     >
       {/* Para lectores de pantalla: los 4 pares completos, siempre en el HTML. */}
-      <table className="sr-only">
-        <caption>Programa genérico frente a NoderIA</caption>
-        <thead>
-          <tr>
-            <th scope="col">Programa genérico</th>
-            <th scope="col">NoderIA</th>
-          </tr>
-        </thead>
-        <tbody>
-          {FILAS_COMPARACION.map((fila) => (
-            <tr key={fila.noderia}>
-              <td>{fila.generico}</td>
-              <td>{fila.noderia}</td>
+      {/* La tabla va dentro de un div: una tabla no respeta el ancho de 1 px de sr-only y desbordaría. */}
+      <div className="sr-only">
+        <table>
+          <caption>Programa genérico frente a NoderIA</caption>
+          <thead>
+            <tr>
+              <th scope="col">Programa genérico</th>
+              <th scope="col">NoderIA</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {FILAS_COMPARACION.map((fila) => (
+              <tr key={fila.noderia}>
+                <td>{fila.generico}</td>
+                <td>{fila.noderia}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
       <InterruptorComparacion />
     </Seccion>
   );
