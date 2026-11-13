@@ -191,6 +191,19 @@ function crearBucle(q: Selector) {
   tl.to(reparado ?? [], { opacity: 0, duration: 0.6, ease: "none" }, 9.1);
   puertaCierra(9.7);
 
+  // Tarjetas flotantes (SPEC v3 §7): cada una se enciende en su paso de la historia.
+  const tarjeta = (id: number, entra: number, sale: number) => {
+    const el = uno(`[data-tarjeta="${id}"]`);
+    if (!el) return;
+    tl.fromTo(el, { opacity: 0, y: 10, scale: 0.96 }, { opacity: 1, y: 0, scale: 1, duration: 0.45, ease: "power2.out", immediateRender: false }, entra);
+    tl.to(el, { opacity: 0, y: -8, duration: 0.4, ease: "power1.in" }, sale);
+  };
+  tl.set(q("[data-tarjeta]"), { opacity: 0 }, 0);
+  tarjeta(1, 0.2, 2.6);
+  tarjeta(2, 1.7, 4.2);
+  tarjeta(3, 6.0, 8.6);
+  tarjeta(4, 8.8, 10.5);
+
   // 6. Pulso de vuelta al móvil; los checks se apagan. El ciclo vuelve a empezar.
   tl.to(checks, { opacity: 0, duration: 0.4, ease: "none" }, 9.8);
   viaje("monitorMovil", 9.8, DURACION_BUCLE - 9.8);

@@ -1,5 +1,6 @@
 import { Fragment, type CSSProperties, type ReactNode } from "react";
 import { Boton } from "@/components/ui/Boton";
+import { ParallaxHero } from "./ParallaxHero";
 import { ANCLAS, ENLACE_PRESUPUESTO } from "@/lib/navegacion";
 
 type HeroProps = {
@@ -61,11 +62,29 @@ export function Hero({ escena }: HeroProps) {
             </Boton>
           </div>
         </div>
-        <div className="lg:col-span-6">{escena}</div>
+        {/* Escena más grande (sobresale hacia la derecha) y en capas con parallax (SPEC v3 §7). */}
+        <div className="relative lg:col-span-6 lg:-mr-4 xl:-mr-12"> 
+          <div className="parallax-capa lg:scale-[1.04] xl:scale-[1.08]" style={{ "--profundidad": 10 } as CSSProperties}>
+            {escena}
+          </div>
+        </div>
+        <ParallaxHero />
       </div>
     </section>
   );
 }
+
+/** Posición (en %) y duración de las partículas de luz del fondo del hero. */
+const PARTICULAS: [number, number, number][] = [
+  [56, 18, 7],
+  [64, 72, 9],
+  [72, 34, 8],
+  [80, 60, 10],
+  [88, 22, 7.5],
+  [93, 80, 9.5],
+  [60, 46, 11],
+  [84, 44, 8.5],
+];
 
 /** Halo azul y curvas de nodos muy sutiles, como pide el manual para el hero. Decorativo. */
 function FondoHero() {
@@ -75,8 +94,13 @@ function FondoHero() {
       {/* Textura de nodos: retícula de puntos muy tenue que se desvanece hacia los bordes (SPEC v2, S1). */}
       <div data-textura-nodos className="textura-nodos absolute inset-0" />
       <div className="absolute -left-60 -top-60 size-[36rem] rounded-full bg-[radial-gradient(circle,rgb(0_48_192/0.25)_0%,transparent_65%)]" />
+      {/* Partículas de luz sutiles (quietas con movimiento reducido o con la escena en pausa). */}
+      {PARTICULAS.map(([x, y, t], i) => (
+        <span key={i} className="particula-hero absolute size-1 rounded-full bg-aqua" style={{ left: `${x}%`, top: `${y}%`, "--t": `${t}s`, "--i": i } as CSSProperties} />
+      ))}
       <svg
-        className="absolute inset-0 size-full opacity-30"
+        className="parallax-capa absolute inset-0 size-full opacity-30"
+        style={{ "--profundidad": -8 } as CSSProperties}
         viewBox="0 0 1440 800"
         preserveAspectRatio="xMidYMid slice"
         fill="none"

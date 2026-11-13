@@ -1,6 +1,7 @@
 import { PantallaCarga } from "@/components/carga/PantallaCarga";
 import { BucleEscena } from "@/components/escena/BucleEscena";
 import { Escena } from "@/components/escena/Escena";
+import { TarjetasHero } from "@/components/escena/TarjetasHero";
 import { AnclaInicial } from "@/components/movimiento/AnclaInicial";
 import { EntradasAlScroll } from "@/components/movimiento/EntradasAlScroll";
 import { CasoUria } from "@/components/inicio/CasoUria";
@@ -26,6 +27,7 @@ export default function Inicio() {
         escena={
           <BucleEscena>
             <Escena />
+            <TarjetasHero />
           </BucleEscena>
         }
       />
