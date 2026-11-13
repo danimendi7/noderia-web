@@ -30,6 +30,17 @@ describe("Acordeon", () => {
     expect(boton).toHaveAttribute("aria-expanded", "false");
   });
 
+  it("anima la altura: el panel cerrado colapsa a 0fr y queda oculto; abierto pasa a 1fr", () => {
+    render(<Acordeon items={ITEMS} />);
+    const boton = screen.getByRole("button", { name: "¿Uno?" });
+    const panel = document.getElementById(boton.getAttribute("aria-controls")!)!;
+    expect(panel.style.gridTemplateRows).toBe("0fr");
+    expect(panel.style.visibility).toBe("hidden");
+    fireEvent.click(boton);
+    expect(panel.style.gridTemplateRows).toBe("1fr");
+    expect(panel.style.visibility).toBe("visible");
+  });
+
   it("las respuestas están en el HTML aunque estén cerradas (para buscadores)", () => {
     render(<Acordeon items={ITEMS} />);
     expect(screen.getByText("Respuesta uno", { selector: "*" })).toBeInTheDocument();
@@ -54,6 +65,12 @@ describe("Preguntas frecuentes", () => {
         text: "Cada taller es distinto: te preparamos un presupuesto a medida sin compromiso.",
       },
     });
+  });
+
+  it("el H2 va en la columna izquierda, fijo en escritorio", () => {
+    render(<Preguntas />);
+    const titulo = screen.getByRole("heading", { level: 2, name: "Preguntas frecuentes" });
+    expect(titulo.closest(".lg\\:sticky")).not.toBeNull();
   });
 
   it("los datos estructurados coinciden con las preguntas visibles", () => {
