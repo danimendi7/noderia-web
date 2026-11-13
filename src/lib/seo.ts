@@ -133,3 +133,17 @@ export function datosServicio(base: URL, pagina: Pagina, tipoServicio: string) {
     audience: { "@type": "BusinessAudience", name: "Talleres mecánicos y de neumáticos" },
   };
 }
+
+/** Datos estructurados AboutPage (schema.org) de Quiénes somos, sobre la organización del layout. */
+export function datosQuienesSomos(base: URL) {
+  const raiz = base.toString();
+  return {
+    "@context": "https://schema.org",
+    "@type": "AboutPage",
+    name: PAGINAS.quienesSomos.titulo,
+    description: PAGINAS.quienesSomos.descripcion,
+    url: new URL(PAGINAS.quienesSomos.ruta, base).toString(),
+    inLanguage: "es",
+    about: { "@id": `${raiz}#organizacion` },
+  };
+}

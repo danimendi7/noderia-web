@@ -48,6 +48,13 @@ test.describe("menú superior", () => {
     await expect(page).toHaveURL(/\/casos\/neumaticos-uria$/);
   });
 
+  test("Quiénes somos lleva a su página", async ({ page, isMobile }) => {
+    await page.goto("/");
+    const cabecera = await abrirMenu(page, isMobile);
+    await cabecera.getByRole("link", { name: "Quiénes somos" }).click();
+    await expect(page).toHaveURL(/\/quienes-somos$/);
+  });
+
   test("el botón Pide presupuesto del menú lleva a /presupuesto", async ({ page, isMobile }) => {
     await page.goto("/");
     const cabecera = await abrirMenu(page, isMobile);

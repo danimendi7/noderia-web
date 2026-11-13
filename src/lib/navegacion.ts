@@ -28,7 +28,10 @@ export const SOLUCIONES = [
 ] as const;
 
 /** Enlaces del menú después de "Soluciones". */
-export const ENLACES_MENU = [{ href: PAGINAS.casoUria.ruta, texto: "Caso de éxito" }] as const;
+export const ENLACES_MENU = [
+  { href: PAGINAS.casoUria.ruta, texto: "Caso de éxito" },
+  { href: PAGINAS.quienesSomos.ruta, texto: "Quiénes somos" },
+] as const;
 
 /** Secciones de la home que se enlazan desde el pie. */
 export const ENLACES_HOME = [

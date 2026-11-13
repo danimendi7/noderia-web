@@ -31,6 +31,12 @@ const PAGINAS = [
     tipos: ["BreadcrumbList"],
   },
   {
+    ruta: "/quienes-somos",
+    titulo: "Quiénes somos: software e IA para empresas | NoderIA",
+    h1: "Software e inteligencia artificial para empresas, desde Donostia",
+    tipos: ["BreadcrumbList", "AboutPage"],
+  },
+  {
     ruta: "/presupuesto",
     titulo: "Pide presupuesto para tu taller | NoderIA",
     h1: "Pide presupuesto para tu taller",
@@ -132,5 +138,27 @@ test("la home tiene los H2 de la SPEC v3 §2", async ({ page }) => {
     "Cuéntanos cómo es tu taller",
   ]) {
     await expect(page.getByRole("heading", { level: 2, name: h2 })).toHaveCount(1);
+  }
+});
+
+test("/quienes-somos: secciones de la SPEC, sin nombres ni fotos de personas, y cierre con enlaces a las soluciones", async ({ page }) => {
+  await page.goto("/quienes-somos");
+  for (const h2 of [
+    "Programadores y expertos en comunicación, en el mismo equipo",
+    "Atentos cada día a la IA, con los pies en el suelo",
+    "Cómo entendemos nuestro trabajo",
+    "Por qué NoderIA",
+    "¿Hablamos de tu taller?",
+  ]) {
+    await expect(page.getByRole("heading", { level: 2, name: h2 })).toBeVisible();
+  }
+  for (const tarjeta of ["A tu medida, sobre una base probada", "Cerca de ti", "Contigo después de lanzar"]) {
+    await expect(page.getByRole("heading", { level: 3, name: tarjeta })).toBeVisible();
+  }
+  const main = page.getByRole("main");
+  // Solo el isotipo oficial: ninguna foto (imágenes con texto alternativo) en la página.
+  await expect(main.locator("img[alt]:not([alt=''])")).toHaveCount(0);
+  for (const ruta of ["/software-gestion-talleres", "/diseno-web-talleres", "/automatizaciones-talleres", "/presupuesto"]) {
+    await expect(main.locator(`a[href="${ruta}"]`).first()).toBeVisible();
   }
 });
