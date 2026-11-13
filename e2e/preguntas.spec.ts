@@ -14,5 +14,5 @@ test("la home publica datos estructurados FAQPage", async ({ request }) => {
   const bloques = [...html.matchAll(/<script type="application\/ld\+json">(.*?)<\/script>/g)].map((m) =>
     JSON.parse(m[1]),
   );
-  expect(bloques.some((b) => b["@type"] === "FAQPage" && b.mainEntity.length === 5)).toBe(true);
+  expect(bloques.some((b) => b["@type"] === "FAQPage" && b.mainEntity.length === 8)).toBe(true);
 });

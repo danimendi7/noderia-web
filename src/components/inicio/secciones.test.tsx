@@ -37,7 +37,7 @@ describe("Qué incluye", () => {
   it("tiene ancla, H2, entradilla y los 9 bloques del bento con su H3 y su texto (SPEC v2, S4)", () => {
     const { container } = render(<QueIncluye />);
     expect(container.querySelector("section#que-incluye")).not.toBeNull();
-    expect(screen.getByRole("heading", { level: 2, name: "Todo lo que tu taller necesita, conectado" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { level: 2, name: "Software, web y automatizaciones para tu taller" })).toBeInTheDocument();
     expect(screen.getByText("Estos son los bloques principales. Cada proyecto se adapta a tu taller.")).toBeInTheDocument();
     const bloques = container.querySelectorAll("[data-bloque]");
     expect(bloques).toHaveLength(9);
@@ -45,6 +45,23 @@ describe("Qué incluye", () => {
       expect(within(bloques[i] as HTMLElement).getByRole("heading", { level: 3, name: titulo })).toBeInTheDocument();
       expect(within(bloques[i] as HTMLElement).getByText(texto)).toBeInTheDocument();
     });
+  });
+
+  it("cada tarjeta del bento enlaza a su página de servicio (SPEC v3 §2)", () => {
+    render(<QueIncluye />);
+    const destino: Record<string, string> = {
+      "Diseño completo de tu web nueva": "/diseno-web-talleres",
+      "Reservas online": "/diseno-web-talleres",
+      "Panel de administración con agenda en tiempo real": "/software-gestion-talleres",
+      "Área de clientes y B2B": "/software-gestion-talleres",
+      "Recordatorios automáticos": "/automatizaciones-talleres",
+      "Email automatizado": "/automatizaciones-talleres",
+      "WhatsApp automatizado": "/automatizaciones-talleres",
+      Newsletter: "/automatizaciones-talleres",
+    };
+    for (const [titulo, href] of Object.entries(destino)) {
+      expect(screen.getByRole("link", { name: titulo })).toHaveAttribute("href", href);
+    }
   });
 
   it("cada bloque lleva su ilustración decorativa (el principal, un vídeo) salvo el de cierre, que enlaza al presupuesto", () => {
@@ -65,14 +82,14 @@ describe("Qué incluye", () => {
       expect(img).toHaveAttribute("alt", "");
       expect(img).toHaveAttribute("loading", "lazy");
     }
-    expect(screen.getByRole("link", { name: /Pide presupuesto/ })).toHaveAttribute("href", "/#presupuesto");
+    expect(screen.getByRole("link", { name: /Pide presupuesto/ })).toHaveAttribute("href", "/presupuesto");
   });
 });
 
 describe("No es otro programa más", () => {
   it("es una tabla con cabeceras y las cuatro comparaciones", () => {
     render(<Comparacion />);
-    expect(screen.getByRole("heading", { level: 2, name: "No es otro programa más" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { level: 2, name: "No es otro programa de taller más" })).toBeInTheDocument();
     const tabla = screen.getByRole("table");
     expect(within(tabla).getByRole("columnheader", { name: "Programa genérico" })).toBeInTheDocument();
     expect(within(tabla).getByRole("columnheader", { name: "NoderIA" })).toBeInTheDocument();

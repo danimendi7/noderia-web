@@ -8,7 +8,7 @@ test("en la primera visita se ve la animación y el hero aparece solo, sin clic"
   await expect(pantalla(page)).toHaveAttribute("data-activa", "");
   await expect(pantalla(page)).toBeVisible();
   // El hero ya está en el HTML del servidor, debajo de la pantalla.
-  await expect(page.getByRole("heading", { level: 1 })).toHaveText(/punta a punta/);
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText(/talleres mecánicos/);
   const inicio = Date.now();
   await expect(pantalla(page)).toHaveAttribute("data-estado", "terminada", { timeout: 8_000 });
   await expect(pantalla(page)).toBeHidden();

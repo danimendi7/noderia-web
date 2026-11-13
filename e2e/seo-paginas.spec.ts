@@ -25,6 +25,12 @@ const PAGINAS = [
     tipos: ["BreadcrumbList", "Service", "FAQPage"],
   },
   {
+    ruta: "/casos/neumaticos-uria",
+    titulo: "Caso de éxito: software y web para Neumáticos Uría | NoderIA",
+    h1: "Caso de éxito: software y web para Neumáticos Uría",
+    tipos: ["BreadcrumbList"],
+  },
+  {
     ruta: "/presupuesto",
     titulo: "Pide presupuesto para tu taller | NoderIA",
     h1: "Pide presupuesto para tu taller",
@@ -105,3 +111,26 @@ for (const servicio of SERVICIOS) {
     for (const alt of alts) expect(alt.length).toBeGreaterThan(15);
   });
 }
+
+test("la home enlaza cada tarjeta del bento a su página de servicio", async ({ page }) => {
+  await page.goto("/#que-incluye");
+  const bento = page.locator("#que-incluye");
+  await bento.getByRole("link", { name: "Reservas online" }).click();
+  await expect(page).toHaveURL(/\/diseno-web-talleres$/);
+});
+
+test("la home tiene los H2 de la SPEC v3 §2", async ({ page }) => {
+  await page.goto("/");
+  for (const h2 of [
+    "¿Te suena?",
+    "De la cita online a la próxima revisión, todo conectado",
+    "Software, web y automatizaciones para tu taller",
+    "No es otro programa de taller más",
+    "Neumáticos Uría, conectado",
+    "Así implantamos tu software, paso a paso",
+    "Preguntas sobre nuestro programa para talleres",
+    "Cuéntanos cómo es tu taller",
+  ]) {
+    await expect(page.getByRole("heading", { level: 2, name: h2 })).toHaveCount(1);
+  }
+});

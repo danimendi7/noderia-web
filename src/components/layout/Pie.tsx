@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Logo } from "@/components/marca/Logo";
-import { ENLACE_PRESUPUESTO, ENLACES_LEGALES, ENLACES_MENU } from "@/lib/navegacion";
+import { ENLACE_PRESUPUESTO, ENLACES_HOME, ENLACES_LEGALES, ENLACES_MENU, SOLUCIONES } from "@/lib/navegacion";
 
 /**
  * Pie común: logo, frase, enlaces a secciones y legales, y ubicación. Sin email hasta tener dominio propio.
@@ -10,7 +10,7 @@ export function Pie() {
   return (
     <footer className="relative isolate overflow-hidden bg-midnight text-white/80">
       <TexturaNodos />
-      <div className="mx-auto grid max-w-7xl gap-10 px-4 py-14 sm:px-6 md:grid-cols-[1.4fr_1fr_1fr] lg:px-8">
+      <div className="mx-auto grid max-w-7xl gap-10 px-4 py-14 sm:px-6 md:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr] lg:px-8">
         <div className="flex flex-col gap-3">
           <Logo />
           <p className="max-w-sm">
@@ -19,13 +19,26 @@ export function Pie() {
           <p className="text-sm">Donostia / San Sebastián</p>
         </div>
 
+        <nav aria-label="Soluciones">
+          <p className="mb-3 font-display text-sm font-semibold uppercase tracking-widest text-aqua">Soluciones</p>
+          <ul className="flex flex-col">
+            {SOLUCIONES.map((enlace) => (
+              <li key={enlace.href}>
+                <Link href={enlace.href} className="inline-flex min-h-11 items-center hover:text-aqua">
+                  {enlace.texto}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
+
         <nav aria-label="Secciones">
           <p className="mb-3 font-display text-sm font-semibold uppercase tracking-widest text-aqua">
             {/* No se pone el nombre: en mayúsculas sería "NODERIA" y el manual pide escribir siempre NoderIA. */}
             Secciones
           </p>
           <ul className="flex flex-col">
-            {ENLACES_MENU.map((enlace) => (
+            {[...ENLACES_MENU, ...ENLACES_HOME].map((enlace) => (
               <li key={enlace.href}>
                 <Link href={enlace.href} className="inline-flex min-h-11 items-center hover:text-aqua">
                   {enlace.texto}

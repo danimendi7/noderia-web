@@ -7,14 +7,14 @@ describe("Hero", () => {
     render(<Hero />);
     const titulos = screen.getAllByRole("heading", { level: 1 });
     expect(titulos).toHaveLength(1);
-    expect(titulos[0]).toHaveTextContent("Tu taller, conectado de punta a punta");
+    expect(titulos[0]).toHaveTextContent("Programa de gestión y web a medida para talleres mecánicos");
   });
 
   it("muestra la etiqueta y el subtítulo", () => {
     render(<Hero />);
-    expect(screen.getByText("Software para talleres")).toBeInTheDocument();
+    expect(screen.getByText("Tu taller, conectado de punta a punta")).toBeInTheDocument();
     expect(
-      screen.getByText(/Citas, órdenes de trabajo, avisos y clientes en un solo sistema/),
+      screen.getByText(/Citas online, agenda en tiempo real, recordatorios de ITV y revisiones/),
     ).toBeInTheDocument();
   });
 
@@ -22,7 +22,7 @@ describe("Hero", () => {
     render(<Hero />);
     expect(screen.getByRole("link", { name: "Pide presupuesto" })).toHaveAttribute(
       "href",
-      "/#presupuesto",
+      "/presupuesto",
     );
     expect(screen.getByRole("link", { name: "Ver cómo funciona" })).toHaveAttribute(
       "href",
@@ -30,10 +30,10 @@ describe("Hero", () => {
     );
   });
 
-  it("parte el titular en palabras para la entrada y deja \"punta a punta\" en un bloque con el degradado", () => {
+  it("parte el titular en palabras para la entrada y deja \"talleres mecánicos\" en un bloque con el degradado", () => {
     render(<Hero />);
     const palabras = [...screen.getByRole("heading", { level: 1 }).querySelectorAll(".hero-palabra")];
-    expect(palabras.map((p) => p.textContent)).toEqual(["Tu", "taller,", "conectado", "de", "punta a punta"]);
+    expect(palabras.map((p) => p.textContent)).toEqual(["Programa", "de", "gestión", "y", "web", "a", "medida", "para", "talleres mecánicos"]);
     expect(palabras.at(-1)).toHaveClass("texto-marca-oscuro");
   });
 

@@ -4,6 +4,7 @@ import { Inter, Outfit } from "next/font/google";
 import { Cabecera } from "@/components/layout/Cabecera";
 import { Pie } from "@/components/layout/Pie";
 import { JsonLd } from "@/components/ui/JsonLd";
+import { PAGINAS } from "@/lib/seo";
 import { datosEstructuradosEmpresa, DESCRIPCION, NOMBRE, urlDelSitio } from "@/lib/sitio";
 import "./globals.css";
 
@@ -24,7 +25,7 @@ const outfit = Outfit({
 export const metadata: Metadata = {
   metadataBase: urlDelSitio(),
   title: {
-    default: "Programa de gestión de taller y web a medida | NoderIA",
+    default: PAGINAS.inicio.titulo,
     template: "%s | NoderIA",
   },
   description: DESCRIPCION,

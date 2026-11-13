@@ -3,8 +3,9 @@ import { Boton } from "@/components/ui/Boton";
 import { Logo } from "@/components/marca/Logo";
 import { ENLACE_PRESUPUESTO, ENLACES_MENU } from "@/lib/navegacion";
 import { MenuMovil } from "./MenuMovil";
+import { MenuSoluciones } from "./MenuSoluciones";
 
-/** Menú fijo superior: logo, anclas de la home y botón "Pide presupuesto". */
+/** Menú fijo superior (SPEC v3 §1): logo · Soluciones ▾ · Caso de éxito · Quiénes somos · "Pide presupuesto". */
 export function Cabecera() {
   return (
     <header className="fixed inset-x-0 top-0 z-50 border-b border-white/10 bg-midnight">
@@ -13,6 +14,9 @@ export function Cabecera() {
 
         <nav aria-label="Principal" className="hidden lg:block">
           <ul className="flex items-center gap-1 xl:gap-2">
+            <li>
+              <MenuSoluciones />
+            </li>
             {ENLACES_MENU.map((enlace) => (
               <li key={enlace.href}>
                 <Link

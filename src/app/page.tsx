@@ -12,6 +12,9 @@ import { Preguntas } from "@/components/inicio/Preguntas";
 import { Presupuesto } from "@/components/inicio/Presupuesto";
 import { Problema } from "@/components/inicio/Problema";
 import { QueIncluye } from "@/components/inicio/QueIncluye";
+import { metadatosPagina, PAGINAS } from "@/lib/seo";
+
+export const metadata = metadatosPagina(PAGINAS.inicio);
 
 /** Home. Las secciones se van completando tarea a tarea (ver PROGRESS.md). */
 export default function Inicio() {

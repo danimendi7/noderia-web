@@ -14,8 +14,8 @@ export function ComoTrabajamos() {
     <Seccion
       idTitulo="titulo-como-trabajamos"
       etiqueta="Cómo trabajamos"
-      titulo="Así lo ponemos en marcha"
-      destacado="ponemos en marcha"
+      titulo="Así implantamos tu software, paso a paso"
+      destacado="paso a paso"
       fondo="blanco"
     >
       <LineaTiempo pasos={PASOS} />

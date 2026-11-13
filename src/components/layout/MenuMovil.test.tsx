@@ -21,9 +21,23 @@ describe("MenuMovil", () => {
     expect(boton()).toHaveAttribute("aria-expanded", "true");
     const panel = document.getElementById(boton().getAttribute("aria-controls")!)!;
     expect(panel).toBeVisible();
-    for (const nombre of ["Cómo funciona", "Qué incluye", "Caso Uría", "Preguntas", "Pide presupuesto"]) {
+    for (const nombre of ["Caso de éxito", "Pide presupuesto"]) {
       expect(screen.getByRole("link", { name: nombre })).toBeVisible();
     }
+    expect(screen.getByRole("link", { name: "Pide presupuesto" })).toHaveAttribute("href", "/presupuesto");
+  });
+
+  it("tiene un desplegable Soluciones con las tres páginas de servicio", () => {
+    render(<MenuMovil />);
+    fireEvent.click(boton());
+    const soluciones = screen.getByRole("button", { name: "Soluciones" });
+    expect(soluciones).toHaveAttribute("aria-expanded", "false");
+    expect(screen.queryByRole("link", { name: "Diseño web" })).toBeNull();
+    fireEvent.click(soluciones);
+    expect(soluciones).toHaveAttribute("aria-expanded", "true");
+    expect(screen.getByRole("link", { name: "Software de gestión" })).toHaveAttribute("href", "/software-gestion-talleres");
+    expect(screen.getByRole("link", { name: "Diseño web" })).toHaveAttribute("href", "/diseno-web-talleres");
+    expect(screen.getByRole("link", { name: "Automatizaciones" })).toHaveAttribute("href", "/automatizaciones-talleres");
   });
 
   it("se cierra con Escape y devuelve el foco al botón", () => {
@@ -37,7 +51,7 @@ describe("MenuMovil", () => {
   it("se cierra al elegir un enlace", () => {
     render(<MenuMovil />);
     fireEvent.click(boton());
-    fireEvent.click(screen.getByRole("link", { name: "Preguntas" }));
+    fireEvent.click(screen.getByRole("link", { name: "Caso de éxito" }));
     expect(boton()).toHaveAttribute("aria-expanded", "false");
   });
 });
