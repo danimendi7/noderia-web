@@ -118,6 +118,25 @@
   opacity: 1;
 }
 
+/* Ilustración que flota 6 px al pasar el ratón por su tarjeta (SPEC v2, S4). */
+.flotante {
+  transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.group:hover .flotante {
+  transform: translateY(-6px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flotante {
+    transition: none;
+  }
+
+  .group:hover .flotante {
+    transform: none;
+  }
+}
+
 @layer base {
   html {
     scroll-behavior: smooth;
