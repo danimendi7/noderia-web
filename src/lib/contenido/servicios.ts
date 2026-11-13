@@ -39,14 +39,14 @@ export const SERVICIOS: Record<ClaveServicio, Servicio> = {
     h1: "Software de gestión para talleres hecho a tu medida",
     destacado: "a tu medida",
     intro:
-      "Todo tu taller en una sola pantalla: citas, clientes, vehículos, órdenes de trabajo y recordatorios. Lo adaptamos a cómo trabajas tú, sobre una base ya probada en un taller real.",
+      "Un programa de gestión para talleres mecánicos y de neumáticos: citas, clientes, vehículos, órdenes de trabajo y recordatorios en una sola pantalla. Lo adaptamos a cómo trabajas tú, sobre una base ya probada en un taller real.",
     ilustracion: {
       nombre: "portal-clientes-flotas",
       alt: "Programa de gestión del taller con los clientes, sus coches y las flotas de empresa",
     },
     bloques: [
       {
-        titulo: "Agenda en tiempo real",
+        titulo: "Agenda del taller en tiempo real",
         texto:
           "Citas por día y por puesto, sin solapes. Ves de un vistazo qué coches entran hoy, quién los atiende y qué huecos te quedan libres.",
         ilustracion: { nombre: "monitor-orden", alt: "Monitor del taller con la agenda de citas del día" },
@@ -106,7 +106,7 @@ export const SERVICIOS: Record<ClaveServicio, Servicio> = {
       },
       {
         pregunta: "¿Mis datos están seguros?",
-        respuesta: "Sí, cumplimos el RGPD y cada taller solo ve sus datos.",
+        respuesta: "Sí. Cumplimos el RGPD, cada taller solo ve sus datos y cada persona entra con su propio usuario.",
       },
     ],
     conCaso: true,
@@ -187,11 +187,11 @@ export const SERVICIOS: Record<ClaveServicio, Servicio> = {
       {
         titulo: "Recordatorios de ITV, revisiones y neumáticos",
         texto:
-          "El sistema detecta cuándo le toca a cada vehículo y avisa al cliente automáticamente, sin que tengas que acordarte tú.",
+          "Cada cliente recibe el aviso de la ITV, de la revisión o del cambio de neumáticos cuando le toca a su coche, con el nombre de tu taller.",
       },
       {
         titulo: "WhatsApp automatizado",
-        texto: "Avisa por el canal que más usan tus clientes, sin estar pendiente del móvil.",
+        texto: "Los avisos llegan al móvil de tus clientes por WhatsApp, sin que tengas que escribirlos uno a uno.",
         ilustracion: { nombre: "burbuja-aviso", alt: "Aviso del taller recibido en el móvil del cliente" },
       },
       {

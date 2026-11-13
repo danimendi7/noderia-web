@@ -3,6 +3,7 @@ import { CabeceraSeccion } from "@/components/ui/CabeceraSeccion";
 import { CONTENEDOR, ESPACIADO_SECCION, type Fondo, Fundido } from "@/components/ui/Seccion";
 import { ANCLAS } from "@/lib/navegacion";
 import { FormularioPresupuesto } from "./FormularioPresupuesto";
+import { RazonesPresupuesto } from "./RazonesPresupuesto";
 
 /** Sección 10 de la home (SPEC v2, S9): llamada final y formulario en tarjeta de cristal sobre Midnight con halo. */
 export function Presupuesto({ desde = "mist", origen }: { desde?: Fondo; origen?: string } = {}) {
@@ -36,6 +37,7 @@ export function Presupuesto({ desde = "mist", origen }: { desde?: Fondo; origen?
           <p className="mt-8 max-w-[62ch] text-white/70">
             Rellena el formulario y te llamamos nosotros para conocer tu taller y lo que necesitas.
           </p>
+          <RazonesPresupuesto className="mt-10" />
         </div>
         <div className="lg:col-span-7">
           <FormularioPresupuesto accion={enviarSolicitud} origen={origen} />

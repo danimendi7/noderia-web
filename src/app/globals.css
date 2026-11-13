@@ -170,7 +170,12 @@
 }
 
 @media (width >= 64rem) {
-  [data-paso-activo] .paso-texto,
+  /* El texto de los pasos inactivos se atenúa poco (sigue a ≥ 4,5:1, WCAG 1.4.3); el nodo, más. */
+  [data-paso-activo] .paso-texto {
+    opacity: 0.8;
+    transition: opacity 0.4s ease;
+  }
+
   [data-paso-activo] .paso-nodo {
     opacity: 0.35;
     transition: opacity 0.4s ease;
@@ -767,8 +772,9 @@
   .qs-red-nodo {
     transform-box: fill-box;
     transform-origin: center;
-    animation: qs-pulso 3.6s ease-in-out infinite;
-    animation-delay: calc(var(--i) * 0.45s);
+    /* Una sola vez y en menos de 5 s en total: no necesita botón de pausa (WCAG 2.2.2). */
+    animation: qs-pulso 3.2s ease-in-out 1 both;
+    animation-delay: calc(var(--i) * 0.2s);
   }
 }
 
@@ -782,4 +788,23 @@
     opacity: 1;
     transform: scale(1.08);
   }
+}
+
+/* Enlace dentro de un párrafo (enlazado interno con texto descriptivo, SPEC v3 §1). */
+.enlace-texto {
+  color: var(--color-electric);
+  font-weight: 500;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  border-radius: 2px;
+}
+
+.enlace-texto:hover {
+  color: var(--color-royal);
+}
+
+.enlace-texto:focus-visible {
+  outline: 2px solid var(--color-electric);
+  outline-offset: 2px;
 }

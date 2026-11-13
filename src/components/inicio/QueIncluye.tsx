@@ -87,7 +87,14 @@ export function QueIncluye() {
       etiqueta="Qué incluye"
       titulo="Software, web y automatizaciones para tu taller"
       destacado="taller"
-      entradilla="Estos son los bloques principales. Cada proyecto se adapta a tu taller."
+      entradilla={
+        <>
+          Tres soluciones que funcionan juntas:{" "}
+          <Link href={PAGINAS.software.ruta} className="enlace-texto">programa de gestión para talleres</Link>,{" "}
+          <Link href={PAGINAS.web.ruta} className="enlace-texto">diseño web con citas online</Link> y{" "}
+          <Link href={PAGINAS.automatizaciones.ruta} className="enlace-texto">recordatorios y avisos automáticos</Link>. Cada proyecto se adapta a tu taller.
+        </>
+      }
       fondo="mist"
       desde="blanco"
     >

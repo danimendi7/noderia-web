@@ -76,10 +76,10 @@ export function PaginaServicio({ clave }: { clave: ClaveServicio }) {
 
       <section aria-label="Qué incluye" data-fondo="mist" className="relative isolate bg-mist text-midnight">
         <Fundido desde="midnight" hacia="mist" />
-        <div className={`${CONTENEDOR} ${ESPACIADO_SECCION} flex flex-col gap-16 md:gap-24`}>
+        <div className={`${CONTENEDOR} ${ESPACIADO_SECCION} flex flex-col gap-12 md:gap-16`}>
           {conIlustracion.map((bloque, indice) => (
             <div key={bloque.titulo} data-entra="" className="grid items-center gap-8 md:grid-cols-2 md:gap-16">
-              <div className={`mx-auto w-full max-w-[20rem] md:max-w-[24rem] ${indice % 2 ? "md:order-2" : ""}`}>
+              <div className={`mx-auto w-full max-w-[15rem] md:max-w-[18rem] ${indice % 2 ? "md:order-2" : ""}`}>
                 <Ilustracion nombre={bloque.ilustracion.nombre} alt={bloque.ilustracion.alt} />
               </div>
               <TextoBloque bloque={bloque} grande />
@@ -114,7 +114,7 @@ export function PaginaServicio({ clave }: { clave: ClaveServicio }) {
         id="preguntas"
         aria-labelledby="titulo-preguntas"
         data-fondo="mist"
-        className="relative isolate scroll-mt-20 bg-mist text-midnight"
+        className="relative isolate bg-mist text-midnight"
       >
         <Fundido desde={servicio.conCaso ? "midnight" : "blanco"} hacia="mist" />
         <div className={`${CONTENEDOR} ${ESPACIADO_SECCION} grid gap-12 md:gap-16 lg:grid-cols-12`}>

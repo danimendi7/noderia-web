@@ -124,11 +124,12 @@ export function datosServicio(base: URL, pagina: Pagina, tipoServicio: string) {
   return {
     "@context": "https://schema.org",
     "@type": "Service",
-    name: pagina.nombre,
+    "@id": `${new URL(pagina.ruta, base).toString()}#servicio`,
+    name: tipoServicio,
     serviceType: tipoServicio,
     description: pagina.descripcion,
     url: new URL(pagina.ruta, base).toString(),
-    provider: { "@type": "Organization", "@id": `${raiz}#organizacion`, name: NOMBRE, url: raiz },
+    provider: { "@id": `${raiz}#organizacion` },
     areaServed: { "@type": "Country", name: "España" },
     audience: { "@type": "BusinessAudience", name: "Talleres mecánicos y de neumáticos" },
   };
@@ -140,10 +141,11 @@ export function datosQuienesSomos(base: URL) {
   return {
     "@context": "https://schema.org",
     "@type": "AboutPage",
-    name: PAGINAS.quienesSomos.titulo,
+    name: "Software e inteligencia artificial para empresas, desde Donostia",
     description: PAGINAS.quienesSomos.descripcion,
     url: new URL(PAGINAS.quienesSomos.ruta, base).toString(),
     inLanguage: "es",
     about: { "@id": `${raiz}#organizacion` },
+    isPartOf: { "@id": `${raiz}#web` },
   };
 }

@@ -65,7 +65,9 @@ describe("datosServicio", () => {
     expect(datos).toMatchObject({
       "@type": "Service",
       url: "https://noderia.es/software-gestion-talleres",
-      provider: { "@id": "https://noderia.es/#organizacion", name: "NoderIA" },
+      "@id": "https://noderia.es/software-gestion-talleres#servicio",
+      name: "Software de gestión para talleres",
+      provider: { "@id": "https://noderia.es/#organizacion" },
     });
   });
 });

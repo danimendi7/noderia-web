@@ -90,7 +90,7 @@ export function BucleEscena({ children }: { children: ReactNode }) {
           aria-label="Pausar animación"
           title={pausado ? "Reanudar animación" : "Pausar animación"}
           onClick={alternar}
-          className="absolute bottom-2 right-2 inline-flex size-11 items-center justify-center rounded-full border border-white/40 bg-midnight/80 text-white transition-colors hover:border-aqua hover:text-aqua"
+          className="absolute bottom-2 left-2 inline-flex size-11 items-center justify-center rounded-full border border-white/40 bg-midnight/80 text-white transition-colors hover:border-aqua hover:text-aqua"
         >
           <svg aria-hidden="true" viewBox="0 0 24 24" className="size-5" fill="currentColor">
             {pausado ? <path d="M8 5.5v13l10.5-6.5z" /> : <path d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z" />}

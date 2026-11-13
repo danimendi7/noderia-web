@@ -1,12 +1,22 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useId, useRef, useState } from "react";
+import { EnlaceMenu } from "./EnlaceMenu";
 import { ENLACE_PRESUPUESTO, ENLACES_MENU, SOLUCIONES } from "@/lib/navegacion";
 
-/** Menú desplegable para móvil: botón con aria-expanded, cierre con Escape y al elegir un enlace. */
+/**
+ * Menú desplegable para móvil: botón con aria-expanded; se cierra con Escape, al elegir un enlace, al tocar fuera y al
+ * cambiar de página por cualquier otro camino (se guarda la ruta en la que se abrió). Panel con scroll propio.
+ */
 export function MenuMovil() {
-  const [abierto, setAbierto] = useState(false);
+  const ruta = usePathname() ?? "";
+  // Ruta en la que se abrió: si se navega a otra (logo, botón de la cabecera…), el menú deja de estar abierto.
+  const [abiertoEn, setAbiertoEn] = useState<string | null>(null);
+  const abierto = abiertoEn === ruta;
+  const setAbierto = (valor: boolean) => setAbiertoEn(valor ? ruta : null);
+  const raiz = useRef<HTMLDivElement>(null);
   const [solucionesAbiertas, setSolucionesAbiertas] = useState(false);
   const idPanel = useId();
   const idSoluciones = useId();
@@ -16,28 +26,38 @@ export function MenuMovil() {
     if (!abierto) return;
     function alPulsarTecla(evento: KeyboardEvent) {
       if (evento.key === "Escape") {
-        setAbierto(false);
+        setAbiertoEn(null);
         setSolucionesAbiertas(false);
         refBoton.current?.focus();
       }
     }
+    function alPulsarFuera(evento: PointerEvent) {
+      if (!raiz.current?.contains(evento.target as Node)) {
+        setAbiertoEn(null);
+        setSolucionesAbiertas(false);
+      }
+    }
     document.addEventListener("keydown", alPulsarTecla);
-    return () => document.removeEventListener("keydown", alPulsarTecla);
+    document.addEventListener("pointerdown", alPulsarFuera);
+    return () => {
+      document.removeEventListener("keydown", alPulsarTecla);
+      document.removeEventListener("pointerdown", alPulsarFuera);
+    };
   }, [abierto]);
 
   const cerrar = () => {
-    setAbierto(false);
+    setAbiertoEn(null);
     setSolucionesAbiertas(false);
   };
 
   return (
-    <div className="lg:hidden">
+    <div ref={raiz} className="lg:hidden">
       <button
         ref={refBoton}
         type="button"
         aria-expanded={abierto}
         aria-controls={idPanel}
-        onClick={() => setAbierto((valor) => !valor)}
+        onClick={() => setAbierto(!abierto)}
         className="inline-flex size-11 items-center justify-center rounded-xl text-white hover:bg-white/10"
       >
         <span className="sr-only">{abierto ? "Cerrar menú" : "Abrir menú"}</span>
@@ -62,7 +82,7 @@ export function MenuMovil() {
         id={idPanel}
         aria-label="Menú principal"
         hidden={!abierto}
-        className="absolute inset-x-0 top-full border-t border-white/10 bg-midnight px-4 pb-6 pt-2 shadow-2xl"
+        className="absolute inset-x-0 top-full border-t border-white/10 bg-midnight px-4 pb-6 pt-2 shadow-2xl max-h-[calc(100dvh-4rem)] overflow-y-auto overscroll-contain"
       >
         <ul className="flex flex-col">
           <li>
@@ -103,13 +123,14 @@ export function MenuMovil() {
           </li>
           {ENLACES_MENU.map((enlace) => (
             <li key={enlace.href}>
-              <Link
+              <EnlaceMenu
                 href={enlace.href}
-                onClick={cerrar}
-                className="flex min-h-12 items-center rounded-xl px-3 text-lg text-white hover:bg-white/10"
+                alPulsar={cerrar}
+                className="flex min-h-12 items-center rounded-xl px-3 text-lg hover:bg-white/10"
+                colorInactivo="text-white"
               >
                 {enlace.texto}
-              </Link>
+              </EnlaceMenu>
             </li>
           ))}
         </ul>

@@ -32,7 +32,7 @@ export function CasoUria() {
           >
             “
           </span>
-          <blockquote className="font-display text-[1.75rem] font-semibold leading-[1.3] tracking-[-0.01em] text-midnight text-pretty sm:text-[2rem]">
+          <blockquote className="font-display text-[1.375rem] font-semibold leading-[1.35] tracking-[-0.01em] text-midnight text-pretty sm:text-[2rem]">
             <p>{CITA_URIA}</p>
           </blockquote>
           <figcaption className="mt-10 flex flex-wrap items-center gap-x-6 gap-y-4">

@@ -108,3 +108,14 @@ test.describe("bucle de la escena", () => {
     });
   });
 });
+
+// Revisión final (T48): a 1280 px el botón para pausar la escena se ve entero (WCAG 2.2.2).
+test("a 1280 px el botón de pausa de la escena queda dentro de la pantalla", async ({ page }, info) => {
+  test.skip(info.project.name === "movil", "escritorio");
+  await page.setViewportSize({ width: 1280, height: 800 });
+  await page.goto("/");
+  const pausa = page.getByRole("button", { name: "Pausar animación" });
+  await expect(pausa).toBeVisible({ timeout: 10_000 });
+  const caja = (await pausa.boundingBox())!;
+  expect(caja.x + caja.width).toBeLessThanOrEqual(1280);
+});
