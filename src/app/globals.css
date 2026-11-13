@@ -210,15 +210,42 @@
   opacity: 0;
 }
 
-.hilo-parada {
-  fill: var(--color-aqua);
-  opacity: 0.3;
-  transition: opacity 0.3s ease;
+/* Esferas de las paradas (SPEC v3 §6): apagadas hasta que llega la cinta; al llegar se encienden con un pulso. */
+.cinta-esfera {
+  opacity: 0.4;
+  transition: opacity 0.35s ease;
 }
 
-.hilo-parada[data-encendida],
-.hilo-conductor[data-estado="completo"] .hilo-parada {
+.cinta-esfera-halo {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.cinta-esfera[data-encendida],
+.hilo-conductor[data-estado="completo"] .cinta-esfera {
   opacity: 1;
+}
+
+.hilo-conductor[data-estado="completo"] .cinta-esfera-halo {
+  opacity: 0.6;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .cinta-esfera[data-encendida] .cinta-esfera-halo {
+    animation: cinta-pulso 1.1s ease-out 1 forwards;
+  }
+}
+
+@keyframes cinta-pulso {
+  0% {
+    opacity: 0.9;
+    transform: scale(0.5);
+  }
+  100% {
+    opacity: 0.45;
+    transform: scale(1);
+  }
 }
 
 .hilo-conductor[data-estado="completo"] .hilo-punta {
@@ -481,13 +508,15 @@
 }
 
 @media (width >= 64rem) {
+  /* En escritorio la línea de tiempo es un tramo de la cinta (SPEC v3 §5.4 y §6): más gruesa y con brillo. */
   .linea-tramo {
-    top: calc(1.375rem - 1px);
+    top: calc(1.375rem - 4px);
     bottom: auto;
-    left: calc(2.75rem + 8px);
-    right: calc(-2rem + 8px);
+    left: calc(2.75rem + 4px);
+    right: calc(-2rem + 4px);
     width: auto;
-    height: 2px;
+    height: 8px;
+    box-shadow: 0 0 14px rgb(0 104 224 / 0.18);
   }
 
   .linea-tramo-relleno {

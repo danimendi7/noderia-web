@@ -3,7 +3,7 @@
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useEffect, useRef, useState } from "react";
-import { construirHilo, type Hilo, longitudParaY, margenesHilo } from "@/lib/hilo";
+import { construirHilo, type Hilo, longitudParaY, margenesHilo, medidasCinta } from "@/lib/hilo";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -61,7 +61,7 @@ function medirLinea(seccion: HTMLElement, y0: number) {
 }
 
 /**
- * Hilo conductor de la home (SPEC v2, G1): trazo con el degradado de marca que se dibuja al hacer scroll, con una
+ * Hilo conductor de la home, ahora cinta con forma de N (SPEC v3 §6; antes SPEC v2, G1): cinta con el degradado de marca que se dibuja al hacer scroll, con una
  * parada Aqua en cada sección y una punta con halo. Decorativo (`aria-hidden`) y sin eventos de puntero. Con
  * movimiento reducido se muestra completo y quieto. Se calcula después de cargar, así que no mueve nada (sin CLS).
  */
@@ -89,16 +89,17 @@ export function HiloConductor() {
     };
   }, []);
 
-  // Dibujar con el scroll.
+  // Dibujar con el scroll: la cinta, su brillo y su reflejo avanzan juntos.
   useEffect(() => {
     const path = trazo.current;
     const svg = raiz.current;
     if (!geo || !path || !svg) return;
+    const trazos = [...svg.querySelectorAll<SVGPathElement>("[data-cinta-trazo]")];
     const total = path.getTotalLength();
     const reducido = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     svg.style.setProperty("--hilo-total", `${total}`);
     if (reducido) {
-      path.style.strokeDasharray = "none";
+      trazos.forEach((t) => (t.style.strokeDasharray = "none"));
       svg.dataset.estado = "completo";
       return;
     }
@@ -112,12 +113,12 @@ export function HiloConductor() {
       tabla.push({ longitud: l, y: maxY });
     }
     const longitudesParadas = geo.paradas.map((p) => longitudParaY(tabla, p.y));
-    const paradas = [...svg.querySelectorAll<SVGCircleElement>("[data-parada]")];
+    const paradas = [...svg.querySelectorAll<SVGGElement>("[data-parada]")];
 
-    path.style.strokeDasharray = `${total} ${total}`;
+    trazos.forEach((t) => (t.style.strokeDasharray = `${total} ${total}`));
     const estado = { l: 0 };
     const pintar = () => {
-      path.style.strokeDashoffset = `${total - estado.l}`;
+      trazos.forEach((t) => (t.style.strokeDashoffset = `${total - estado.l}`));
       const p = path.getPointAtLength(estado.l);
       punta.current?.setAttribute("transform", `translate(${p.x} ${p.y})`);
       paradas.forEach((c, i) => c.toggleAttribute("data-encendida", estado.l >= longitudesParadas[i] - 2));
@@ -138,13 +139,15 @@ export function HiloConductor() {
   }, [geo]);
 
   if (!geo) return null;
-  const grosor = geo.movil ? 1.25 : 1.75;
+  const m = medidasCinta(geo.ancho);
+  const esferas = [...geo.paradas, geo.final];
   return (
     <svg
       ref={raiz}
       aria-hidden="true"
       focusable="false"
       data-hilo
+      data-cinta
       className="hilo-conductor pointer-events-none absolute left-0 top-0 z-[5] overflow-visible"
       width={geo.ancho}
       height={geo.alto}
@@ -152,27 +155,52 @@ export function HiloConductor() {
       fill="none"
     >
       <defs>
-        <linearGradient id="hilo-degradado" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="420" y2="900" spreadMethod="reflect">
+        {/* Degradado de marca a lo largo del recorrido (Royal → Electric → Sky → Aqua), repetido en espejo. */}
+        <linearGradient id="hilo-degradado" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="360" y2="1100" spreadMethod="reflect">
           <stop offset="0" stopColor="#0030C0" />
           <stop offset="0.4" stopColor="#0068E0" />
           <stop offset="0.75" stopColor="#00B0F0" />
           <stop offset="1" stopColor="#00E5F0" />
         </linearGradient>
         <radialGradient id="hilo-halo">
-          <stop offset="0" stopColor="#00E5F0" stopOpacity="0.55" />
+          <stop offset="0" stopColor="#00E5F0" stopOpacity="0.6" />
           <stop offset="1" stopColor="#00E5F0" stopOpacity="0" />
         </radialGradient>
+        {/* Esfera como las bolitas del logo: blanco-aqua arriba a la izquierda y azul en el borde. */}
+        <radialGradient id="cinta-esfera" cx="0.5" cy="0.5" r="0.5" fx="0.34" fy="0.3">
+          <stop offset="0" stopColor="#FFFFFF" />
+          <stop offset="0.3" stopColor="#B9FAFF" />
+          <stop offset="0.68" stopColor="#00B0F0" />
+          <stop offset="1" stopColor="#0030C0" />
+        </radialGradient>
       </defs>
-      {/* Pista muy tenue por donde irá el hilo. */}
-      <path d={geo.d} stroke="#0068E0" strokeOpacity="0.12" strokeWidth={grosor * 0.6} />
-      <path ref={trazo} d={geo.d} stroke="url(#hilo-degradado)" strokeWidth={grosor} strokeLinecap="round" />
-      {geo.paradas.map((p) => (
-        <circle key={p.y} data-parada cx={p.x} cy={p.y} r={geo.movil ? 3.5 : 4.5} className="hilo-parada" />
+      {/* Pista muy tenue por donde irá la cinta. */}
+      <path d={geo.d} stroke="#0068E0" strokeOpacity="0.1" strokeWidth={m.grosor * 0.35} strokeLinecap="round" />
+      {/* Brillo exterior suave (trazo ancho y transparente, sin filtros). */}
+      <path data-cinta-trazo="brillo" d={geo.d} stroke="#0068E0" strokeOpacity="0.16" strokeWidth={m.brillo} strokeLinecap="round" strokeLinejoin="round" />
+      {/* Cinta con volumen. */}
+      <path ref={trazo} data-cinta-trazo="principal" d={geo.d} stroke="url(#hilo-degradado)" strokeWidth={m.grosor} strokeLinecap="round" strokeLinejoin="round" />
+      {/* Reflejo: trazo fino y claro desplazado, como el brillo de la N. */}
+      <path
+        data-cinta-trazo="reflejo"
+        d={geo.d}
+        transform={`translate(${-m.desplazamientoReflejo} ${-m.desplazamientoReflejo})`}
+        stroke="#E6FDFF"
+        strokeOpacity="0.42"
+        strokeWidth={m.reflejo}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      {esferas.map((p) => (
+        <g key={`${p.x}-${p.y}`} data-parada className="cinta-esfera" transform={`translate(${p.x} ${p.y})`}>
+          <circle className="cinta-esfera-halo" r={m.esfera * 2.4} fill="url(#hilo-halo)" />
+          <circle r={m.esfera} fill="url(#cinta-esfera)" />
+          <circle cx={-m.esfera * 0.32} cy={-m.esfera * 0.36} r={m.esfera * 0.3} fill="#FFFFFF" fillOpacity="0.85" />
+        </g>
       ))}
-      <circle data-parada cx={geo.final.x} cy={geo.final.y} r={geo.movil ? 3.5 : 4.5} className="hilo-parada" />
       <g ref={punta} className="hilo-punta">
-        <circle r="16" fill="url(#hilo-halo)" />
-        <circle r="3.5" fill="#00E5F0" />
+        <circle r={m.grosor * 1.6} fill="url(#hilo-halo)" />
+        <circle r={m.grosor * 0.35} fill="#FFFFFF" />
       </g>
     </svg>
   );
