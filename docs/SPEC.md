@@ -189,3 +189,11 @@ La dirección de arte está en `docs/SPEC-v2-diseno.md`. Cambios de producto res
 - Se permiten vídeos cortos generados con Higgsfield (mp4 H.264 + webm, < 2,5 MB, sin sonido, `autoplay muted loop playsinline`, con poster, diferidos bajo el primer pantallazo, nunca LCP, sin reproducir con `prefers-reduced-motion`).
 - Umbrales: Lighthouse móvil Rendimiento ≥ 90, Accesibilidad/Buenas prácticas/SEO ≥ 95 y CLS < 0,05; sin scroll horizontal de 320 a 1920 px.
 - Se mantiene: solo Outfit + Inter, la paleta NoderIA y los logos oficiales sin tocar; nada de cifras, clientes ni testimonios inventados.
+
+## 11. Fase V3: SEO, páginas, cinta y hero (orden del 2026-11-13 19:18)
+
+El detalle está en `docs/SPEC-v3.md`. Cambios de producto respecto a este documento:
+- La web pasa de landing única a varias páginas: `/software-gestion-talleres`, `/diseno-web-talleres`, `/automatizaciones-talleres`, `/quienes-somos` y `/presupuesto`, además de la home y el caso Uría. La home resume y enlaza; cada página desarrolla.
+- Menú: logo · Soluciones ▾ · Caso de éxito · Quiénes somos · Pide presupuesto (→ `/presupuesto`). Las anclas de la home se conservan.
+- La regla de la sección 7 sobre WhatsApp se relaja: la SPEC v3 lo incluye en el subtítulo de la home y en `/automatizaciones-talleres` como servicio que se desarrolla a medida. En el caso Uría se sigue mostrando solo lo que tienen implantado.
+- Sigue fuera de alcance: blog, euskera, página de agencias de viaje, fotos o nombres del equipo, cifras o testimonios nuevos.
