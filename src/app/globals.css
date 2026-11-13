@@ -423,3 +423,60 @@
     display: none;
   }
 }
+
+/* Línea de tiempo de "Cómo trabajamos" (SPEC v2, S7). Sin --progreso (sin JS o con movimiento reducido) está completa. */
+.linea-tiempo li {
+  --llenado: clamp(0, calc(var(--progreso, 1) * var(--tramos) - var(--indice)), 1);
+}
+
+.linea-nodo {
+  background: #fff;
+  color: rgb(0 16 44 / 0.55);
+  box-shadow: inset 0 0 0 1.5px rgb(0 16 44 / 0.15);
+  transition:
+    background-color 0.4s ease,
+    color 0.4s ease,
+    box-shadow 0.4s ease;
+}
+
+.linea-tiempo li[data-encendido] .linea-nodo {
+  background: linear-gradient(135deg, #0030c0 0%, #0068e0 55%, #00b0f0 100%);
+  color: #fff;
+  box-shadow:
+    inset 0 0 0 1.5px rgb(255 255 255 / 0.25),
+    0 0 0 6px rgb(0 229 240 / 0.14),
+    0 10px 24px -10px rgb(0 104 224 / 0.8);
+}
+
+.linea-tramo {
+  left: calc(1.375rem - 1px);
+  top: calc(2.75rem + 6px);
+  bottom: calc(-2.5rem + 6px);
+  width: 2px;
+  border-radius: 9999px;
+  background: rgb(0 16 44 / 0.08);
+  overflow: hidden;
+}
+
+.linea-tramo-relleno {
+  background: linear-gradient(180deg, #0068e0, #00b0f0 60%, #00e5f0);
+  transform-origin: top;
+  transform: scaleY(var(--llenado));
+}
+
+@media (width >= 64rem) {
+  .linea-tramo {
+    top: calc(1.375rem - 1px);
+    bottom: auto;
+    left: calc(2.75rem + 8px);
+    right: calc(-2rem + 8px);
+    width: auto;
+    height: 2px;
+  }
+
+  .linea-tramo-relleno {
+    background: linear-gradient(90deg, #0068e0, #00b0f0 60%, #00e5f0);
+    transform-origin: left;
+    transform: scaleX(var(--llenado));
+  }
+}

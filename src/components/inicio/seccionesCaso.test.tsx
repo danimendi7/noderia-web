@@ -69,4 +69,13 @@ describe("Cómo trabajamos", () => {
       "Acompañamiento",
     ]);
   });
+
+  it("sin JavaScript la línea de tiempo está completa: los 4 nodos encendidos y 3 tramos que los unen", () => {
+    const { container } = render(<ComoTrabajamos />);
+    const pasos = container.querySelectorAll("ol > li");
+    expect([...pasos].every((p) => p.hasAttribute("data-encendido"))).toBe(true);
+    const tramos = container.querySelectorAll("[data-tramo]");
+    expect(tramos).toHaveLength(3);
+    tramos.forEach((t) => expect(t.closest("[aria-hidden='true']")).not.toBeNull());
+  });
 });
