@@ -10,7 +10,7 @@ describe("Caso real: Neumáticos Uría", () => {
   it("tiene ancla, H2 y la cita exacta de la SPEC con su autora", () => {
     const { container } = render(<CasoUria />);
     expect(container.querySelector("section#caso-uria")).not.toBeNull();
-    expect(screen.getByRole("heading", { level: 2, name: "Caso real: Neumáticos Uría" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { level: 2, name: "Neumáticos Uría, conectado" })).toBeInTheDocument();
     const cita = container.querySelector("blockquote");
     expect(cita?.textContent?.replace(/[«»]/g, "").trim()).toBe(CITA_SPEC);
     expect(container.querySelector("figcaption")).toHaveTextContent("Mónica, Neumáticos Uría (Hernani)");
@@ -29,7 +29,7 @@ describe("Caso real: Neumáticos Uría", () => {
 describe("Cómo trabajamos", () => {
   it("son 4 pasos en orden", () => {
     render(<ComoTrabajamos />);
-    expect(screen.getByRole("heading", { level: 2, name: "Cómo trabajamos" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { level: 2, name: "Así lo ponemos en marcha" })).toBeInTheDocument();
     const lista = screen.getByRole("list");
     expect(lista.tagName).toBe("OL");
     const pasos = within(lista).getAllByRole("listitem");

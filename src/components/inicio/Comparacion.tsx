@@ -11,7 +11,14 @@ const FILAS = [
 /** Sección 6 de la home: comparación con un programa genérico. */
 export function Comparacion() {
   return (
-    <Seccion idTitulo="titulo-comparacion" titulo="No es otro programa más" fondo="midnight">
+    <Seccion
+      idTitulo="titulo-comparacion"
+      etiqueta="La diferencia"
+      titulo="No es otro programa más"
+      destacado="otro programa"
+      fondo="midnight"
+      desde="mist"
+    >
       <div className="overflow-hidden rounded-3xl border border-white/10">
         <table className="w-full table-fixed border-collapse text-left">
           <caption className="sr-only">Programa genérico frente a NoderIA</caption>

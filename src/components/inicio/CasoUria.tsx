@@ -17,9 +17,12 @@ export function CasoUria() {
     <Seccion
       id={ANCLAS.casoUria}
       idTitulo="titulo-caso-uria"
-      titulo="Caso real: Neumáticos Uría"
+      etiqueta="Caso real"
+      titulo="Neumáticos Uría, conectado"
+      destacado="conectado"
       entradilla="Taller de neumáticos en Hernani. Les hicimos su web y su sistema de gestión, conectados entre sí."
       fondo="blanco"
+      desde="midnight"
     >
       <div className="grid gap-10 lg:grid-cols-12 lg:gap-16">
         <figure className="lg:col-span-7">

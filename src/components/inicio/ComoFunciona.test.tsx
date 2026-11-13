@@ -6,7 +6,7 @@ describe("Cómo funciona", () => {
   it("tiene su ancla, H2 y los 5 pasos de la SPEC en una lista ordenada", () => {
     const { container } = render(<ComoFunciona />);
     expect(container.querySelector("section#como-funciona")).not.toBeNull();
-    expect(screen.getByRole("heading", { level: 2, name: "Cómo funciona" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { level: 2, name: "De la cita a la próxima revisión, todo conectado" })).toBeInTheDocument();
     const lista = screen.getByRole("list");
     expect(lista.tagName).toBe("OL");
     const pasos = within(lista).getAllByRole("listitem");

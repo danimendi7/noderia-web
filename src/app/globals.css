@@ -38,6 +38,38 @@
   color: transparent;
 }
 
+/* Sobre fondo claro, el tramo Sky/Aqua del degradado no se lee: se muestra el mismo degradado oficial
+   ampliado y anclado a la izquierda, así la palabra va de Royal a Electric y no baja de 3:1. */
+@utility texto-marca-claro {
+  background-image: linear-gradient(120deg, #0030c0 0%, #0068e0 40%, #00b0f0 75%, #00e5f0 100%);
+  background-size: 175% 100%;
+  background-position: 0 0;
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+/* Jerarquía de la V2 (SPEC v2, G3): H2 de sección en Outfit 700, 32–36 px en móvil y 48–56 px en escritorio. */
+@utility titulo-seccion {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(2rem, 1.35rem + 2.6vw, 3.5rem);
+  line-height: 1.08;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+
+/* Párrafos de 17–18 px con 60–65 caracteres por línea como mucho. */
+@utility texto-entradilla {
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  max-width: 62ch;
+  text-wrap: pretty;
+  @media (width >= 64rem) {
+    font-size: 1.125rem;
+  }
+}
+
 @layer base {
   html {
     scroll-behavior: smooth;
@@ -62,6 +94,10 @@
   h3 {
     font-family: var(--font-display);
     line-height: 1.15;
+  }
+
+  h3 {
+    text-wrap: balance;
   }
 
   :focus-visible {
