@@ -1,4 +1,4 @@
-import { render, screen, within } from "@testing-library/react";
+import { fireEvent, render, screen, within } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import { Comparacion } from "./Comparacion";
 import { Problema } from "./Problema";
@@ -77,3 +77,32 @@ describe("No es otro programa más", () => {
     expect(within(tabla).getByText(/equipo cercano en Gipuzkoa/)).toBeInTheDocument();
   });
 });
+
+describe("Interruptor de la comparación (SPEC v2, S5)", () => {
+  it("es un radiogroup accesible que arranca en «Con NoderIA» y se cambia con las flechas", () => {
+    const { container } = render(<Comparacion />);
+    const grupo = screen.getByRole("radiogroup", { name: "Comparar" });
+    const [generico, noderia] = within(grupo).getAllByRole("radio");
+    expect(generico).toHaveAccessibleName("Programa genérico");
+    expect(noderia).toHaveAttribute("aria-checked", "true");
+    expect(noderia).toHaveAttribute("tabindex", "0");
+    expect(generico).toHaveAttribute("tabindex", "-1");
+    fireEvent.keyDown(noderia, { key: "ArrowLeft" });
+    expect(generico).toHaveAttribute("aria-checked", "true");
+    expect(generico).toHaveFocus();
+    expect(container.querySelector("[data-modo]")).toHaveAttribute("data-modo", "generico");
+    fireEvent.click(noderia);
+    expect(container.querySelector("[data-modo]")).toHaveAttribute("data-modo", "noderia");
+  });
+
+  it("los 8 textos están en el HTML (tabla para lectores) y la lista visual está oculta para ellos", () => {
+    const { container } = render(<Comparacion />);
+    const tabla = screen.getByRole("table");
+    for (const texto of ["Te adaptas al programa", "Web y gestión por separado", "Soporte por ticket", "Empiezas de cero",
+      "Se adapta a tu taller", "Web y gestión conectadas", "Un equipo cercano en Gipuzkoa que conoce tu taller", "Importamos tus datos"]) {
+      expect(within(tabla).getByText(texto)).toBeInTheDocument();
+    }
+    expect(container.querySelector(".comparacion-panel")).toHaveAttribute("aria-hidden", "true");
+  });
+});
+
