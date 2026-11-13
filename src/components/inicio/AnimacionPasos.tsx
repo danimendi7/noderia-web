@@ -8,18 +8,20 @@ import { type ReactNode, useRef } from "react";
 gsap.registerPlugin(useGSAP, ScrollTrigger);
 
 /**
- * Anima "Cómo funciona" al hacer scroll: la línea se va llenando y cada paso aparece al llegar.
- * Solo transform y opacity. Con prefers-reduced-motion no se anima nada (todo visible desde el inicio).
+ * "Cómo funciona" al hacer scroll (SPEC v2, S3): la línea se va llenando y el paso que cruza el centro de la
+ * pantalla queda activo (`data-paso-activo`), lo que cambia la ilustración de la escena fija (CSS).
+ * Solo transform y opacity. Con prefers-reduced-motion no se anima nada y no hay paso activo: todo visible.
  */
-export function AnimacionPasos({ className, children }: { className?: string; children: ReactNode }) {
+export function AnimacionPasos({ className = "", children }: { className?: string; children: ReactNode }) {
   const raiz = useRef<HTMLDivElement>(null);
 
   useGSAP(
     () => {
       const mm = gsap.matchMedia();
       mm.add("(prefers-reduced-motion: no-preference)", () => {
-        const lista = raiz.current?.querySelector("ol");
-        if (!lista) return;
+        const el = raiz.current;
+        const lista = el?.querySelector("ol");
+        if (!el || !lista) return;
 
         gsap.fromTo(
           "[data-progreso]",
@@ -27,25 +29,33 @@ export function AnimacionPasos({ className, children }: { className?: string; ch
           {
             scaleY: 1,
             ease: "none",
-            scrollTrigger: { trigger: lista, start: "top 70%", end: "bottom 60%", scrub: 0.4 },
+            scrollTrigger: { trigger: lista, start: "top 60%", end: "bottom 50%", scrub: 0.4 },
           },
         );
 
+        el.setAttribute("data-paso-activo", "1");
         gsap.utils.toArray<HTMLElement>("[data-paso]").forEach((paso) => {
-          const disparador = { trigger: paso, start: "top 80%", toggleActions: "play none none reverse" };
-          gsap.from(paso.querySelector("[data-nodo]"), {
-            scale: 0.4,
-            opacity: 0,
-            duration: 0.45,
-            ease: "back.out(2)",
-            scrollTrigger: disparador,
+          ScrollTrigger.create({
+            trigger: paso,
+            start: "top 55%",
+            end: "bottom 55%",
+            onToggle: (estado) => {
+              if (estado.isActive) el.setAttribute("data-paso-activo", paso.dataset.paso ?? "1");
+            },
           });
+        });
+
+        return () => el.removeAttribute("data-paso-activo");
+      });
+      // En móvil no hay escena fija: cada paso entra con un desplazamiento corto al llegar.
+      mm.add("(prefers-reduced-motion: no-preference) and (max-width: 63.99rem)", () => {
+        gsap.utils.toArray<HTMLElement>("[data-paso]").forEach((paso) => {
           gsap.from(paso.querySelector("[data-texto]"), {
-            x: 24,
+            y: 16,
             opacity: 0,
             duration: 0.55,
             ease: "power2.out",
-            scrollTrigger: disparador,
+            scrollTrigger: { trigger: paso, start: "top 85%", toggleActions: "play none none reverse" },
           });
         });
       });
@@ -55,7 +65,7 @@ export function AnimacionPasos({ className, children }: { className?: string; ch
   );
 
   return (
-    <div ref={raiz} className={className}>
+    <div ref={raiz} className={`pasos-raiz ${className}`}>
       {children}
     </div>
   );

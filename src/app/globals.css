@@ -137,6 +137,74 @@
   }
 }
 
+/* "Cómo funciona" (SPEC v2, S3): escena fija que cambia con el paso activo (data-paso-activo lo pone GSAP). */
+.escena-paso {
+  opacity: 0;
+  transform: translateY(14px) scale(0.96);
+  transition:
+    opacity 0.5s ease,
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+[data-paso-activo="1"] [data-escena-paso="1"],
+[data-paso-activo="2"] [data-escena-paso="2"],
+[data-paso-activo="3"] [data-escena-paso="3"],
+[data-paso-activo="4"] [data-escena-paso="4"],
+[data-paso-activo="5"] [data-escena-paso="5"],
+.pasos-raiz:not([data-paso-activo]) [data-escena-paso="1"] {
+  opacity: 1;
+  transform: none;
+}
+
+.escena-llave {
+  opacity: 0;
+  transform: translate(10px, 10px) scale(0.8);
+  transition:
+    opacity 0.4s ease 0.25s,
+    transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.25s;
+}
+
+[data-paso-activo="5"] .escena-llave {
+  opacity: 1;
+  transform: none;
+}
+
+@media (width >= 64rem) {
+  [data-paso-activo] .paso-texto,
+  [data-paso-activo] .paso-nodo {
+    opacity: 0.35;
+    transition: opacity 0.4s ease;
+  }
+
+  [data-paso-activo="1"] [data-paso="1"] .paso-texto,
+  [data-paso-activo="1"] [data-paso="1"] .paso-nodo,
+  [data-paso-activo="2"] [data-paso="2"] .paso-texto,
+  [data-paso-activo="2"] [data-paso="2"] .paso-nodo,
+  [data-paso-activo="3"] [data-paso="3"] .paso-texto,
+  [data-paso-activo="3"] [data-paso="3"] .paso-nodo,
+  [data-paso-activo="4"] [data-paso="4"] .paso-texto,
+  [data-paso-activo="4"] [data-paso="4"] .paso-nodo,
+  [data-paso-activo="5"] [data-paso="5"] .paso-texto,
+  [data-paso-activo="5"] [data-paso="5"] .paso-nodo {
+    opacity: 1;
+  }
+}
+
+/* Con movimiento reducido no hay escena fija: cada paso lleva su ilustración, como en móvil. */
+@media (prefers-reduced-motion: reduce) {
+  .escena-fija {
+    display: none !important;
+  }
+
+  .escena-fija + * {
+    grid-column: 1 / -1;
+  }
+
+  .ilustracion-paso {
+    display: block !important;
+  }
+}
+
 @layer base {
   html {
     scroll-behavior: smooth;
