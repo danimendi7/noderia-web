@@ -50,6 +50,8 @@ try {
       window.scrollTo(0, 0);
     });
     await pagina.waitForLoadState("networkidle");
+    // La cabecera fija taparía la parte de arriba de cada sección; las herramientas de Next (en local) también sobran.
+    await pagina.addStyleTag({ content: "body > header, header { position: absolute !important; } nextjs-portal { display: none !important; }" });
     for (const selector of selectores.length ? selectores : [null]) {
       const archivo = join(carpeta, `${fase}-${ancho}-${nombreDe(selector)}.jpg`);
       const opciones = { path: archivo, type: "jpeg", quality: 70 };

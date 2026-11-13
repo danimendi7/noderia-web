@@ -3,6 +3,7 @@ import type { Metadata, Viewport } from "next";
 import { Inter, Outfit } from "next/font/google";
 import { Cabecera } from "@/components/layout/Cabecera";
 import { Pie } from "@/components/layout/Pie";
+import { ProveedorMovimiento } from "@/components/movimiento/ProveedorMovimiento";
 import { DESCRIPCION, NOMBRE, urlDelSitio } from "@/lib/sitio";
 import "./globals.css";
 
@@ -54,11 +55,13 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         >
           Saltar al contenido
         </a>
-        <Cabecera />
-        <main id="contenido" className="flex-1 pt-16">
-          {children}
-        </main>
-        <Pie />
+        <ProveedorMovimiento>
+          <Cabecera />
+          <main id="contenido" className="flex-1 pt-16">
+            {children}
+          </main>
+          <Pie />
+        </ProveedorMovimiento>
         {/* Vercel Web Analytics: sin cookies, no necesita banner. */}
         <Analytics />
       </body>
