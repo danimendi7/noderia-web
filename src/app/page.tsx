@@ -1,6 +1,7 @@
 import { PantallaCarga } from "@/components/carga/PantallaCarga";
 import { BucleEscena } from "@/components/escena/BucleEscena";
 import { Escena } from "@/components/escena/Escena";
+import { EntradasAlScroll } from "@/components/movimiento/EntradasAlScroll";
 import { CasoUria } from "@/components/inicio/CasoUria";
 import { ComoFunciona } from "@/components/inicio/ComoFunciona";
 import { Comparacion } from "@/components/inicio/Comparacion";
@@ -38,6 +39,7 @@ export default function Inicio() {
       <Preguntas />
       <Presupuesto />
       <HiloConductor />
+      <EntradasAlScroll />
       <JsonLd datos={datosEstructuradosEmpresa(urlDelSitio())} />
     </>
   );

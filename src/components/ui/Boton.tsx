@@ -31,7 +31,7 @@ const base =
 function clasesDe(variante: Variante, fondo: Fondo): string {
   switch (variante) {
     case "principal":
-      return "min-h-12 rounded-xl bg-electric px-6 py-3 text-white shadow-[0_8px_24px_-8px_rgb(0_104_224/0.6)] hover:bg-royal";
+      return "boton-principal min-h-12 rounded-xl bg-electric px-6 py-3 text-white shadow-[0_8px_24px_-8px_rgb(0_104_224/0.6)] hover:bg-royal";
     case "secundario":
       return fondo === "oscuro"
         ? "min-h-12 rounded-xl border border-white/50 px-6 py-3 text-white hover:border-aqua hover:text-aqua"

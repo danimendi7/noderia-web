@@ -8,6 +8,7 @@ import {
   ESPERA_MAXIMA_IMAGENES,
   ID_PANTALLA_CARGA,
   IMAGENES_CARGA,
+  anunciarSalidaCarga,
 } from "@/lib/pantallaCarga";
 
 gsap.registerPlugin(useGSAP);
@@ -74,6 +75,7 @@ export function AnimacionCarga() {
       function terminar() {
         if (!vigente) return;
         soltar();
+        anunciarSalidaCarga();
         pantalla!.removeAttribute("data-activa");
         pantalla!.dataset.estado = "terminada";
       }
@@ -234,5 +236,6 @@ function crearAnimacion(pantalla: HTMLDivElement, alTerminar: () => void) {
     .addLabel("logo-completo", LOGO_COMPLETO)
     // 4. Salida hacia el hero.
     .to(q(".carga-logo"), { scale: 0.92, opacity: 0, duration: 0.4, ease: "power2.in" }, LOGO_COMPLETO)
+    .call(() => anunciarSalidaCarga(), undefined, 2.25)
     .to(pantalla, { autoAlpha: 0, duration: 0.45, ease: "power1.out" }, 2.25);
 }

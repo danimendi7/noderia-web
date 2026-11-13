@@ -542,3 +542,101 @@
     stroke-dashoffset: 0;
   }
 }
+
+/* Textura de nodos del hero (SPEC v2, S1): retícula de puntos que se desvanece hacia los bordes. */
+.textura-nodos {
+  background-image: radial-gradient(rgb(0 229 240 / 0.22) 1px, transparent 1.5px);
+  background-size: 28px 28px;
+  mask-image: radial-gradient(ellipse 70% 60% at 65% 45%, black 0%, transparent 75%);
+  opacity: 0.55;
+}
+
+/* Entrada del hero al fundirse la pantalla de carga (SPEC v2, S1 y G4). Sin pantalla de carga no hay entrada:
+   el texto está pintado desde el principio, así el H1 sigue siendo el LCP. */
+.hero-palabra {
+  display: inline-block;
+}
+
+@keyframes hero-palabra-entra {
+  from {
+    opacity: 0;
+    transform: translateY(0.45em);
+  }
+}
+
+@keyframes entra-sube {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html[data-carga="saliendo"] .hero-palabra {
+    animation: hero-palabra-entra 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+    animation-delay: calc(0.08s + var(--i, 0) * 0.08s);
+  }
+
+  html[data-carga="saliendo"] .hero-entra {
+    animation: entra-sube 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+    animation-delay: calc(0.45s + var(--i, 0) * 0.1s);
+  }
+}
+
+/* Botón principal (SPEC v2, G4): brillo que recorre el botón y ligera elevación al pasar el ratón.
+   El foco visible (outline) no se recorta: overflow solo afecta al contenido. */
+.boton-principal {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  transition:
+    background-color 0.2s ease,
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.boton-principal::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(105deg, transparent 35%, rgb(255 255 255 / 0.22) 50%, transparent 65%);
+  transform: translateX(-110%);
+  pointer-events: none;
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .boton-principal:not(:disabled):hover {
+    transform: translateY(-2px);
+    box-shadow: 0 14px 32px -10px rgb(0 104 224 / 0.75);
+  }
+
+  .boton-principal:not(:disabled):hover::after {
+    transform: translateX(110%);
+    transition: transform 0.75s ease;
+  }
+
+  .boton-principal:not(:disabled):active {
+    transform: translateY(0);
+  }
+}
+
+/* Entradas al hacer scroll (SPEC v2, G4): EntradasAlScroll marca "oculto" lo que aún no se ve y "visto" al llegar.
+   Sin JavaScript o con movimiento reducido no se oculta nada. La etiqueta solo se funde: el hilo conductor la mide. */
+@media (prefers-reduced-motion: no-preference) {
+  [data-entra] {
+    transition:
+      opacity 0.7s cubic-bezier(0.2, 0.7, 0.2, 1),
+      transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+    transition-delay: calc(var(--i, 0) * 90ms);
+  }
+
+  [data-entra="oculto"] {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+
+  [data-entra="oculto"][data-entra-fundido] {
+    transform: none;
+  }
+}

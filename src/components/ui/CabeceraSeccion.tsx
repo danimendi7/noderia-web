@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
 
 export type Tono = "claro" | "oscuro";
 
@@ -28,14 +28,14 @@ export function CabeceraSeccion({
   const oscuro = tono === "oscuro";
   return (
     <div className={`max-w-3xl ${className}`}>
-      <p className={`text-xs font-semibold uppercase tracking-[0.2em] sm:text-sm ${oscuro ? "text-aqua" : "text-electric"}`}>
+      <p data-entra="" data-entra-fundido="" className={`text-xs font-semibold uppercase tracking-[0.2em] sm:text-sm ${oscuro ? "text-aqua" : "text-electric"}`}>
         {etiqueta}
       </p>
-      <h2 id={idTitulo} className="titulo-seccion mt-4">
+      <h2 id={idTitulo} data-entra="" style={{ "--i": 1 } as CSSProperties} className="titulo-seccion mt-4">
         {destacado ? conDestacado(titulo, destacado, oscuro ? "texto-marca-oscuro" : "texto-marca-claro") : titulo}
       </h2>
       {entradilla ? (
-        <p className={`texto-entradilla mt-5 ${oscuro ? "text-white/75" : "text-midnight/75"}`}>{entradilla}</p>
+        <p data-entra="" style={{ "--i": 2 } as CSSProperties} className={`texto-entradilla mt-5 ${oscuro ? "text-white/75" : "text-midnight/75"}`}>{entradilla}</p>
       ) : null}
     </div>
   );

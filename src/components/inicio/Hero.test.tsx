@@ -29,4 +29,16 @@ describe("Hero", () => {
       "/#como-funciona",
     );
   });
+
+  it("parte el titular en palabras para la entrada y deja \"punta a punta\" en un bloque con el degradado", () => {
+    render(<Hero />);
+    const palabras = [...screen.getByRole("heading", { level: 1 }).querySelectorAll(".hero-palabra")];
+    expect(palabras.map((p) => p.textContent)).toEqual(["Tu", "taller,", "conectado", "de", "punta a punta"]);
+    expect(palabras.at(-1)).toHaveClass("texto-marca-oscuro");
+  });
+
+  it("lleva una textura de nodos decorativa en el fondo", () => {
+    const { container } = render(<Hero />);
+    expect(container.querySelector("[data-textura-nodos]")?.closest("[aria-hidden='true']")).not.toBeNull();
+  });
 });
