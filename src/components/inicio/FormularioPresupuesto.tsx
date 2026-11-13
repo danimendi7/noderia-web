@@ -36,10 +36,14 @@ const ORDEN_CAMPOS: CampoFormulario[] = [
 const idCampo = (campo: string) => `presupuesto-${campo}`;
 const idError = (campo: string) => `presupuesto-${campo}-error`;
 
+/** Campos sobre cristal oscuro (SPEC v2, S9): borde fino y foco luminoso Aqua. */
 const claseControl =
-  "mt-2 block w-full rounded-xl border border-midnight/50 bg-white px-4 py-3 text-base text-midnight placeholder:text-midnight/60 focus:border-electric focus:outline-2 focus:outline-offset-0 focus:outline-electric aria-[invalid=true]:border-[#C4002B]";
+  "campo-cristal mt-2 block w-full rounded-xl border border-white/25 bg-white/[0.06] px-4 py-3 text-base text-white placeholder:text-white/55 hover:border-white/40 focus:border-aqua focus:outline-2 focus:outline-offset-0 focus:outline-aqua aria-[invalid=true]:border-[#FF8FA0]";
 
-/** Formulario de presupuesto (SPEC F4): valida en el navegador y en el servidor. */
+/** Rojo de error legible sobre Midnight (contraste > 7:1). */
+const COLOR_ERROR = "text-[#FF9AAA]";
+
+/** Formulario de presupuesto (SPEC F4) en tarjeta de cristal oscuro (SPEC v2, S9): valida en el navegador y en el servidor. */
 export function FormularioPresupuesto({ accion, origen = "home#presupuesto" }: Props) {
   const [estado, enviar, enviando] = useActionState(accion, ESTADO_INICIAL);
   const [erroresCliente, setErroresCliente] = useState<ErroresFormulario | null>(null);
@@ -79,17 +83,24 @@ export function FormularioPresupuesto({ accion, origen = "home#presupuesto" }: P
         ref={refGracias}
         role="status"
         tabIndex={-1}
-        className="rounded-3xl bg-white p-8 text-center text-midnight sm:p-12"
+        className="tarjeta-cristal p-8 text-center text-white focus:outline-2 focus:outline-offset-4 focus:outline-aqua sm:p-12"
       >
-        <span
+        {/* Check que se dibuja en Aqua (SPEC v2, S9); con movimiento reducido aparece ya dibujado. */}
+        <svg
           aria-hidden="true"
-          className="mx-auto flex size-14 items-center justify-center rounded-full bg-electric text-white"
+          data-check-exito
+          viewBox="0 0 64 64"
+          className="check-exito mx-auto size-16 text-aqua"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         >
-          <svg viewBox="0 0 24 24" className="size-7" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M5 12.5l4.5 4.5L19 7.5" />
-          </svg>
-        </span>
-        <p className="mt-5 font-display text-2xl font-bold">{MENSAJE_GRACIAS}</p>
+          <circle cx="32" cy="32" r="29" pathLength={1} className="check-exito-circulo" />
+          <path d="M20 33l8.5 8.5L45 24" pathLength={1} className="check-exito-trazo" />
+        </svg>
+        <p className="mt-6 font-display text-2xl font-bold">{MENSAJE_GRACIAS}</p>
       </div>
     );
   }
@@ -102,9 +113,9 @@ export function FormularioPresupuesto({ accion, origen = "home#presupuesto" }: P
       onSubmit={alEnviar}
       noValidate
       aria-describedby="presupuesto-obligatorios"
-      className="relative rounded-3xl bg-white p-6 text-midnight sm:p-10"
+      className="tarjeta-cristal relative p-6 text-white sm:p-10"
     >
-      <p id="presupuesto-obligatorios" className="text-sm text-midnight/75">
+      <p id="presupuesto-obligatorios" className="text-sm text-white/75">
         Los campos con <span aria-hidden="true">*</span>
         <span className="sr-only">asterisco</span> son obligatorios.
       </p>
@@ -114,7 +125,7 @@ export function FormularioPresupuesto({ accion, origen = "home#presupuesto" }: P
           ref={refFallo}
           role="alert"
           tabIndex={-1}
-          className="mt-5 rounded-xl border border-[#C4002B]/30 bg-[#C4002B]/5 px-4 py-3 text-[#9B0022]"
+          className="mt-5 rounded-xl border border-[#FF8FA0]/40 bg-[#FF8FA0]/10 px-4 py-3 text-[#FFC2CC] focus:outline-2 focus:outline-offset-2 focus:outline-aqua"
         >
           {estado.mensaje}
         </div>
@@ -258,11 +269,11 @@ export function FormularioPresupuesto({ accion, origen = "home#presupuesto" }: P
             required
             defaultChecked={valores.consentimiento === "on"}
             {...accesibilidad("consentimiento", errores.consentimiento, true)}
-            className="mt-1 size-5 shrink-0 accent-electric"
+            className="mt-1 size-5 shrink-0 accent-aqua focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aqua"
           />
-          <label htmlFor={idCampo("consentimiento")} className="text-midnight/85">
+          <label htmlFor={idCampo("consentimiento")} className="text-white/85">
             Acepto que NoderIA use estos datos para preparar mi presupuesto y contactarme, según la{" "}
-            <Link href="/privacidad" className="font-medium text-electric underline underline-offset-2">
+            <Link href="/privacidad" className="font-medium text-aqua underline underline-offset-2 hover:text-white">
               política de privacidad
             </Link>
             . <span aria-hidden="true">*</span>
@@ -274,7 +285,7 @@ export function FormularioPresupuesto({ accion, origen = "home#presupuesto" }: P
       <button
         type="submit"
         disabled={enviando}
-        className="mt-8 inline-flex min-h-12 w-full items-center justify-center rounded-xl bg-electric px-6 py-3 font-semibold text-white shadow-[0_8px_24px_-8px_rgb(0_104_224/0.6)] transition-colors hover:bg-royal focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-electric disabled:cursor-wait disabled:opacity-70 sm:w-auto"
+        className="mt-8 inline-flex min-h-12 w-full items-center justify-center rounded-xl bg-electric px-6 py-3 font-semibold text-white shadow-[0_8px_28px_-6px_rgb(0_104_224/0.75)] transition-[background-color,box-shadow] hover:bg-royal hover:shadow-[0_10px_32px_-6px_rgb(0_176_240/0.6)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aqua disabled:cursor-wait disabled:opacity-70 sm:w-auto"
       >
         {enviando ? "Enviando…" : "Pide tu presupuesto"}
       </button>
@@ -305,7 +316,7 @@ function Campo({
 }) {
   return (
     <div>
-      <label htmlFor={idCampo(campo)} className="font-medium">
+      <label htmlFor={idCampo(campo)} className="font-medium text-white/90">
         {etiqueta}
         {obligatorio ? <span aria-hidden="true"> *</span> : null}
       </label>
@@ -318,7 +329,7 @@ function Campo({
 function MensajeError({ campo, error }: { campo: string; error?: string }) {
   if (!error) return null;
   return (
-    <p id={idError(campo)} className="mt-2 flex items-start gap-1.5 text-sm font-medium text-[#C4002B]">
+    <p id={idError(campo)} className={`mt-2 flex items-start gap-1.5 text-sm font-medium ${COLOR_ERROR}`}>
       {error}
     </p>
   );

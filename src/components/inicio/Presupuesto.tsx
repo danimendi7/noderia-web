@@ -4,7 +4,7 @@ import { CONTENEDOR, ESPACIADO_SECCION, Fundido } from "@/components/ui/Seccion"
 import { ANCLAS } from "@/lib/navegacion";
 import { FormularioPresupuesto } from "./FormularioPresupuesto";
 
-/** Sección 10 de la home: llamada final y formulario de presupuesto. */
+/** Sección 10 de la home (SPEC v2, S9): llamada final y formulario en tarjeta de cristal sobre Midnight con halo. */
 export function Presupuesto() {
   return (
     <section
@@ -14,9 +14,14 @@ export function Presupuesto() {
       className="relative isolate overflow-hidden bg-midnight text-white"
     >
       <Fundido desde="mist" />
+      {/* Halo grande detrás de la tarjeta (SPEC v2, S9). Decorativo. */}
       <div
         aria-hidden="true"
         className="absolute -left-40 top-0 -z-10 size-[40rem] rounded-full bg-[radial-gradient(circle,rgb(0_104_224/0.3)_0%,transparent_65%)]"
+      />
+      <div
+        aria-hidden="true"
+        className="absolute -right-56 top-1/2 -z-10 size-[56rem] -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgb(0_104_224/0.32)_0%,rgb(0_48_192/0.14)_40%,transparent_68%)]"
       />
       <div className={`${CONTENEDOR} ${ESPACIADO_SECCION} grid gap-12 lg:grid-cols-12`}>
         <div className="lg:col-span-5">

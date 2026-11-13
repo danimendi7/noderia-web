@@ -32,6 +32,12 @@ describe("FormularioPresupuesto", () => {
     expect(screen.getByRole("link", { name: /política de privacidad/i })).toHaveAttribute("href", "/privacidad");
   });
 
+  it("va en una tarjeta de cristal oscuro con foco Aqua en los campos", () => {
+    const { container } = render(<FormularioPresupuesto accion={accionQueEnvia} />);
+    expect(container.querySelector("form")).toHaveClass("tarjeta-cristal");
+    expect(screen.getByLabelText(/^Tu nombre/)).toHaveClass("campo-cristal", "focus:outline-aqua");
+  });
+
   it("el campo trampa está fuera de la vista y del lector de pantalla", () => {
     const { container } = render(<FormularioPresupuesto accion={accionQueEnvia} />);
     const trampa = container.querySelector('input[name="sitio_web"]')!;
@@ -63,6 +69,10 @@ describe("FormularioPresupuesto", () => {
     });
     expect(await screen.findByText("¡Recibido! Te llamamos en menos de 24 horas laborables.")).toBeInTheDocument();
     expect(screen.getByRole("status")).toHaveFocus();
+    // Éxito con el check Aqua que se dibuja (SPEC v2, S9), decorativo.
+    const check = screen.getByRole("status").querySelector("[data-check-exito]");
+    expect(check).toHaveAttribute("aria-hidden", "true");
+    expect(check).toHaveClass("text-aqua");
   });
 
   it("muestra el fallo del servidor como alerta y conserva lo escrito", async () => {
