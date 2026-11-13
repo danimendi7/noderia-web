@@ -126,3 +126,18 @@ export function longitudParaY(tabla: { longitud: number; y: number }[], y: numbe
   const t = b.y === a.y ? 0 : (y - a.y) / (b.y - a.y);
   return a.longitud + t * (b.longitud - a.longitud);
 }
+
+/** Medidas de la cinta (SPEC v3 §6): 10–14 px en escritorio y 6–8 px en móvil, con el brillo y el reflejo. */
+export function medidasCinta(anchoVentana: number) {
+  const grosor = anchoVentana < 768 ? 7 : anchoVentana < 1280 ? 10 : 12;
+  return {
+    grosor,
+    /** Brillo exterior suave: un trazo ancho y muy transparente por debajo (sin filtros). */
+    brillo: grosor * 2.2,
+    /** Reflejo: trazo fino y claro desplazado hacia arriba a la izquierda. */
+    reflejo: Math.max(1.5, grosor * 0.26),
+    desplazamientoReflejo: anchoVentana < 768 ? 1.5 : 2.5,
+    /** Radio de las esferas de las paradas. */
+    esfera: anchoVentana < 768 ? 6 : grosor * 0.8 + 1,
+  };
+}

@@ -15,7 +15,7 @@ test("el hilo es decorativo, para en cada sección y en el pie, y se dibuja al h
   const secciones = await page.locator("main section[data-fondo]").count();
   await expect(hilo.locator("[data-parada]")).toHaveCount(secciones); // una por sección (sin el hero) + la del pie
   const desplazamiento = () =>
-    hilo.locator("path").nth(1).evaluate((p) => parseFloat(getComputedStyle(p).strokeDashoffset));
+    hilo.locator('[data-cinta-trazo="principal"]').evaluate((p) => parseFloat(getComputedStyle(p).strokeDashoffset));
   const alPrincipio = await desplazamiento();
   await page.evaluate(() => scrollTo(0, document.documentElement.scrollHeight / 2));
   await expect.poll(desplazamiento).toBeLessThan(alPrincipio - 500);
@@ -30,7 +30,11 @@ test.describe("con movimiento reducido", () => {
     await page.goto("/");
     const hilo = page.locator("svg[data-hilo]");
     await expect(hilo).toHaveAttribute("data-estado", "completo");
-    await expect(hilo.locator("path").nth(1)).toHaveCSS("stroke-dasharray", "none");
+    for (const trazo of ["brillo", "principal", "reflejo"]) {
+      await expect(hilo.locator(`[data-cinta-trazo="${trazo}"]`)).toHaveCSS("stroke-dasharray", "none");
+    }
+    // Todas las esferas encendidas: la cinta se ve completa y quieta.
+    for (const esfera of await hilo.locator("[data-parada]").all()) await expect(esfera).toHaveCSS("opacity", "1");
     await expect(hilo.locator(".hilo-punta")).toBeHidden();
   });
 });
@@ -63,4 +67,43 @@ test("en escritorio el hilo entra y sale de la línea de tiempo de Cómo trabaja
   expect(salto).not.toBeNull();
   expect(Math.abs(Number(salto![2]) - y)).toBeLessThan(2);
   expect(Number(salto![3])).toBeGreaterThan(Number(salto![1]));
+});
+
+// SPEC v3 §6: cinta con volumen inspirada en la N del isotipo.
+test("la cinta tiene el grosor de la SPEC, un reflejo desplazado y una esfera con degradado en cada parada", async ({ page }, info) => {
+  const movil = info.project.name === "movil";
+  await page.goto("/");
+  const cinta = page.locator("svg[data-cinta]");
+  await expect(cinta).toHaveAttribute("data-estado", /scroll|completo/);
+  const grosor = Number(await cinta.locator('[data-cinta-trazo="principal"]').getAttribute("stroke-width"));
+  const [minimo, maximo] = movil ? [6, 8] : [10, 14];
+  expect(grosor).toBeGreaterThanOrEqual(minimo);
+  expect(grosor).toBeLessThanOrEqual(maximo);
+  await expect(cinta.locator('[data-cinta-trazo="principal"]')).toHaveAttribute("stroke", "url(#hilo-degradado)");
+  await expect(cinta.locator('[data-cinta-trazo="principal"]')).toHaveAttribute("stroke-linecap", "round");
+  const reflejo = cinta.locator('[data-cinta-trazo="reflejo"]');
+  await expect(reflejo).toHaveAttribute("transform", /translate\(-[123](\.\d+)? -[123](\.\d+)?\)/);
+  expect(Number(await reflejo.getAttribute("stroke-width"))).toBeLessThan(grosor);
+  // Sin filtros pesados.
+  await expect(cinta.locator("filter")).toHaveCount(0);
+  const esferas = cinta.locator("[data-parada]");
+  expect(await esferas.count()).toBeGreaterThanOrEqual(8);
+  await expect(esferas.first().locator('circle[fill="url(#cinta-esfera)"]')).toHaveCount(1);
+});
+
+test("la cinta empieza en la escena del hero y la primera esfera se enciende al llegar con el scroll", async ({ page }) => {
+  await page.goto("/");
+  const cinta = page.locator("svg[data-cinta]");
+  await expect(cinta).toHaveAttribute("data-estado", "scroll");
+  const { inicioY, escenaAbajo } = await page.evaluate(() => {
+    const d = document.querySelector('[data-cinta-trazo="principal"]')!.getAttribute("d")!;
+    const r = document.querySelector('[data-pieza="taller"]')!.getBoundingClientRect();
+    return { inicioY: Number(d.split(" ")[1]), escenaAbajo: r.bottom + scrollY };
+  });
+  expect(Math.abs(inicioY - escenaAbajo)).toBeLessThan(80);
+  const primera = cinta.locator("[data-parada]").first();
+  await expect(primera).not.toHaveAttribute("data-encendida");
+  await page.locator("#como-funciona").scrollIntoViewIfNeeded();
+  await page.evaluate(() => scrollBy(0, 300));
+  await expect(primera).toHaveAttribute("data-encendida", "");
 });

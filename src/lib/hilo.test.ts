@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { construirHilo, longitudParaY, margenesHilo } from "./hilo";
+import { construirHilo, longitudParaY, margenesHilo, medidasCinta } from "./hilo";
 
 const base = {
   inicio: { x: 900, y: 700 },
@@ -76,5 +76,28 @@ describe("longitudParaY", () => {
     expect(longitudParaY(tabla, 125)).toBe(25);
     expect(longitudParaY(tabla, 175)).toBe(100);
     expect(longitudParaY(tabla, 999)).toBe(150);
+  });
+});
+
+describe("medidasCinta", () => {
+  it("la cinta mide 10–14 px en escritorio y 6–8 px en móvil, con el reflejo desplazado 2–3 px", () => {
+    for (const ancho of [1024, 1280, 1440, 1920]) {
+      const m = medidasCinta(ancho);
+      expect(m.grosor).toBeGreaterThanOrEqual(10);
+      expect(m.grosor).toBeLessThanOrEqual(14);
+      expect(m.desplazamientoReflejo).toBeGreaterThanOrEqual(2);
+      expect(m.desplazamientoReflejo).toBeLessThanOrEqual(3);
+      expect(m.reflejo).toBeLessThan(m.grosor);
+    }
+    for (const ancho of [320, 390, 767]) {
+      const m = medidasCinta(ancho);
+      expect(m.grosor).toBeGreaterThanOrEqual(6);
+      expect(m.grosor).toBeLessThanOrEqual(8);
+    }
+  });
+
+  it("en tableta el brillo no invade el contenido (margen de 24 px, cinta a 12 px)", () => {
+    const m = medidasCinta(800);
+    expect(12 + m.brillo / 2).toBeLessThanOrEqual(24);
   });
 });
