@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import { Fragment, type CSSProperties, type ReactNode } from "react";
 import { Boton } from "@/components/ui/Boton";
 import { ANCLAS, ENLACE_PRESUPUESTO } from "@/lib/navegacion";
 
@@ -7,7 +7,19 @@ type HeroProps = {
   escena?: ReactNode;
 };
 
-/** Hero de la home. Se renderiza en el servidor para que el H1 sea el LCP. */
+/** Palabras del titular antes de "punta a punta", que entra como un solo bloque para no partir el degradado. */
+const PALABRAS_TITULAR = ["Tu", "taller,", "conectado", "de"];
+
+/** Posición en la entrada escalonada (la usa el CSS para el retraso). */
+function orden(i: number) {
+  return { "--i": i } as CSSProperties;
+}
+
+/**
+ * Hero de la home. Se renderiza en el servidor para que el H1 sea el LCP.
+ * Las palabras del titular y el resto del bloque están pintados desde el principio (debajo de la pantalla de carga);
+ * solo cuando la pantalla de carga se funde (`html[data-carga="saliendo"]`) entran por palabras y escalonados (SPEC v2, S1 y G4).
+ */
 export function Hero({ escena }: HeroProps) {
   return (
     <section
@@ -18,20 +30,30 @@ export function Hero({ escena }: HeroProps) {
       <FondoHero />
       <div className="mx-auto grid max-w-7xl items-center gap-12 px-4 pb-20 pt-14 sm:px-6 md:pt-20 lg:min-h-[calc(100svh-4rem)] lg:grid-cols-12 lg:px-8 lg:py-16">
         <div className="lg:col-span-6">
-          <p className="font-sans text-sm font-semibold uppercase tracking-[0.2em] text-aqua">
+          <p className="hero-entra font-sans text-sm font-semibold uppercase tracking-[0.2em] text-aqua" style={orden(0)}>
             Software para talleres
           </p>
           <h1
             id="titulo-hero"
             className="mt-5 text-[2.6rem] font-extrabold leading-[1.02] tracking-[-0.02em] sm:text-6xl lg:text-[4.5rem]"
           >
-            Tu taller, conectado de <span className="texto-marca-oscuro">punta a punta</span>
+            {PALABRAS_TITULAR.map((palabra, i) => (
+              <Fragment key={palabra}>
+                {i > 0 ? " " : null}
+                <span className="hero-palabra" style={orden(i)}>
+                  {palabra}
+                </span>
+              </Fragment>
+            ))}{" "}
+            <span className="hero-palabra texto-marca-oscuro" style={orden(PALABRAS_TITULAR.length)}>
+              punta a punta
+            </span>
           </h1>
-          <p className="mt-6 max-w-[34rem] text-lg text-white/80 sm:text-xl">
+          <p className="hero-entra mt-6 max-w-[34rem] text-lg text-white/80 sm:text-xl" style={orden(1)}>
             Citas, órdenes de trabajo, avisos y clientes en un solo sistema, hecho a medida para tu
             taller. Y con una web nueva que te trae las citas directamente.
           </p>
-          <div className="mt-9 flex flex-wrap items-center gap-x-8 gap-y-4">
+          <div className="hero-entra mt-9 flex flex-wrap items-center gap-x-8 gap-y-4" style={orden(2)}>
             <Boton href={ENLACE_PRESUPUESTO}>Pide presupuesto</Boton>
             <Boton href={`/#${ANCLAS.comoFunciona}`} variante="enlace" fondo="oscuro">
               Ver cómo funciona
@@ -49,6 +71,8 @@ function FondoHero() {
   return (
     <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10">
       <div className="absolute -right-40 top-1/2 size-[46rem] -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgb(0_104_224/0.35)_0%,rgb(0_48_192/0.18)_40%,transparent_70%)]" />
+      {/* Textura de nodos: retícula de puntos muy tenue que se desvanece hacia los bordes (SPEC v2, S1). */}
+      <div data-textura-nodos className="textura-nodos absolute inset-0" />
       <div className="absolute -left-60 -top-60 size-[36rem] rounded-full bg-[radial-gradient(circle,rgb(0_48_192/0.25)_0%,transparent_65%)]" />
       <svg
         className="absolute inset-0 size-full opacity-30"

@@ -26,6 +26,19 @@ describe("Boton", () => {
     expect(clases).toContain("text-white");
   });
 
+  it("solo la variante principal lleva el brillo y la elevación de G4", () => {
+    render(
+      <>
+        <Boton href="/">Principal</Boton>
+        <Boton href="/" variante="secundario">
+          Secundario
+        </Boton>
+      </>,
+    );
+    expect(screen.getByRole("link", { name: "Principal" })).toHaveClass("boton-principal");
+    expect(screen.getByRole("link", { name: "Secundario" })).not.toHaveClass("boton-principal");
+  });
+
   it("la variante secundaria lleva borde", () => {
     render(
       <Boton href="/" variante="secundario">

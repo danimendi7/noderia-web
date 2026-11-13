@@ -38,3 +38,11 @@ export const SCRIPT_PANTALLA_CARGA = `(function(){try{var e=document.getElementB
 )})!==null)return;e.setAttribute("data-activa","");[${JSON.stringify(IMAGENES_CARGA.isotipo)},${JSON.stringify(
   IMAGENES_CARGA.mapa,
 )}].forEach(function(s){var i=new Image();i.src=s;});}catch(_){}})();`;
+
+/**
+ * Avisa de que la pantalla de carga se está yendo: marca `<html data-carga="saliendo">` y el CSS hace entrar
+ * el titular del hero por palabras (SPEC v2, S1). Se llama al empezar el fundido y al saltarla.
+ */
+export function anunciarSalidaCarga(raiz: HTMLElement = document.documentElement) {
+  raiz.dataset.carga = "saliendo";
+}

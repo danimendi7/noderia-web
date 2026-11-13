@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { CLAVE_CARGA_VISTA, debeMostrarse, ID_PANTALLA_CARGA, SCRIPT_PANTALLA_CARGA } from "./pantallaCarga";
+import { anunciarSalidaCarga, CLAVE_CARGA_VISTA, debeMostrarse, ID_PANTALLA_CARGA, SCRIPT_PANTALLA_CARGA } from "./pantallaCarga";
 
 function almacen(valor: string | null) {
   return { getItem: (clave: string) => (clave === CLAVE_CARGA_VISTA ? valor : null) };
@@ -50,5 +50,13 @@ describe("script inicial (antes de pintar)", () => {
 
   it("no la activa con movimiento reducido", () => {
     expect(ejecutar(true)).toBe(false);
+  });
+});
+
+describe("anunciarSalidaCarga", () => {
+  it("marca <html data-carga=\"saliendo\"> para que entre el titular del hero", () => {
+    const raiz = document.createElement("html");
+    anunciarSalidaCarga(raiz);
+    expect(raiz.dataset.carga).toBe("saliendo");
   });
 });

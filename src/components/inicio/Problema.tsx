@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import { Icono, type NombreIcono } from "@/components/ui/Icono";
 import { Seccion } from "@/components/ui/Seccion";
 import { TarjetaSpotlight } from "@/components/ui/TarjetaSpotlight";
@@ -27,8 +28,8 @@ export function Problema() {
   return (
     <Seccion idTitulo="titulo-problema" etiqueta="El día a día" titulo="¿Te suena?" destacado="suena" fondo="midnight">
       <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-5">
-        {SITUACIONES.map((situacion) => (
-          <li key={situacion.icono} className="flex">
+        {SITUACIONES.map((situacion, i) => (
+          <li key={situacion.icono} data-entra="" style={{ "--i": i } as CSSProperties} className="flex">
             <TarjetaSpotlight
               como="div"
               tono="oscuro"
