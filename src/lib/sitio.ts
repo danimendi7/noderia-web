@@ -17,6 +17,9 @@ export const DESCRIPCION =
 
 export const RUTAS_PUBLICAS = [
   "/",
+  "/software-gestion-talleres",
+  "/diseno-web-talleres",
+  "/automatizaciones-talleres",
   "/casos/neumaticos-uria",
   "/presupuesto",
   "/aviso-legal",

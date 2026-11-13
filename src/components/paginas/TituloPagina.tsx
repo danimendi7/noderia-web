@@ -6,17 +6,19 @@ type TituloPaginaProps = {
   /** Fragmento del H1 con el degradado de marca. */
   destacado?: string;
   intro: ReactNode;
+  /** id del H1, para el `aria-labelledby` de la sección. */
+  idTitulo?: string;
   className?: string;
 };
 
 /** Etiqueta + H1 único + intro de una página interior, sobre fondo Midnight (SPEC v3 §3). */
-export function TituloPagina({ etiqueta, titulo, destacado, intro, className = "" }: TituloPaginaProps) {
+export function TituloPagina({ etiqueta, titulo, destacado, intro, idTitulo, className = "" }: TituloPaginaProps) {
   const inicio = destacado ? titulo.indexOf(destacado) : -1;
   if (destacado && inicio === -1) throw new Error(`"${destacado}" no está en el título "${titulo}"`);
   return (
     <div className={className}>
       <p className="text-xs font-semibold uppercase tracking-[0.2em] text-aqua sm:text-sm">{etiqueta}</p>
-      <h1 className="mt-5 text-[2.4rem] font-extrabold leading-[1.04] tracking-[-0.02em] sm:text-5xl lg:text-6xl">
+      <h1 id={idTitulo} className="mt-5 text-[2.4rem] font-extrabold leading-[1.04] tracking-[-0.02em] sm:text-5xl lg:text-6xl">
         {destacado ? (
           <>
             {titulo.slice(0, inicio)}

@@ -7,6 +7,24 @@ import { test, expect, type Page } from "@playwright/test";
  */
 const PAGINAS = [
   {
+    ruta: "/software-gestion-talleres",
+    titulo: "Software de gestión para talleres mecánicos | NoderIA",
+    h1: "Software de gestión para talleres hecho a tu medida",
+    tipos: ["BreadcrumbList", "Service", "FAQPage"],
+  },
+  {
+    ruta: "/diseno-web-talleres",
+    titulo: "Diseño web para talleres mecánicos y citas online | NoderIA",
+    h1: "Diseño web para talleres mecánicos con citas online",
+    tipos: ["BreadcrumbList", "Service", "FAQPage"],
+  },
+  {
+    ruta: "/automatizaciones-talleres",
+    titulo: "Recordatorios y avisos automáticos para talleres | NoderIA",
+    h1: "Recordatorios y avisos automáticos para talleres",
+    tipos: ["BreadcrumbList", "Service", "FAQPage"],
+  },
+  {
     ruta: "/presupuesto",
     titulo: "Pide presupuesto para tu taller | NoderIA",
     h1: "Pide presupuesto para tu taller",
@@ -55,7 +73,7 @@ for (const pagina of PAGINAS) {
   });
 }
 
-test("el sitemap incluye /presupuesto", async ({ request }) => {
+test("el sitemap incluye todas las páginas nuevas", async ({ request }) => {
   const xml = await (await request.get("/sitemap.xml")).text();
   for (const { ruta } of PAGINAS) expect(xml).toContain(ruta);
 });
@@ -67,3 +85,23 @@ test("/presupuesto tiene el formulario y tres razones", async ({ page }) => {
     await expect(page.getByRole("heading", { level: 3, name: razon })).toBeVisible();
   }
 });
+
+const SERVICIOS = PAGINAS.filter((p) => p.tipos.includes("Service"));
+
+for (const servicio of SERVICIOS) {
+  test(`${servicio.ruta}: enlaza a las otras dos soluciones, tiene preguntas propias y el formulario`, async ({ page }) => {
+    await page.goto(servicio.ruta);
+    const main = page.getByRole("main");
+    for (const otra of SERVICIOS.filter((s) => s !== servicio)) {
+      await expect(main.locator(`a[href="${otra.ruta}"]`).first()).toBeVisible();
+    }
+    await expect(main.getByRole("link", { name: "Pide presupuesto" }).first()).toHaveAttribute("href", "/presupuesto");
+    const preguntas = page.locator("#preguntas");
+    expect(await preguntas.locator("h3 button").count()).toBeGreaterThanOrEqual(3);
+    await expect(page.getByRole("button", { name: "Pide tu presupuesto" })).toBeVisible();
+    // Las ilustraciones con contenido tienen texto alternativo descriptivo (nada de "imagen 1").
+    const alts = await main.locator("[data-ilustracion] img[alt]:not([alt=''])").evaluateAll((imgs) => imgs.map((i) => i.getAttribute("alt")!));
+    expect(alts.length).toBeGreaterThanOrEqual(2);
+    for (const alt of alts) expect(alt.length).toBeGreaterThan(15);
+  });
+}

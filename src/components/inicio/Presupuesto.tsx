@@ -1,11 +1,11 @@
 import { enviarSolicitud } from "@/app/acciones/presupuesto";
 import { CabeceraSeccion } from "@/components/ui/CabeceraSeccion";
-import { CONTENEDOR, ESPACIADO_SECCION, Fundido } from "@/components/ui/Seccion";
+import { CONTENEDOR, ESPACIADO_SECCION, type Fondo, Fundido } from "@/components/ui/Seccion";
 import { ANCLAS } from "@/lib/navegacion";
 import { FormularioPresupuesto } from "./FormularioPresupuesto";
 
 /** Sección 10 de la home (SPEC v2, S9): llamada final y formulario en tarjeta de cristal sobre Midnight con halo. */
-export function Presupuesto() {
+export function Presupuesto({ desde = "mist", origen }: { desde?: Fondo; origen?: string } = {}) {
   return (
     <section
       id={ANCLAS.presupuesto}
@@ -13,7 +13,7 @@ export function Presupuesto() {
       data-fondo="midnight"
       className="relative isolate overflow-hidden bg-midnight text-white"
     >
-      <Fundido desde="mist" />
+      <Fundido desde={desde} />
       {/* Halo grande detrás de la tarjeta (SPEC v2, S9). Decorativo. */}
       <div
         aria-hidden="true"
@@ -38,7 +38,7 @@ export function Presupuesto() {
           </p>
         </div>
         <div className="lg:col-span-7">
-          <FormularioPresupuesto accion={enviarSolicitud} />
+          <FormularioPresupuesto accion={enviarSolicitud} origen={origen} />
         </div>
       </div>
     </section>
