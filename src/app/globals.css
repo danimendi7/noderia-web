@@ -70,6 +70,73 @@
   }
 }
 
+/* Tarjeta con luz y borde que siguen al cursor (TarjetaSpotlight, adaptada de 21st.dev). */
+.tarjeta-spotlight {
+  --spot-x: 50%;
+  --spot-y: 0%;
+  --spot-luz: rgb(0 104 224 / 0.09);
+  --spot-borde: rgb(0 104 224 / 0.85);
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.tarjeta-spotlight[data-tono="oscuro"] {
+  --spot-luz: rgb(0 176 240 / 0.14);
+  --spot-borde: rgb(0 229 240 / 0.9);
+}
+
+.tarjeta-spotlight::before,
+.tarjeta-spotlight::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.tarjeta-spotlight::before {
+  z-index: -1;
+  background: radial-gradient(28rem circle at var(--spot-x) var(--spot-y), var(--spot-luz), transparent 60%);
+}
+
+.tarjeta-spotlight::after {
+  z-index: 1;
+  padding: 1px;
+  background: radial-gradient(18rem circle at var(--spot-x) var(--spot-y), var(--spot-borde), transparent 65%);
+  mask:
+    linear-gradient(#000 0 0) content-box exclude,
+    linear-gradient(#000 0 0);
+}
+
+.tarjeta-spotlight:hover::before,
+.tarjeta-spotlight:hover::after,
+.tarjeta-spotlight:focus-within::before,
+.tarjeta-spotlight:focus-within::after {
+  opacity: 1;
+}
+
+/* Ilustración que flota 6 px al pasar el ratón por su tarjeta (SPEC v2, S4). */
+.flotante {
+  transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.group:hover .flotante {
+  transform: translateY(-6px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flotante {
+    transition: none;
+  }
+
+  .group:hover .flotante {
+    transform: none;
+  }
+}
+
 @layer base {
   html {
     scroll-behavior: smooth;

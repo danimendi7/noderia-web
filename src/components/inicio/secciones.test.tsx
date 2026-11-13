@@ -18,18 +18,49 @@ describe("¿Te suena?", () => {
 });
 
 describe("Qué incluye", () => {
-  it("tiene ancla, H2 y los tres bloques con su H3", () => {
+  const BLOQUES = [
+    ["Diseño completo de tu web nueva", "Una web a la altura de tu taller: rápida, clara y pensada para que te pidan cita."],
+    ["Panel de administración con agenda en tiempo real", "Citas, coches y trabajos del día en una sola pantalla, actualizada al momento."],
+    ["Reservas online", "Tus clientes piden cita desde el móvil a cualquier hora, sin llamar."],
+    ["Área de clientes y B2B", "Cada cliente ve sus coches y su historial. Empresas y flotas, todo lo suyo en un sitio."],
+    ["Recordatorios automáticos", "ITV, revisiones y neumáticos: el aviso sale solo cuando toca."],
+    ["Email automatizado", "Confirmaciones y avisos que se envían sin que tengas que escribirlos."],
+    ["WhatsApp automatizado", "Avisa por el canal que más usan tus clientes, sin estar pendiente del móvil."],
+    ["Newsletter", "Ofertas de temporada y novedades para que tus clientes vuelvan."],
+    ["Y mucho más, a medida", "Cuéntanos qué necesita tu taller y lo construimos."],
+  ];
+
+  it("tiene ancla, H2, entradilla y los 9 bloques del bento con su H3 y su texto (SPEC v2, S4)", () => {
     const { container } = render(<QueIncluye />);
     expect(container.querySelector("section#que-incluye")).not.toBeNull();
     expect(screen.getByRole("heading", { level: 2, name: "Todo lo que tu taller necesita, conectado" })).toBeInTheDocument();
-    for (const nombre of [
-      "Tu web nueva",
-      "Tu sistema de gestión",
-      "Implantación y acompañamiento",
-    ]) {
-      expect(screen.getByRole("heading", { level: 3, name: nombre })).toBeInTheDocument();
+    expect(screen.getByText("Estos son los bloques principales. Cada proyecto se adapta a tu taller.")).toBeInTheDocument();
+    const bloques = container.querySelectorAll("[data-bloque]");
+    expect(bloques).toHaveLength(9);
+    BLOQUES.forEach(([titulo, texto], i) => {
+      expect(within(bloques[i] as HTMLElement).getByRole("heading", { level: 3, name: titulo })).toBeInTheDocument();
+      expect(within(bloques[i] as HTMLElement).getByText(texto)).toBeInTheDocument();
+    });
+  });
+
+  it("cada bloque lleva su ilustración decorativa salvo el de cierre, que enlaza al presupuesto", () => {
+    const { container } = render(<QueIncluye />);
+    const ilustraciones = [...container.querySelectorAll("[data-ilustracion]")].map((e) => e.getAttribute("data-ilustracion"));
+    expect(ilustraciones).toEqual([
+      "web-taller",
+      "monitor-orden",
+      "movil-formulario",
+      "portal-clientes-flotas",
+      "calendario-recordatorio",
+      "email-automatizado",
+      "burbuja-aviso",
+      "newsletter",
+    ]);
+    for (const img of container.querySelectorAll("[data-ilustracion] img")) {
+      expect(img).toHaveAttribute("alt", "");
+      expect(img).toHaveAttribute("loading", "lazy");
     }
-    expect(screen.getByText(/Importamos tus clientes del programa anterior/i)).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /Pide presupuesto/ })).toHaveAttribute("href", "/#presupuesto");
   });
 });
 

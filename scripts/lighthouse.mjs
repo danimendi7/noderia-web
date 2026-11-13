@@ -34,7 +34,21 @@ function puertoLibre() {
   });
 }
 
+/** El nodo del elemento LCP dentro de los detalles de la auditoría "lcp-breakdown-insight". */
+function buscarNodo(detalles) {
+  if (!detalles || typeof detalles !== "object") return undefined;
+  if (detalles.type === "node") return detalles;
+  for (const valor of Object.values(detalles)) {
+    const nodo = buscarNodo(valor);
+    if (nodo) return nodo;
+  }
+  return undefined;
+}
+
 const resultados = [];
+const cls = [];
+/** Orden 2026-11-13: CLS < 0,05 (se toma la peor pasada). */
+const CLS_MAXIMO = 0.05;
 for (let i = 1; i <= pasadas; i++) {
   // Un navegador limpio por pasada: sin caché ni sessionStorage de la anterior.
   const port = await puertoLibre();
@@ -56,7 +70,12 @@ for (let i = 1; i <= pasadas; i++) {
     const pasada = pasadaDesdeInforme(resultado.lhr.categories);
     resultados.push(pasada);
     await writeFile(join(carpeta, `informe-${i}.html`), resultado.report);
-    console.log(`  pasada ${i}: ${Object.values(pasada).join(" · ")}`);
+    const desplazamiento = resultado.lhr.audits["cumulative-layout-shift"]?.numericValue ?? 0;
+    cls.push(desplazamiento);
+    const lcp = buscarNodo(resultado.lhr.audits["lcp-breakdown-insight"]?.details);
+    console.log(
+      `  pasada ${i}: ${Object.values(pasada).join(" · ")} · CLS ${desplazamiento.toFixed(3)} · LCP ${lcp?.nodeLabel?.slice(0, 50) ?? "—"} (${lcp?.selector ?? "?"})`,
+    );
   } finally {
     await navegador.close();
   }
@@ -67,8 +86,11 @@ console.log("\nMediana por categoría:");
 for (const f of filas) {
   console.log(`  ${f.ok ? "✔" : "✘"} ${f.nombre.padEnd(17)} ${String(f.puntuacion ?? "—").padStart(3)}  (mínimo ${f.umbral})`);
 }
+const peorCls = Math.max(...cls);
+const clsOk = peorCls < CLS_MAXIMO;
+console.log(`  ${clsOk ? "✔" : "✘"} ${"CLS (peor pasada)".padEnd(17)} ${peorCls.toFixed(3)}  (máximo ${CLS_MAXIMO})`);
 console.log(`\nInformes en ${carpeta}`);
-if (!ok) {
+if (!ok || !clsOk) {
   console.error("Lighthouse por debajo de los umbrales de la SPEC");
   process.exit(1);
 }
