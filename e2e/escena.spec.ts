@@ -5,7 +5,9 @@ test("la escena es decorativa y sus imágenes no tienen texto alternativo", asyn
   const escena = page.locator("[data-escena]");
   await expect(escena).toHaveAttribute("aria-hidden", "true");
   const alts = await escena.locator("img").evaluateAll((imgs) => imgs.map((i) => i.getAttribute("alt")));
-  expect(alts.length).toBeGreaterThanOrEqual(6);
+  // 5 piezas como imagen y el taller en un canvas (no compite por el LCP con el titular, T47).
+  expect(alts.length).toBeGreaterThanOrEqual(5);
+  await expect(escena.locator('canvas[data-pieza="taller"]')).toHaveCount(1);
   expect(alts.every((a) => a === "")).toBe(true);
 });
 

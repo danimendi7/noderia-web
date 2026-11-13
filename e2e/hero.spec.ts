@@ -1,4 +1,5 @@
 import { test, expect } from "@playwright/test";
+import { CLAVE_CARGA_VISTA } from "../src/lib/pantallaCarga";
 
 test("el H1 del hero llega en el HTML del servidor", async ({ request }) => {
   const respuesta = await request.get("/");
@@ -97,4 +98,34 @@ test("las cabeceras de sección entran una vez al llegar a ellas", async ({ page
   // Una sola vez: al volver arriba no se vuelve a ocultar.
   await page.evaluate(() => window.scrollTo(0, 0));
   await expect(h2).toHaveAttribute("data-entra", "visto");
+});
+
+// SPEC v3 §7: hero más potente.
+test("las tarjetas flotantes del hero son texto real y accesible, sin nombres ni matrículas", async ({ page }, info) => {
+  await page.goto("/");
+  const lista = page.getByRole("list", { name: "Ejemplos de avisos del sistema" });
+  const esperadas = info.project.name === "movil" ? ["Nueva cita"] : ["Nueva cita", "Confirmación enviada", "Orden de trabajo en curso", "Recordatorio de ITV programado"];
+  for (const texto of esperadas) await expect(lista.getByText(texto)).toBeAttached();
+  const todo = await lista.innerText();
+  expect(todo).not.toMatch(/\d{4}\s?[A-Z]{3}/); // nada parecido a una matrícula
+});
+
+test("sin parallax en pantallas táctiles ni con movimiento reducido", async ({ page }, info) => {
+  await page.emulateMedia({ reducedMotion: info.project.name === "movil" ? "no-preference" : "reduce" });
+  await page.goto("/");
+  await expect(page.locator("h1")).toBeVisible();
+  await page.waitForTimeout(500);
+  await expect(page.locator('section[aria-labelledby="titulo-hero"]')).not.toHaveAttribute("data-parallax");
+});
+
+test("en escritorio, al mover el ratón, la escena se desplaza en capas (parallax)", async ({ page }, info) => {
+  test.skip(info.project.name === "movil", "solo con ratón");
+  // Sin la pantalla de carga encima (tiene su propio test).
+  await page.addInitScript((clave) => sessionStorage.setItem(clave, "1"), CLAVE_CARGA_VISTA);
+  await page.goto("/");
+  const hero = page.locator('section[aria-labelledby="titulo-hero"]');
+  await expect(hero).toHaveAttribute("data-parallax", "");
+  const caja = (await hero.boundingBox())!;
+  await page.mouse.move(caja.x + caja.width * 0.95, 500, { steps: 4 });
+  await expect.poll(() => hero.evaluate((s) => Number(s.style.getPropertyValue("--px")))).toBeGreaterThan(0.5);
 });

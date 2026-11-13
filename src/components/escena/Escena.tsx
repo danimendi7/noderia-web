@@ -1,4 +1,5 @@
 import type { CSSProperties } from "react";
+import { LienzoTaller } from "./LienzoTaller";
 
 /**
  * Escena isométrica del taller (SPEC F2). Decorativa: oculta al lector de pantalla.
@@ -22,7 +23,7 @@ type Pieza = {
   px: [number, number];
 };
 
-const TALLER: Pieza = { nombre: "taller-vacio", x: 170, y: 120, ancho: 660, proporcion: 1108 / 1200, px: [1200, 1108] };
+const TALLER = { nombre: "taller-vacio", x: 170, y: 120, ancho: 660, proporcion: 1108 / 1200, px: [1200, 1108] as [number, number] } satisfies Pieza;
 // Coche colocado a ojo con referencia-taller-con-coche.png: 23 % / 45 % / 36 % del taller.
 const COCHE = {
   x: TALLER.x + 0.23 * TALLER.ancho,
@@ -111,7 +112,7 @@ export function Escena({ className = "" }: { className?: string }) {
       className={`escena-entrada relative mx-auto w-full max-w-[640px] lg:max-w-none ${className}`}
       style={{ aspectRatio: `${ANCHO} / ${ALTO}` }}
     >
-      <Imagen pieza={PIEZAS.taller} dato="taller" />
+      <LienzoTaller nombre={PIEZAS.taller.nombre} px={PIEZAS.taller.px} style={estiloPieza(PIEZAS.taller)} />
 
       {/* Hueco oscuro de la puerta: invisible con la puerta cerrada; al abrirse crece desde el suelo. */}
       <svg viewBox={`0 0 ${ANCHO} ${ALTO}`} className="pointer-events-none absolute inset-0 size-full">
@@ -148,15 +149,12 @@ export function Escena({ className = "" }: { className?: string }) {
           </radialGradient>
         </defs>
         {Object.entries(NODOS).map(([id, d]) => (
+          // Conexiones como la cinta de la web (SPEC v3 §7): brillo, cinta con degradado, reflejo y pulsos de luz.
           <g key={id}>
-            <path d={d} stroke="#00E5F0" strokeOpacity="0.18" strokeWidth="9" strokeLinecap="round" />
-            <path
-              data-nodo={id}
-              d={d}
-              stroke="url(#escena-degradado)"
-              strokeWidth="3"
-              strokeLinecap="round"
-            />
+            <path d={d} stroke="#00E5F0" strokeOpacity="0.14" strokeWidth="16" strokeLinecap="round" />
+            <path data-nodo={id} d={d} stroke="url(#escena-degradado)" strokeWidth="6" strokeLinecap="round" />
+            <path d={d} transform="translate(-1.2 -1.2)" stroke="#E6FDFF" strokeOpacity="0.5" strokeWidth="1.6" strokeLinecap="round" />
+            <path d={d} className="escena-pulso" stroke="#FFFFFF" strokeWidth="3.5" strokeLinecap="round" strokeDasharray="1 90" />
           </g>
         ))}
         {/* Esferitas de luz que recorren los nodos (se animan en el bucle). */}

@@ -396,6 +396,82 @@
   animation: escena-aparece 0.8s ease-out 0.4s forwards;
 }
 
+/* Hero (SPEC v3 §7): entrada tipo "cámara que se acerca". Si hay pantalla de carga, espera a que se vaya. */
+@media (prefers-reduced-motion: no-preference) {
+  .escena-entrada {
+    animation: escena-camara 1.4s cubic-bezier(0.16, 1, 0.3, 1) 0.35s both;
+  }
+
+  html:not([data-carga="saliendo"]):has(#pantalla-carga[data-activa]) .escena-entrada {
+    animation-play-state: paused;
+  }
+}
+
+@keyframes escena-camara {
+  from {
+    opacity: 0;
+    transform: scale(0.82) translateY(28px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Capas con parallax al ratón (ParallaxHero): `translate` no choca con las animaciones de `transform`. */
+.parallax-capa {
+  translate: calc(var(--px, 0) * var(--profundidad, 0) * -1px) calc(var(--py, 0) * var(--profundidad, 0) * -1px);
+  transition: translate 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* Pulsos de luz que recorren las conexiones de la escena y partículas del fondo. */
+@media (prefers-reduced-motion: no-preference) {
+  [data-bucle] .escena-pulso {
+    animation: escena-pulso 2.4s linear infinite;
+  }
+
+  .particula-hero {
+    animation: particula-flota var(--t, 8s) ease-in-out infinite;
+    animation-delay: calc(var(--i, 0) * -1.3s);
+  }
+
+  [data-bucle="pausado"] .escena-pulso,
+  section:has([data-bucle="pausado"]) .particula-hero {
+    animation-play-state: paused;
+  }
+}
+
+.escena-pulso {
+  opacity: 0;
+}
+
+[data-bucle] .escena-pulso {
+  opacity: 0.9;
+}
+
+@keyframes escena-pulso {
+  to {
+    stroke-dashoffset: -91;
+  }
+}
+
+.particula-hero {
+  opacity: 0.35;
+  box-shadow: 0 0 8px var(--color-aqua);
+}
+
+@keyframes particula-flota {
+  0%,
+  100% {
+    opacity: 0.15;
+    transform: translateY(0);
+  }
+  50% {
+    opacity: 0.7;
+    transform: translateY(-22px);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .escena-entrada {
     animation: escena-aparece 0.01s linear 0.4s forwards;
