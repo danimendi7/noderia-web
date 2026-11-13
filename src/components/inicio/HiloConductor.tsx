@@ -122,7 +122,7 @@ export function HiloConductor() {
     // Tabla longitud → y (el trazo siempre baja), para colocar la punta a la altura de la pantalla que toca.
     const tabla: { longitud: number; y: number }[] = [];
     let maxY = -Infinity;
-    for (let l = 0; l <= total; l += 6) {
+    for (let l = 0; l <= total; l += 12) {
       const p = path.getPointAtLength(l);
       maxY = Math.max(maxY, p.y);
       tabla.push({ longitud: l, y: maxY });
