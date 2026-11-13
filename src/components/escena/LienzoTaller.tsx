@@ -22,8 +22,14 @@ export function LienzoTaller({ nombre, px, style }: Props) {
       imagen.fetchPriority = "low";
       imagen.src = `/escena/${nombre}.${formato}`;
       // decode() descodifica fuera del hilo principal; drawImage con la imagen sin descodificar lo bloquearía.
-      imagen
-        .decode()
+      const lista: Promise<void> =
+        typeof imagen.decode === "function"
+          ? imagen.decode()
+          : new Promise((resolver, rechazar) => {
+              imagen.onload = () => resolver();
+              imagen.onerror = rechazar;
+            });
+      lista
         .then(() => {
           if (cancelado) return;
           const ctx = canvas.getContext("2d");
