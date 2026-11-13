@@ -9,11 +9,15 @@ describe("¿Te suena?", () => {
     render(<Problema />);
     expect(screen.getByRole("heading", { level: 2, name: "¿Te suena?" })).toBeInTheDocument();
     const lista = screen.getByRole("list");
-    expect(within(lista).getAllByRole("listitem")).toHaveLength(4);
-    expect(screen.getByText(/las llamadas que no coges son clientes/)).toBeInTheDocument();
-    expect(screen.getByText(/Citas en la libreta, presupuestos en el WhatsApp/)).toBeInTheDocument();
-    expect(screen.getByText(/Avisos de revisión, ITV o neumáticos que nadie manda/)).toBeInTheDocument();
-    expect(screen.getByText(/y otra cuota más/)).toBeInTheDocument();
+    const tarjetas = within(lista).getAllByRole("listitem");
+    expect(tarjetas.map((t) => t.textContent)).toEqual([
+      "El teléfono no para y las llamadas que no coges son clientes que se van al taller de al lado.",
+      "Citas en la libreta, presupuestos en el WhatsApp y clientes en la memoria.",
+      "Avisos de revisión, ITV o neumáticos que nadie manda.",
+      "Un programa que te obliga a trabajar como él quiere… y otra cuota más.",
+    ]);
+    // SPEC v2, S2: la primera parte de cada frase en negrita.
+    for (const t of tarjetas) expect(t.querySelector("strong")).not.toBeNull();
   });
 });
 
