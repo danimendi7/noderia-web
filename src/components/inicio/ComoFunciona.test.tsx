@@ -24,4 +24,22 @@ describe("Cómo funciona", () => {
       expect(paso).toBeVisible();
     }
   });
+
+  it("cada paso lleva su ilustración y la escena fija tiene las 5 más la llave del paso 5 (SPEC v2, S3)", () => {
+    const { container } = render(<ComoFunciona />);
+    const enPasos = [...container.querySelectorAll("ol [data-ilustracion]")].map((e) => e.getAttribute("data-ilustracion"));
+    expect(enPasos).toEqual([
+      "movil-formulario",
+      "burbuja-aviso",
+      "ficha-cliente-vehiculo",
+      "monitor-orden",
+      "calendario-recordatorio",
+    ]);
+    const escena = container.querySelector(".escena-fija");
+    expect(escena).toHaveAttribute("aria-hidden", "true");
+    expect([...escena!.querySelectorAll("[data-ilustracion]")].map((e) => e.getAttribute("data-ilustracion"))).toEqual([
+      ...enPasos,
+      "llave-entrega",
+    ]);
+  });
 });
