@@ -37,6 +37,19 @@ describe("construirHilo", () => {
     }
   });
 
+  it("en una línea de tiempo entra por el borde del primer nodo y sale por el del último, sin cruzar en diagonal por debajo (SPEC v3 §5.4)", () => {
+    const linea = { y: 2000, izquierda: 120, derecha: 1300 };
+    const paradas = [base.paradas[0], { ...base.paradas[1], linea }, base.paradas[2]];
+    const hilo = construirHilo({ ...base, paradas, modo: "serpiente" });
+    // La segunda parada está a la izquierda: entra por la izquierda del primer nodo y salta al último.
+    expect(hilo.d).toContain("L120 2000 M1300 2000");
+    // Sale hacia el margen derecho y baja recto a la tercera parada, que sigue a la derecha.
+    expect(hilo.paradas[2]).toEqual({ x: 1384, y: 2600 });
+    const tras = hilo.d.slice(hilo.d.indexOf("M1300 2000"));
+    expect(tras).toContain("1384 2056");
+    expect(tras).toMatch(/L1384 \d+(\.\d)? L1384 2600/);
+  });
+
   it("en recto es una línea vertical por el margen izquierdo", () => {
     const hilo = construirHilo({ ...base, izquierda: 6, modo: "recto" });
     expect(hilo.d).toBe("M6 700 L6 3300");

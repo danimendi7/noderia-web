@@ -62,9 +62,9 @@ export function ComoFunciona() {
               reproduce el del paso activo y hay un botón de pausa común. Cada capa lleva el fondo detrás del vídeo
               porque su transform crea un grupo aislado y el blanco del vídeo se funde (multiply) con ese fondo. */}
           <div className="escena-fija hidden lg:col-span-6 lg:block">
-            <GrupoVideos etiqueta="Pausar vídeo de cómo funciona" className="sticky top-[max(6rem,calc(50vh+2rem-14.4rem))] aspect-[5/4] max-h-[min(34rem,calc(100vh-9rem))] w-full overflow-hidden rounded-3xl bg-mist">
+            <GrupoVideos etiqueta="Pausar vídeo de cómo funciona" className="sticky top-[max(6rem,calc(50vh+2rem-14.4rem))] aspect-[5/4] max-h-[min(34rem,calc(100vh-9rem))] w-full overflow-hidden rounded-3xl bg-midnight shadow-[0_40px_100px_-36px_rgb(0_104_224/0.7)] ring-1 ring-electric/20">
               {PASOS.map((paso, indice) => (
-                <div key={paso.ilustracion} aria-hidden="true" data-escena-paso={indice + 1} className="escena-paso absolute inset-0 bg-mist bg-[radial-gradient(60%_55%_at_50%_55%,rgb(0_176_240/0.16)_0%,rgb(0_104_224/0.06)_45%,transparent_75%)]">
+                <div key={paso.ilustracion} aria-hidden="true" data-escena-paso={indice + 1} className="escena-paso absolute inset-0 bg-[radial-gradient(64%_64%_at_50%_54%,#ffffff_0%,#f1f8ff_40%,#bde6fb_68%,#4aaeea_88%,#0068e0_100%)]">
                   <VideoBucle nombre={paso.ilustracion} paso={indice + 1} className="size-full object-cover" />
                   {indice === PASOS.length - 1 ? (
                     <Ilustracion nombre="llave-entrega" className="escena-llave absolute bottom-[12%] right-[10%] w-[22%]" />
@@ -81,7 +81,7 @@ export function ComoFunciona() {
             </div>
             <ol className="relative flex flex-col gap-12 sm:gap-14 lg:gap-0">
               {PASOS.map((paso, indice) => (
-                <li key={paso.titulo} data-paso={indice + 1} className="paso flex gap-6 lg:min-h-[min(26rem,55vh)] lg:items-center">
+                <li key={paso.titulo} data-paso={indice + 1} className="paso flex gap-6 lg:min-h-[min(20rem,40vh)] lg:items-center">
                   <span
                     aria-hidden="true"
                     data-nodo

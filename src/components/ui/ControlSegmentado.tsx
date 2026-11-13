@@ -36,13 +36,16 @@ type ControlSegmentadoProps<T extends string> = {
   alCambiar: (valor: T) => void;
   /** Nombre accesible del grupo. */
   etiqueta: string;
+  /** "grande": interruptor protagonista (SPEC v3 §5.3), 64 px de alto en escritorio. */
+  tamano?: "normal" | "grande";
   className?: string;
 };
 
 /** Selección entre dos opciones como radiogroup con foco itinerante: las flechas cambian de opción. */
-export function ControlSegmentado<T extends string>({ opciones, valor, alCambiar, etiqueta, className = "" }: ControlSegmentadoProps<T>) {
+export function ControlSegmentado<T extends string>({ opciones, valor, alCambiar, etiqueta, tamano = "normal", className = "" }: ControlSegmentadoProps<T>) {
   const refs = useRef<(HTMLButtonElement | null)[]>([]);
   const indice = Math.max(0, opciones.findIndex((o) => o.valor === valor));
+  const grande = tamano === "grande";
 
   const mover = (evento: KeyboardEvent, i: number) => {
     if (!["ArrowRight", "ArrowLeft", "ArrowDown", "ArrowUp"].includes(evento.key)) return;
@@ -57,9 +60,9 @@ export function ControlSegmentado<T extends string>({ opciones, valor, alCambiar
       role="radiogroup"
       aria-label={etiqueta}
       data-seleccion={indice}
-      className={`control-segmentado relative inline-grid grid-cols-2 rounded-2xl border border-white/10 bg-white/[0.05] p-1.5 ${className}`}
+      className={`control-segmentado relative inline-grid grid-cols-2 border border-white/10 bg-white/[0.05] p-1.5 ${grande ? "rounded-3xl shadow-[0_0_0_1px_rgb(0_229_240/0.08),0_24px_60px_-24px_rgb(0_104_224/0.8)]" : "rounded-2xl"} ${className}`}
     >
-      <span aria-hidden="true" className="control-segmentado-pildora absolute inset-y-1.5 left-1.5 w-[calc(50%-0.375rem)] rounded-xl" />
+      <span aria-hidden="true" className={`control-segmentado-pildora absolute inset-y-1.5 left-1.5 w-[calc(50%-0.375rem)] ${grande ? "rounded-[1.25rem]" : "rounded-xl"}`} />
       {opciones.map((opcion, i) => {
         const seleccionada = i === indice;
         return (
@@ -74,7 +77,7 @@ export function ControlSegmentado<T extends string>({ opciones, valor, alCambiar
             tabIndex={seleccionada ? 0 : -1}
             onClick={() => alCambiar(opcion.valor)}
             onKeyDown={(e) => mover(e, i)}
-            className={`relative z-10 min-h-12 rounded-xl px-4 text-sm font-semibold transition-colors duration-300 sm:px-6 sm:text-base ${
+            className={`relative z-10 font-semibold transition-colors duration-300 ${grande ? "min-h-14 rounded-[1.25rem] px-4 font-display text-base sm:min-h-16 sm:px-10 sm:text-xl" : "min-h-12 rounded-xl px-4 text-sm sm:px-6 sm:text-base"} ${
               seleccionada ? "text-white" : "text-white/70 hover:text-white"
             }`}
           >

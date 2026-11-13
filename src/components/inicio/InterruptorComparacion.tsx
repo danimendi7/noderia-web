@@ -52,6 +52,8 @@ export function InterruptorComparacion() {
   return (
     <div ref={raiz} data-modo={modo} className="comparacion flex flex-col items-start gap-8">
       <ControlSegmentado
+        tamano="grande"
+        className="w-full sm:w-auto"
         etiqueta="Comparar"
         valor={modo}
         alCambiar={cambiar}
