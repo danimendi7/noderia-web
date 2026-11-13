@@ -9,9 +9,9 @@ Actualizado: 2026-11-13 (orden del rediseño V2). Ya aparecen en la sesión `web
 | ui-ux-pro-max | Criterio de jerarquía, espaciado, color y patrones de UI en cada sección V2 |
 | design-taste-frontend | Acabado premium y evitar lo genérico (sus fuentes y colores se ignoran: manda el manual) |
 | frontend-design | Dirección visual de cada sección |
-| motion | Microinteracciones con `motion/react` (bento, interruptor, acordeón, formulario) |
+| motion | Criterio para las microinteracciones; al final se hicieron con CSS y GSAP, sin instalar `motion/react`, para no sumar JS a la home |
 | vercel-react-best-practices | Al escribir componentes: carga diferida, tamaño del JS, LCP |
-| MCP magic (21st.dev) | Componentes de referencia (spotlight, bento, interruptor segmentado, texto por palabras), adaptados a la marca |
+| MCP magic (21st.dev) | Componentes de referencia adaptados a la marca: "Spotlight Card" y "Segmented Control" (Klyv) |
 | MCP Higgsfield | Vídeos en bucle desde las piezas isométricas (T36), con presupuesto de 150 créditos |
 | web-design-guidelines, design:design-critique, design:accessibility-review | Revisión final (T38) |
 | superpowers:test-driven-development, systematic-debugging, verification-before-completion | Tests primero, depuración y comprobar antes de abrir cada PR |
