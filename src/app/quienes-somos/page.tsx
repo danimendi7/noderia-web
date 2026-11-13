@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { CSSProperties } from "react";
+import { HiloConductor } from "@/components/inicio/HiloConductor";
 import { EntradasAlScroll } from "@/components/movimiento/EntradasAlScroll";
 import { TituloPagina } from "@/components/paginas/TituloPagina";
 import { Boton } from "@/components/ui/Boton";
@@ -175,6 +176,8 @@ export default function QuienesSomos() {
 
       <JsonLd datos={datosQuienesSomos(urlDelSitio())} />
       <EntradasAlScroll />
+      {/* Versión corta de la cinta de la home (SPEC v3 §6). */}
+      <HiloConductor />
     </>
   );
 }
@@ -182,7 +185,7 @@ export default function QuienesSomos() {
 /** Isotipo oficial (sin redibujar ni efectos sobre él) con un halo y una constelación de nodos detrás. */
 function IsotipoConNodos() {
   return (
-    <div aria-hidden="true" className="relative mx-auto w-full max-w-[22rem] sm:max-w-[28rem] lg:col-span-5 lg:max-w-none">
+    <div aria-hidden="true" data-cinta-inicio className="relative mx-auto w-full max-w-[22rem] sm:max-w-[28rem] lg:col-span-5 lg:max-w-none">
       <svg viewBox="0 0 400 400" className="absolute inset-0 -z-10 size-full overflow-visible" fill="none">
         <defs>
           <linearGradient id="qs-nodos" x1="0" y1="1" x2="1" y2="0">
