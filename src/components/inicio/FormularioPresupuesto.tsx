@@ -183,6 +183,7 @@ export function FormularioPresupuesto({ accion, origen = "home#presupuesto" }: P
             type="email"
             inputMode="email"
             autoComplete="email"
+            spellCheck={false}
             maxLength={254}
             defaultValue={valores.email}
             {...accesibilidad("email", errores.email, true)}
@@ -261,7 +262,8 @@ export function FormularioPresupuesto({ accion, origen = "home#presupuesto" }: P
       <input type="hidden" name="origen" value={origen} />
 
       <div className="mt-6">
-        <div className="flex gap-3">
+        {/* Sin hueco entre la casilla y su texto: el relleno de la etiqueta hace de una sola zona de toque. */}
+        <div className="flex">
           <input
             id={idCampo("consentimiento")}
             name="consentimiento"
@@ -269,10 +271,10 @@ export function FormularioPresupuesto({ accion, origen = "home#presupuesto" }: P
             required
             defaultChecked={valores.consentimiento === "on"}
             {...accesibilidad("consentimiento", errores.consentimiento, true)}
-            className="mt-1 size-5 shrink-0 accent-aqua focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aqua"
+            className="mt-0.5 size-6 shrink-0 accent-aqua focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aqua"
           />
-          <label htmlFor={idCampo("consentimiento")} className="text-white/85">
-            Acepto que NoderIA use estos datos para preparar mi presupuesto y contactarme, según la{" "}
+          <label htmlFor={idCampo("consentimiento")} className="pl-3 text-white/85">
+            Acepto que <span translate="no">NoderIA</span> use estos datos para preparar mi presupuesto y contactarme, según la{" "}
             <Link href="/privacidad" className="font-medium text-aqua underline underline-offset-2 hover:text-white">
               política de privacidad
             </Link>

@@ -56,7 +56,7 @@ export function Pie() {
         </nav>
       </div>
       <div className="border-t border-white/10">
-        <p className="mx-auto max-w-7xl px-4 py-5 text-sm sm:px-6 lg:px-8">© NoderIA</p>
+        <p className="mx-auto max-w-7xl px-4 py-5 text-sm sm:px-6 lg:px-8">© <span translate="no">NoderIA</span></p>
       </div>
     </footer>
   );

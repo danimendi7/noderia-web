@@ -327,8 +327,24 @@
     line-height: 1.15;
   }
 
+  h1,
+  h2,
   h3 {
     text-wrap: balance;
+  }
+
+  /* Toques en móvil: sin retraso de doble toque y con un resalte de la marca, no el gris del sistema. */
+  html {
+    -webkit-tap-highlight-color: rgb(0 104 224 / 0.15);
+  }
+
+  a,
+  button,
+  input,
+  select,
+  textarea,
+  label {
+    touch-action: manipulation;
   }
 
   :focus-visible {

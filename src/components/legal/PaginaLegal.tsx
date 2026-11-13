@@ -18,7 +18,7 @@ export function PaginaLegal({
           <p className="mt-4 text-white/70">Última actualización: {actualizado}</p>
         </div>
       </header>
-      <div className="mx-auto max-w-3xl px-4 py-14 sm:px-6 md:py-20 [&_a]:font-medium [&_a]:text-electric [&_a]:underline [&_a]:underline-offset-2 [&_h2]:mt-12 [&_h2]:text-2xl [&_h2]:font-bold [&_li]:mt-2 [&_p]:mt-4 [&_p]:text-midnight/85 [&_ul]:mt-4 [&_ul]:list-disc [&_ul]:pl-6 [&_ul]:text-midnight/85">
+      <div className="mx-auto max-w-3xl px-4 py-14 sm:px-6 md:py-20 [&_a]:font-medium [&_a]:text-electric [&_a]:underline [&_a]:underline-offset-2 [&_a:hover]:text-royal [&_h2]:mt-12 [&_h2]:text-2xl [&_h2]:font-bold [&_li]:mt-2 [&_p]:mt-4 [&_p]:text-midnight/85 [&_ul]:mt-4 [&_ul]:list-disc [&_ul]:pl-6 [&_ul]:text-midnight/85">
         {children}
       </div>
     </article>
