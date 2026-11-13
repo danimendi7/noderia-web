@@ -33,3 +33,11 @@ test.describe("con movimiento reducido", () => {
     await expect(comparacion).not.toHaveAttribute("data-demostracion", /.+/);
   });
 });
+
+// SPEC v3 §5.3: interruptor más grande y protagonista.
+test("el interruptor de La diferencia mide al menos 56 px de alto", async ({ page }) => {
+  await page.goto("/");
+  const grupo = page.getByRole("radiogroup", { name: "Comparar" });
+  const caja = await grupo.boundingBox();
+  expect(caja!.height).toBeGreaterThanOrEqual(56);
+});

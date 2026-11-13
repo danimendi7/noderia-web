@@ -48,7 +48,7 @@ export function LineaTiempo({ pasos }: { pasos: readonly PasoLinea[] }) {
 
   const tramos = pasos.length - 1;
   return (
-    <ol ref={lista} className="linea-tiempo grid gap-10 lg:grid-cols-4 lg:gap-8" style={{ "--tramos": tramos } as React.CSSProperties}>
+    <ol ref={lista} data-hilo-linea className="linea-tiempo grid gap-10 lg:grid-cols-4 lg:gap-8" style={{ "--tramos": tramos } as React.CSSProperties}>
       {pasos.map((paso, indice) => (
         <li
           key={paso.titulo}

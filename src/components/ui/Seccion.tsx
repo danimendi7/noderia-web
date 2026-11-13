@@ -16,6 +16,8 @@ type SeccionProps = {
   /** Fondo de la sección anterior: si es distinto, se funde con un degradado suave (SPEC v2, G2). */
   desde?: Fondo;
   children: ReactNode;
+  /** Menos aire abajo, para secciones que acaban en un bloque compacto (SPEC v3 §5.3). */
+  compacta?: boolean;
   className?: string;
 };
 
@@ -27,6 +29,9 @@ export const CLASES_FONDO: Record<Fondo, string> = {
 
 /** Separación vertical entre secciones (SPEC v2, G3): 80–96 px en móvil, 144 px en escritorio. */
 export const ESPACIADO_SECCION = "py-20 sm:py-24 lg:py-36";
+
+/** Variante con menos aire abajo. */
+export const ESPACIADO_COMPACTO = "pt-20 pb-16 sm:pt-24 sm:pb-20 lg:pt-36 lg:pb-24";
 
 /** Contenedor común: mismos bordes izquierdo y derecho en toda la home. */
 export const CONTENEDOR = "mx-auto max-w-7xl px-4 sm:px-6 lg:px-8";
@@ -42,6 +47,7 @@ export function Seccion({
   fondo = "mist",
   desde,
   children,
+  compacta = false,
   className = "",
 }: SeccionProps) {
   return (
@@ -52,7 +58,7 @@ export function Seccion({
       className={`relative isolate ${CLASES_FONDO[fondo]} ${className}`}
     >
       {desde && desde !== fondo ? <Fundido desde={desde} hacia={fondo} /> : null}
-      <div className={`${CONTENEDOR} ${ESPACIADO_SECCION}`}>
+      <div className={`${CONTENEDOR} ${compacta ? ESPACIADO_COMPACTO : ESPACIADO_SECCION}`}>
         <CabeceraSeccion
           etiqueta={etiqueta}
           titulo={titulo}

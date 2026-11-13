@@ -36,13 +36,28 @@ function medir(): Geometria | null {
     inicio: { x: rEscena.left + rEscena.width * 0.5, y: rEscena.bottom + y0 - rEscena.height * 0.06 },
     paradas: etiquetas.map((e, i) => {
       const r = e!.getBoundingClientRect();
-      return { y: r.top + r.height / 2 + y0, frontera: secciones[i + 1].getBoundingClientRect().top + y0 };
+      return {
+        y: r.top + r.height / 2 + y0,
+        frontera: secciones[i + 1].getBoundingClientRect().top + y0,
+        linea: movil ? undefined : medirLinea(secciones[i + 1], y0),
+      };
     }),
     final: { y: rLogo.top + rLogo.height / 2 + y0, frontera: pie.top + y0 },
     izquierda: movil ? Math.max(6, izquierdaContenido / 2 - 2) : izquierda,
     derecha,
   });
   return { ...hilo, alto: document.documentElement.scrollHeight, ancho, movil };
+}
+
+/** Línea de tiempo horizontal de la sección (si la hay): el hilo entra y sale por los bordes de sus nodos. */
+function medirLinea(seccion: HTMLElement, y0: number) {
+  const nodos = [...seccion.querySelectorAll<HTMLElement>("[data-hilo-linea] .linea-nodo")];
+  if (nodos.length < 2) return undefined;
+  const primero = nodos[0].getBoundingClientRect();
+  const ultimo = nodos[nodos.length - 1].getBoundingClientRect();
+  // Solo si es horizontal (en tableta y móvil la línea de tiempo es vertical).
+  if (Math.abs(primero.top - ultimo.top) > 2) return undefined;
+  return { y: primero.top + primero.height / 2 + y0, izquierda: primero.left - 6, derecha: ultimo.right + 6 };
 }
 
 /**

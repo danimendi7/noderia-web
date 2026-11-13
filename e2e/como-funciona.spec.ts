@@ -50,3 +50,14 @@ test("al hacer scroll los pasos terminan visibles", async ({ page }) => {
   await ultimo.scrollIntoViewIfNeeded();
   await expect(ultimo.locator("[data-texto]")).toHaveCSS("opacity", "1", { timeout: 5000 });
 });
+
+// SPEC v3 §5.2: más compacto (cada paso ≤ 70 vh) y escenario con halo en lugar de la tarjeta gris claro.
+test("a 1440×900 cada paso ocupa como mucho el 70 % de la pantalla y el escenario lleva fondo Midnight con halo", async ({ page }, info) => {
+  test.skip(info.project.name === "movil", "escritorio");
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/#como-funciona");
+  const alturas = await page.locator("#como-funciona [data-paso]").evaluateAll((els) => els.map((e) => e.getBoundingClientRect().height));
+  for (const alto of alturas) expect(alto).toBeLessThanOrEqual(900 * 0.7);
+  const fondo = await page.locator("#como-funciona .escena-fija > div").first().evaluate((e) => getComputedStyle(e).backgroundColor);
+  expect(fondo).toBe("rgb(0, 16, 44)");
+});

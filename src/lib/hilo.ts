@@ -5,8 +5,12 @@ export type Punto = { x: number; y: number };
 export type DatosHilo = {
   /** Punto de salida (bajo la escena del hero). */
   inicio: Punto;
-  /** Paradas: una por sección, a la altura de su etiqueta, con el `y` de arriba de la sección (frontera). */
-  paradas: { y: number; frontera: number }[];
+  /**
+   * Paradas: una por sección, a la altura de su etiqueta, con el `y` de arriba de la sección (frontera).
+   * `linea`: si la sección tiene una línea de tiempo horizontal, el hilo entra por el borde de su primer nodo
+   * y sale por el del último (entre medias, la propia línea de tiempo hace de hilo; SPEC v3 §5.4).
+   */
+  paradas: { y: number; frontera: number; linea?: LineaHilo }[];
   /** Llegada (junto al logo del pie), con la frontera del pie. */
   final: { y: number; frontera: number };
   /** x del margen izquierdo y derecho por donde va el hilo. */
@@ -16,7 +20,13 @@ export type DatosHilo = {
   modo: "serpiente" | "recto";
 };
 
+/** Línea de tiempo horizontal: `y` del centro de los nodos y x de los bordes exteriores del primero y del último. */
+export type LineaHilo = { y: number; izquierda: number; derecha: number };
+
 export type Hilo = { d: string; paradas: Punto[]; final: Punto };
+
+/** Radio de las esquinas con las que el hilo entra y sale de la línea de tiempo. */
+const RADIO_LINEA = 56;
 
 const r = (n: number) => Math.round(n * 10) / 10;
 
@@ -55,9 +65,39 @@ export function construirHilo(datos: DatosHilo): Hilo {
     partes.push(`L${r(hasta.x)} ${r(hasta.y)}`);
   };
 
-  for (let i = 1; i < puntos.length; i++) cruzar(puntos[i - 1], puntos[i], paradas[i].frontera);
+  /** Desde la parada baja por su margen, entra en la línea de tiempo, salta al otro extremo y sale al otro margen. */
+  const recorrerLinea = (parada: Punto, linea: LineaHilo): Punto => {
+    const desdeIzquierda = parada.x < (izquierda + derecha) / 2;
+    const entrada = desdeIzquierda ? linea.izquierda : linea.derecha;
+    const salida = desdeIzquierda ? linea.derecha : linea.izquierda;
+    const otroLado = desdeIzquierda ? derecha : izquierda;
+    const sentido = desdeIzquierda ? 1 : -1;
+    const k = RADIO_LINEA;
+    partes.push(`L${r(parada.x)} ${r(linea.y - k)}`);
+    partes.push(`C${r(parada.x)} ${r(linea.y)} ${r(parada.x)} ${r(linea.y)} ${r(parada.x + sentido * k)} ${r(linea.y)}`);
+    partes.push(`L${r(entrada)} ${r(linea.y)}`);
+    partes.push(`M${r(salida)} ${r(linea.y)}`);
+    partes.push(`L${r(otroLado - sentido * k)} ${r(linea.y)}`);
+    partes.push(`C${r(otroLado)} ${r(linea.y)} ${r(otroLado)} ${r(linea.y)} ${r(otroLado)} ${r(linea.y + k)}`);
+    return { x: otroLado, y: linea.y + k };
+  };
+
+  // Punto desde el que se sigue tras cada parada (si recorre una línea de tiempo, el extremo opuesto).
+  const salidas = puntos.map((p) => p);
+  const recorrer = (i: number) => {
+    const linea = paradas[i].linea;
+    if (linea) salidas[i] = recorrerLinea(puntos[i], linea);
+  };
+  recorrer(0);
+  for (let i = 1; i < puntos.length; i++) {
+    // Tras una línea de tiempo el hilo ya está en el otro margen: la parada siguiente va en ese mismo lado.
+    if (paradas[i - 1].linea) puntos[i] = { x: salidas[i - 1].x, y: puntos[i].y };
+    cruzar(salidas[i - 1], puntos[i], paradas[i].frontera);
+    salidas[i] = puntos[i];
+    recorrer(i);
+  }
   const llegada = { x: izquierda, y: final.y };
-  cruzar(puntos[puntos.length - 1] ?? primera, llegada, final.frontera);
+  cruzar(salidas[salidas.length - 1] ?? primera, llegada, final.frontera);
 
   return { d: partes.join(" "), paradas: puntos, final: llegada };
 }

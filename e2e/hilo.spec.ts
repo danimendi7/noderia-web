@@ -45,3 +45,22 @@ for (const ancho of [320, 768, 1920]) {
     expect(desborda).toBe(false);
   });
 }
+
+// SPEC v3 §5.4: en escritorio el hilo se integra como la línea de tiempo de "Cómo trabajamos" (entra por el primer
+// nodo y sale por el último) en lugar de cruzar en diagonal por debajo.
+test("en escritorio el hilo entra y sale de la línea de tiempo de Cómo trabajamos a la altura de sus nodos", async ({ page }, info) => {
+  test.skip(info.project.name === "movil", "escritorio");
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/");
+  await expect(page.locator("svg[data-hilo]")).toBeAttached({ timeout: 10_000 });
+  const { d, y } = await page.evaluate(() => {
+    const nodo = document.querySelector("[data-hilo-linea] .linea-nodo")!.getBoundingClientRect();
+    const trazo = document.querySelector<SVGPathElement>("svg[data-hilo] path[stroke^='url']")!;
+    return { d: trazo.getAttribute("d")!, y: nodo.top + nodo.height / 2 + scrollY };
+  });
+  const salto = d.match(/L(\d+(?:\.\d)?) (\d+(?:\.\d)?) M(\d+(?:\.\d)?) (\d+(?:\.\d)?)/);
+  expect(salto).not.toBeNull();
+  expect(Math.abs(Number(salto![2]) - y)).toBeLessThan(2);
+  expect(Number(salto![3])).toBeGreaterThan(Number(salto![1]));
+});

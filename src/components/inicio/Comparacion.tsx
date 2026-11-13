@@ -12,6 +12,7 @@ export function Comparacion() {
       destacado="otro programa de taller"
       fondo="midnight"
       desde="mist"
+      compacta
     >
       {/* Para lectores de pantalla: los 4 pares completos, siempre en el HTML. */}
       {/* La tabla va dentro de un div: una tabla no respeta el ancho de 1 px de sr-only y desbordaría. */}
