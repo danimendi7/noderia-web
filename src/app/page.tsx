@@ -1,6 +1,7 @@
 import { PantallaCarga } from "@/components/carga/PantallaCarga";
 import { BucleEscena } from "@/components/escena/BucleEscena";
 import { Escena } from "@/components/escena/Escena";
+import { AnclaInicial } from "@/components/movimiento/AnclaInicial";
 import { EntradasAlScroll } from "@/components/movimiento/EntradasAlScroll";
 import { CasoUria } from "@/components/inicio/CasoUria";
 import { ComoFunciona } from "@/components/inicio/ComoFunciona";
@@ -41,6 +42,7 @@ export default function Inicio() {
       <Presupuesto />
       <HiloConductor />
       <EntradasAlScroll />
+      <AnclaInicial />
     </>
   );
 }
