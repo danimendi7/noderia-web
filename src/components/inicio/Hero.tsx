@@ -12,6 +12,7 @@ export function Hero({ escena }: HeroProps) {
   return (
     <section
       aria-labelledby="titulo-hero"
+      data-fondo="midnight"
       className="relative isolate overflow-hidden bg-midnight text-white"
     >
       <FondoHero />

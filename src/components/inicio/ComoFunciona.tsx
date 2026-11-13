@@ -1,3 +1,5 @@
+import { CabeceraSeccion } from "@/components/ui/CabeceraSeccion";
+import { CONTENEDOR, ESPACIADO_SECCION, Fundido } from "@/components/ui/Seccion";
 import { ANCLAS } from "@/lib/navegacion";
 import { AnimacionPasos } from "./AnimacionPasos";
 
@@ -27,16 +29,24 @@ const PASOS = [
 /** Sección 4 de la home: los 5 pasos, contados al hacer scroll. El contenido se renderiza en el servidor. */
 export function ComoFunciona() {
   return (
-    <section id={ANCLAS.comoFunciona} aria-labelledby="titulo-como-funciona" className="overflow-x-clip bg-white text-midnight">
-      <AnimacionPasos className="mx-auto grid max-w-7xl gap-12 px-4 py-20 sm:px-6 md:py-28 lg:grid-cols-12 lg:px-8">
+    <section
+      id={ANCLAS.comoFunciona}
+      aria-labelledby="titulo-como-funciona"
+      data-fondo="blanco"
+      className="relative isolate overflow-x-clip bg-white text-midnight"
+    >
+      <Fundido desde="midnight" />
+      <AnimacionPasos className={`${CONTENEDOR} ${ESPACIADO_SECCION} grid gap-12 lg:grid-cols-12`}>
         <div className="lg:col-span-5">
           <div className="lg:sticky lg:top-32">
-            <h2 id="titulo-como-funciona" className="text-3xl font-bold tracking-[-0.01em] sm:text-4xl lg:text-5xl">
-              Cómo funciona
-            </h2>
-            <p className="mt-4 max-w-md text-lg text-midnight/75">
-              De la cita a la próxima revisión, todo conectado. Así es un día con tu taller en marcha.
-            </p>
+            <CabeceraSeccion
+              etiqueta="Cómo funciona"
+              titulo="De la cita a la próxima revisión, todo conectado"
+              destacado="todo conectado"
+              idTitulo="titulo-como-funciona"
+              entradilla="Así es un día con tu taller en marcha."
+              tono="claro"
+            />
           </div>
         </div>
 

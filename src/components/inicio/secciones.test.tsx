@@ -21,7 +21,7 @@ describe("Qué incluye", () => {
   it("tiene ancla, H2 y los tres bloques con su H3", () => {
     const { container } = render(<QueIncluye />);
     expect(container.querySelector("section#que-incluye")).not.toBeNull();
-    expect(screen.getByRole("heading", { level: 2, name: "Qué incluye" })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { level: 2, name: "Todo lo que tu taller necesita, conectado" })).toBeInTheDocument();
     for (const nombre of [
       "Tu web nueva",
       "Tu sistema de gestión",

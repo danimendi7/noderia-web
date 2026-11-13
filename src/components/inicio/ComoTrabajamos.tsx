@@ -10,7 +10,13 @@ const PASOS = [
 /** Sección 8 de la home: cómo trabajamos (proceso en 4 pasos). */
 export function ComoTrabajamos() {
   return (
-    <Seccion idTitulo="titulo-como-trabajamos" titulo="Cómo trabajamos" fondo="mist">
+    <Seccion
+      idTitulo="titulo-como-trabajamos"
+      etiqueta="Cómo trabajamos"
+      titulo="Así lo ponemos en marcha"
+      destacado="ponemos en marcha"
+      fondo="blanco"
+    >
       <ol className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4 lg:gap-6">
         {PASOS.map((paso, indice) => (
           <li key={paso.titulo} className="relative flex flex-col gap-3 lg:pr-6">
