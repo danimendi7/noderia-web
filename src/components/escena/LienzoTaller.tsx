@@ -19,20 +19,21 @@ export function LienzoTaller({ nombre, px, style }: Props) {
     let cancelado = false;
     const pintar = (formato: "avif" | "webp") => {
       const imagen = new Image(px[0], px[1]);
-      imagen.decoding = "async";
       imagen.fetchPriority = "low";
-      imagen.onload = () => {
-        if (cancelado) return;
-        const ctx = canvas.getContext("2d");
-        if (!ctx) return;
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.drawImage(imagen, 0, 0, canvas.width, canvas.height);
-        canvas.dataset.pintado = "";
-      };
-      imagen.onerror = () => {
-        if (!cancelado && formato === "avif") pintar("webp");
-      };
       imagen.src = `/escena/${nombre}.${formato}`;
+      // decode() descodifica fuera del hilo principal; drawImage con la imagen sin descodificar lo bloquearía.
+      imagen
+        .decode()
+        .then(() => {
+          if (cancelado) return;
+          const ctx = canvas.getContext("2d");
+          if (!ctx) return;
+          ctx.drawImage(imagen, 0, 0, canvas.width, canvas.height);
+          canvas.dataset.pintado = "";
+        })
+        .catch(() => {
+          if (!cancelado && formato === "avif") pintar("webp");
+        });
     };
     pintar("avif");
     return () => {
