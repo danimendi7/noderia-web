@@ -1,4 +1,5 @@
 import { Flotante } from "@/components/movimiento/Flotante";
+import { GrupoVideos, VideoBucle } from "@/components/movimiento/VideoBucle";
 import { Boton } from "@/components/ui/Boton";
 import { Ilustracion } from "@/components/ui/Ilustracion";
 import { Seccion } from "@/components/ui/Seccion";
@@ -111,9 +112,12 @@ function Bloque({ titulo, texto, ilustracion, forma }: (typeof BLOQUES)[number])
     return (
       <TarjetaSpotlight como="div" className={`${TARJETA} flex-col gap-6 p-7 sm:p-9`}>
         {textos}
-        <Flotante className="mx-auto mt-auto w-full max-w-[22rem] lg:max-w-[24rem]">
-          <Ilustracion nombre={ilustracion} className="aspect-[960/1189] max-h-[26rem] w-full" />
-        </Flotante>
+        {/* Vídeo en bucle de Higgsfield (T36) con poster; con movimiento reducido se queda en el poster. */}
+        <GrupoVideos etiqueta="Pausar vídeo de la web" className="relative mx-auto mt-auto w-full max-w-[24rem] lg:max-w-[26rem]">
+          <Flotante>
+            <VideoBucle nombre="web-taller" className="aspect-square w-full" />
+          </Flotante>
+        </GrupoVideos>
       </TarjetaSpotlight>
     );
   }

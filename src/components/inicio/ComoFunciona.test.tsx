@@ -25,7 +25,7 @@ describe("Cómo funciona", () => {
     }
   });
 
-  it("cada paso lleva su ilustración y la escena fija tiene las 5 más la llave del paso 5 (SPEC v2, S3)", () => {
+  it("cada paso lleva su ilustración y la escena fija tiene un vídeo por paso más la llave del paso 5 (SPEC v2, S3)", () => {
     const { container } = render(<ComoFunciona />);
     const enPasos = [...container.querySelectorAll("ol [data-ilustracion]")].map((e) => e.getAttribute("data-ilustracion"));
     expect(enPasos).toEqual([
@@ -35,10 +35,13 @@ describe("Cómo funciona", () => {
       "monitor-orden",
       "calendario-recordatorio",
     ]);
-    const escena = container.querySelector(".escena-fija");
-    expect(escena).toHaveAttribute("aria-hidden", "true");
-    expect([...escena!.querySelectorAll("[data-ilustracion]")].map((e) => e.getAttribute("data-ilustracion"))).toEqual([
-      ...enPasos,
+    const escena = container.querySelector(".escena-fija")!;
+    const capas = [...escena.querySelectorAll("[data-escena-paso]")];
+    expect(capas).toHaveLength(5);
+    for (const capa of capas) expect(capa).toHaveAttribute("aria-hidden", "true");
+    // Vídeos en bucle de Higgsfield (T36), uno por paso, y la llave del paso 5.
+    expect([...escena.querySelectorAll("video")].map((e) => e.getAttribute("data-video"))).toEqual(enPasos);
+    expect([...escena.querySelectorAll("[data-ilustracion]")].map((e) => e.getAttribute("data-ilustracion"))).toEqual([
       "llave-entrega",
     ]);
   });
