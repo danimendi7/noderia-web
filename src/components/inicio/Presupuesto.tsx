@@ -13,7 +13,7 @@ export function Presupuesto({ desde = "mist", origen }: { desde?: Fondo; origen?
       data-fondo="midnight"
       className="relative isolate overflow-hidden bg-midnight text-white"
     >
-      <Fundido desde={desde} />
+      <Fundido desde={desde} hacia="midnight" />
       {/* Halo grande detrás de la tarjeta (SPEC v2, S9). Decorativo. */}
       <div
         aria-hidden="true"

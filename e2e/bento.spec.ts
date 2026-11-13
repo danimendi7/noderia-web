@@ -31,3 +31,26 @@ for (const { ancho, columnas } of [
     expect(desborda).toBe(false);
   });
 }
+
+// SPEC v3 §5.5: en móvil, en todas las tarjetas, ilustración arriba y texto debajo a todo el ancho.
+test("a 390 px cada tarjeta del bento tiene la ilustración arriba y el texto a todo el ancho", async ({ page }, info) => {
+  test.skip(info.project.name === "movil", "El ancho se fija a mano: basta con una pasada");
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.addInitScript((clave) => sessionStorage.setItem(clave, "1"), CLAVE_CARGA_VISTA);
+  await page.goto("/#que-incluye");
+  const tarjetas = await page.locator("#que-incluye [data-bloque]:not([data-bloque='cierre'])").evaluateAll((els) =>
+    els.map((li) => {
+      const tarjeta = li.firstElementChild as HTMLElement;
+      const estilo = getComputedStyle(tarjeta);
+      const interior = tarjeta.clientWidth - parseFloat(estilo.paddingLeft) - parseFloat(estilo.paddingRight);
+      const texto = tarjeta.querySelector("h3")!.parentElement!.getBoundingClientRect();
+      const visual = tarjeta.querySelector("[data-ilustracion], video")!.getBoundingClientRect();
+      return { titulo: tarjeta.querySelector("h3")!.textContent, proporcion: texto.width / interior, arriba: visual.bottom <= texto.top + 1 };
+    }),
+  );
+  expect(tarjetas).toHaveLength(8);
+  for (const t of tarjetas) {
+    expect(t.proporcion, t.titulo!).toBeGreaterThanOrEqual(0.9);
+    expect(t.arriba, t.titulo!).toBe(true);
+  }
+});
