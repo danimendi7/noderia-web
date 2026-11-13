@@ -205,6 +205,26 @@
   }
 }
 
+/* Hilo conductor (SPEC v2, G1). Invisible hasta que el script lo mide y lo coloca. */
+.hilo-conductor:not([data-estado]) {
+  opacity: 0;
+}
+
+.hilo-parada {
+  fill: var(--color-aqua);
+  opacity: 0.3;
+  transition: opacity 0.3s ease;
+}
+
+.hilo-parada[data-encendida],
+.hilo-conductor[data-estado="completo"] .hilo-parada {
+  opacity: 1;
+}
+
+.hilo-conductor[data-estado="completo"] .hilo-punta {
+  display: none;
+}
+
 @layer base {
   html {
     scroll-behavior: smooth;

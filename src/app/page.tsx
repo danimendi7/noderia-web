@@ -5,6 +5,7 @@ import { CasoUria } from "@/components/inicio/CasoUria";
 import { ComoFunciona } from "@/components/inicio/ComoFunciona";
 import { Comparacion } from "@/components/inicio/Comparacion";
 import { ComoTrabajamos } from "@/components/inicio/ComoTrabajamos";
+import { HiloConductor } from "@/components/inicio/HiloConductor";
 import { Hero } from "@/components/inicio/Hero";
 import { Preguntas } from "@/components/inicio/Preguntas";
 import { Presupuesto } from "@/components/inicio/Presupuesto";
@@ -36,6 +37,7 @@ export default function Inicio() {
 
       <Preguntas />
       <Presupuesto />
+      <HiloConductor />
       <JsonLd datos={datosEstructuradosEmpresa(urlDelSitio())} />
     </>
   );
