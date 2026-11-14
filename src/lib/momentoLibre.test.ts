@@ -8,7 +8,7 @@ afterEach(() => {
 
 describe("enMomentoLibre", () => {
   it("no ejecuta la tarea en el momento: espera a que el navegador esté libre, con un tiempo máximo", () => {
-    const pedir = vi.fn((_f: IdleRequestCallback, _o?: IdleRequestOptions) => 7);
+    const pedir = vi.fn<typeof window.requestIdleCallback>(() => 7);
     vi.stubGlobal("requestIdleCallback", pedir);
     vi.stubGlobal("cancelIdleCallback", vi.fn());
     const tarea = vi.fn();
