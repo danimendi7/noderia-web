@@ -2,7 +2,7 @@ import Link from "next/link";
 import type { CSSProperties } from "react";
 import { HiloConductor } from "@/components/inicio/HiloConductor";
 import { EntradasAlScroll } from "@/components/movimiento/EntradasAlScroll";
-import { FlujosEquipo } from "@/components/quienes-somos/FlujosEquipo";
+import { DelCodigoAlCliente } from "@/components/quienes-somos/DelCodigoAlCliente";
 import { IsotipoAnimado } from "@/components/quienes-somos/IsotipoAnimado";
 import { RedNeuronal } from "@/components/quienes-somos/RedNeuronal";
 import { RedParticulas } from "@/components/quienes-somos/RedParticulas";
@@ -58,8 +58,8 @@ export default function QuienesSomos() {
 
       <section aria-labelledby="titulo-equipo" data-fondo="mist" className="relative isolate bg-mist text-midnight">
         <Fundido desde="midnight" hacia="mist" />
-        <div className={`${CONTENEDOR} ${ESPACIADO_SECCION} grid items-center gap-14 lg:grid-cols-12`}>
-          <div className="lg:col-span-6">
+        <div className={`${CONTENEDOR} ${ESPACIADO_SECCION}`}>
+          <div className="max-w-3xl">
             <CabeceraSeccion
               etiqueta="El equipo"
               titulo="Tecnología y comunicación, en el mismo equipo"
@@ -74,7 +74,7 @@ export default function QuienesSomos() {
               programan tu sistema, sin intermediarios.
             </p>
           </div>
-          <FlujosEquipo />
+          <DelCodigoAlCliente />
         </div>
       </section>
 

@@ -823,56 +823,68 @@
   }
 }
 
-/* Equipo: los flujos se dibujan con el scroll (stroke-dashoffset de 1 a 0 con pathLength=1). */
-.qs-flujo {
-  stroke-dasharray: 1 1;
-  stroke-dashoffset: 0;
-}
-.qs-estela {
+/* Equipo: "Del código al cliente" (orden 2026-11-14 17:30, punto 2). Sin JavaScript o con movimiento reducido se ve
+   el estado final (la web del taller con la cita confirmada); con movimiento, el escenario se queda fijo mientras se
+   recorre un contenedor alto y GSAP lleva la línea de tiempo con el scroll. Las alturas salen del CSS (no del
+   JavaScript), así el alto de la página es el mismo desde el primer pintado. */
+.dcc-mitad {
   opacity: 0;
-  stroke-dasharray: 0.1 2;
+  visibility: hidden;
 }
-.qs-pulso {
+.dcc-costura {
   opacity: 0;
-  stroke-dasharray: 0.07 1.2;
-  stroke-dashoffset: 0.07;
-}
-.qs-negocio {
-  transition:
-    box-shadow 0.5s ease,
-    transform 0.5s cubic-bezier(0.2, 0.7, 0.2, 1);
-}
-.qs-flujos[data-estado="unido"] .qs-negocio {
+  background: linear-gradient(180deg, #00e5f0 0%, #00b0f0 35%, #0068e0 70%, #0030c0 100%);
   box-shadow:
-    0 0 0 6px rgb(0 229 240 / 0.18),
-    0 18px 48px -10px rgb(0 176 240 / 0.85);
+    0 0 0 6px rgb(0 176 240 / 0.14),
+    0 0 36px 6px rgb(0 176 240 / 0.55);
+}
+.dcc-costura::after {
+  /* Reflejo claro desplazado, como la cinta de la web. */
+  content: "";
+  position: absolute;
+  inset: 8% auto 8% 28%;
+  width: 2px;
+  border-radius: 9999px;
+  background: rgb(230 253 255 / 0.7);
+}
+@media (max-width: 767.98px) {
+  .dcc-costura {
+    background: linear-gradient(90deg, #00e5f0 0%, #00b0f0 35%, #0068e0 70%, #0030c0 100%);
+  }
+  .dcc-costura::after {
+    inset: 28% 8% auto 8%;
+    width: auto;
+    height: 2px;
+  }
+}
+.dcc-linea[data-activa] code::after,
+.dcc-redaccion[data-activa]::after {
+  /* Cursor fijo (sin parpadeo). */
+  content: "";
+  display: inline-block;
+  width: 2px;
+  height: 1.15em;
+  margin-left: 1px;
+  vertical-align: text-bottom;
+  background: currentColor;
+}
+.dcc-linea[data-activa] code::after {
+  background: #00e5f0;
+}
+.dcc-redaccion:empty::before {
+  content: attr(data-vacio);
+  color: rgb(0 16 44 / 0.45);
 }
 @media (prefers-reduced-motion: no-preference) {
-  .qs-flujos[data-estado="unido"] .qs-negocio {
-    transform: scale(1.04);
+  .dcc {
+    height: 250vh;
+    height: 250svh;
   }
-  /* Dos pasadas de luz al unirse (menos de 5 s, sin botón de pausa: WCAG 2.2.2). */
-  .qs-flujos[data-estado="unido"] .qs-pulso {
-    animation: qs-pulso-recorre 1.5s cubic-bezier(0.45, 0, 0.3, 1) 2 both;
-  }
-  .qs-flujos[data-estado="unido"] .qs-pulso-der {
-    animation-delay: 0.25s;
-  }
-}
-@keyframes qs-pulso-recorre {
-  0% {
-    opacity: 0;
-    stroke-dashoffset: 0.07;
-  }
-  12% {
-    opacity: 1;
-  }
-  88% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-    stroke-dashoffset: -1.05;
+  .dcc-escenario {
+    position: sticky;
+    top: 4rem;
+    height: calc(100vh - 4rem);
+    height: calc(100svh - 4rem);
   }
 }
 
