@@ -15,7 +15,7 @@ test("el hero tiene un único H1 y sus dos llamadas a la acción", async ({ page
   await page.goto("/");
   await expect(page.getByRole("heading", { level: 1 })).toHaveCount(1);
   const hero = page.locator("section", { has: page.getByRole("heading", { level: 1 }) });
-  await expect(hero.getByRole("link", { name: "Pide presupuesto" })).toHaveAttribute("href", "/presupuesto");
+  await expect(hero.getByRole("link", { name: "Hablemos de tu taller" })).toHaveAttribute("href", "/contacto");
   await hero.getByRole("link", { name: "Ver cómo funciona" }).click();
   await expect(page.locator("#como-funciona")).toBeInViewport();
 });
@@ -63,7 +63,7 @@ test("el botón principal se eleva al pasar el ratón y conserva el foco visible
   test.skip(isMobile, "el brillo y la elevación son solo con ratón");
   await page.goto("/");
   await page.getByRole("button", { name: "Saltar animación" }).click();
-  const boton = page.locator("main").getByRole("link", { name: "Pide presupuesto" }).first();
+  const boton = page.locator("main").getByRole("link", { name: "Hablemos de tu taller" }).first();
   await boton.hover();
   await expect.poll(() => boton.evaluate((el) => getComputedStyle(el).transform)).not.toBe("none");
   await page.mouse.move(0, 0);

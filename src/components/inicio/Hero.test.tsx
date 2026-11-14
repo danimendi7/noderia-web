@@ -20,9 +20,9 @@ describe("Hero", () => {
 
   it("lleva al formulario y a Cómo funciona", () => {
     render(<Hero />);
-    expect(screen.getByRole("link", { name: "Pide presupuesto" })).toHaveAttribute(
+    expect(screen.getByRole("link", { name: "Hablemos de tu taller" })).toHaveAttribute(
       "href",
-      "/presupuesto",
+      "/contacto",
     );
     expect(screen.getByRole("link", { name: "Ver cómo funciona" })).toHaveAttribute(
       "href",

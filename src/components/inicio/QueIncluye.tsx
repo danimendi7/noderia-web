@@ -7,7 +7,7 @@ import { TarjetaSpotlight } from "@/components/ui/TarjetaSpotlight";
 import Link from "next/link";
 import type { NombreIlustracion } from "@/lib/ilustraciones";
 import { PAGINAS } from "@/lib/seo";
-import { ANCLAS, ENLACE_PRESUPUESTO } from "@/lib/navegacion";
+import { ANCLAS, ENLACE_CONTACTO } from "@/lib/navegacion";
 
 type Forma = "grande" | "ancha" | "pequena";
 
@@ -202,8 +202,8 @@ function BloqueCierre() {
           Cuéntanos qué necesita tu taller y lo construimos.
         </p>
       </div>
-      <Boton href={ENLACE_PRESUPUESTO} variante="enlace" fondo="oscuro" className="shrink-0 text-lg">
-        Pide presupuesto
+      <Boton href={ENLACE_CONTACTO} variante="enlace" fondo="oscuro" className="shrink-0 text-lg">
+        Hablemos de tu taller
       </Boton>
     </TarjetaSpotlight>
   );

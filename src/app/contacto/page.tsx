@@ -6,10 +6,10 @@ import { Migas } from "@/components/ui/Migas";
 import { CONTENEDOR } from "@/components/ui/Seccion";
 import { metadatosPagina, migasDe, PAGINAS } from "@/lib/seo";
 
-export const metadata = metadatosPagina(PAGINAS.presupuesto);
+export const metadata = metadatosPagina(PAGINAS.contacto);
 
-/** Página de presupuesto (SPEC v3 §3): el mismo formulario de la home, solo, con tres razones al lado. */
-export default function PaginaPresupuesto() {
+/** Página de contacto (SPEC §12; antes `/presupuesto`): el mismo formulario de la home, solo, con tres razones al lado. */
+export default function PaginaContacto() {
   return (
     <section data-fondo="midnight" className="relative isolate overflow-hidden bg-midnight text-white">
       <div
@@ -22,20 +22,20 @@ export default function PaginaPresupuesto() {
       />
       <div className={`${CONTENEDOR} grid gap-12 pb-20 pt-10 sm:pb-24 md:pt-14 lg:grid-cols-12 lg:pb-32`}>
         <div className="lg:col-span-5">
-          <Migas migas={migasDe(PAGINAS.presupuesto)} />
+          <Migas migas={migasDe(PAGINAS.contacto)} />
           <TituloPagina
             className="mt-10"
-            etiqueta="Presupuesto"
-            titulo="Pide presupuesto para tu taller"
+            etiqueta="Contacto"
+            titulo="Hablemos de tu taller"
             destacado="tu taller"
-            intro="Cuéntanos cómo trabajas y qué te gustaría mejorar. Te llamamos en menos de 24 horas laborables."
+            intro="Primera consulta gratuita y sin compromiso. Cuéntanos cómo trabajas y te preparamos una propuesta y un presupuesto a medida."
           />
           <h2 className="sr-only">Por qué NoderIA</h2>
           <RazonesPresupuesto className="mt-12" />
         </div>
         <div className="lg:col-span-7 lg:pt-16">
-          <h2 className="sr-only">Formulario de presupuesto</h2>
-          <FormularioPresupuesto accion={enviarSolicitud} origen="/presupuesto" />
+          <h2 className="sr-only">Formulario de contacto</h2>
+          <FormularioPresupuesto accion={enviarSolicitud} origen="/contacto" />
         </div>
       </div>
     </section>

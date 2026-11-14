@@ -151,7 +151,7 @@ export default function QuienesSomos() {
             </h2>
             <p className="texto-entradilla mt-5 text-midnight/75">Te preparamos un presupuesto a medida, sin compromiso.</p>
             <div className="mt-8">
-              <Boton href={PAGINAS.presupuesto.ruta}>Pide presupuesto</Boton>
+              <Boton href={PAGINAS.contacto.ruta}>Hablemos de tu taller</Boton>
             </div>
           </div>
           <nav aria-label="Soluciones para tu taller" className="w-full max-w-md">

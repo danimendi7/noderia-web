@@ -9,8 +9,11 @@ export const ANCLAS = {
   presupuesto: "presupuesto",
 } as const;
 
-/** Todos los "Pide presupuesto" llevan a su página (SPEC v3 §1); el formulario sigue también al final de la home. */
-export const ENLACE_PRESUPUESTO = PAGINAS.presupuesto.ruta;
+/** Todos los "Hablemos de tu taller" llevan a `/contacto` (SPEC §12); el formulario sigue también al final de la home. */
+export const ENLACE_CONTACTO = PAGINAS.contacto.ruta;
+
+/** Línea que acompaña al botón principal del hero y al formulario (SPEC §12). */
+export const PRIMERA_CONSULTA = "Primera consulta gratuita y sin compromiso";
 
 /** Desplegable "Soluciones" del menú (SPEC v3 §1). */
 export const SOLUCIONES = [

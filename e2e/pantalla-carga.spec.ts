@@ -14,7 +14,7 @@ test("en la primera visita se ve la animación y el hero aparece solo, sin clic"
   await expect(pantalla(page)).toBeHidden();
   // ≈2,3 s de animación más la descarga de las imágenes.
   expect(Date.now() - inicio).toBeLessThan(6_000);
-  await expect(page.getByRole("link", { name: "Pide presupuesto" }).first()).toBeVisible();
+  await expect(page.getByRole("link", { name: "Hablemos de tu taller" }).first()).toBeVisible();
 });
 
 test("«Saltar» muestra el hero al instante", async ({ page }) => {

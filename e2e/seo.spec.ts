@@ -9,7 +9,7 @@ test("robots.txt y sitemap.xml responden", async ({ request }) => {
   const xml = await sitemap.text();
   expect(xml).toContain("/casos/neumaticos-uria");
   expect(xml).toContain("/privacidad");
-  for (const ruta of ["/software-gestion-talleres", "/diseno-web-talleres", "/automatizaciones-talleres", "/presupuesto"]) {
+  for (const ruta of ["/software-gestion-talleres", "/diseno-web-talleres", "/automatizaciones-talleres", "/contacto"]) {
     expect(xml).toContain(ruta);
   }
 });
