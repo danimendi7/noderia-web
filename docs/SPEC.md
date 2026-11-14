@@ -197,3 +197,15 @@ El detalle está en `docs/SPEC-v3.md`. Cambios de producto respecto a este docum
 - Menú: logo · Soluciones ▾ · Caso de éxito · Quiénes somos · Pide presupuesto (→ `/presupuesto`). Las anclas de la home se conservan.
 - La regla de la sección 7 sobre WhatsApp se relaja: la SPEC v3 lo incluye en el subtítulo de la home y en `/automatizaciones-talleres` como servicio que se desarrolla a medida. En el caso Uría se sigue mostrando solo lo que tienen implantado.
 - Sigue fuera de alcance: blog, euskera, página de agencias de viaje, fotos o nombres del equipo, cifras o testimonios nuevos.
+
+## 12. Fase V4: cinta, contacto, Quiénes somos y hero (orden del 2026-11-14 09:52)
+
+Cambios de producto respecto a lo anterior:
+- El botón principal pasa de "Pide presupuesto" a **"Hablemos de tu taller"** (en la cabecera, "Hablemos"). Bajo el botón del hero y junto al formulario: "Primera consulta gratuita y sin compromiso".
+- `/presupuesto` pasa a **`/contacto`** (redirección 301 desde `/presupuesto`). Title "Contacto: hablemos de tu taller | NoderIA", H1 "Hablemos de tu taller", subtítulo "Primera consulta gratuita y sin compromiso. Cuéntanos cómo trabajas y te preparamos una propuesta y un presupuesto a medida." Las anclas antiguas (`#presupuesto`) siguen funcionando.
+- Titles: Quiénes somos → "Empresa de software e IA en Donostia | NoderIA"; Automatizaciones → "Recordatorios de ITV y avisos para talleres | NoderIA".
+- Quiénes somos, equipo: H2 "Tecnología y comunicación, en el mismo equipo" y el párrafo exacto de la orden. En ninguna parte se describen perfiles o departamentos separados ni se insinúa un equipo grande.
+- Quiénes somos gana animaciones en el hero (isotipo que se monta sobre una red de nodos), en el equipo (dos flujos que se funden en "Tu negocio") y en IA (red neuronal con pulsos). Todo estático con movimiento reducido.
+- Hero de la home con un render nuevo de la escena (Higgsfield), manteniendo el H1 como LCP.
+- WhatsApp: confirmado en la home y en `/automatizaciones-talleres`; en el caso Uría, no.
+- La cinta debe dibujarse bien tras cualquier navegación del cliente, cambio de tamaño y carga de imágenes.
