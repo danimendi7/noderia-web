@@ -30,21 +30,21 @@ describe("PAGINAS", () => {
 
 describe("metadatosPagina", () => {
   it("da título absoluto, canonical y Open Graph propio", () => {
-    const m = metadatosPagina(PAGINAS.presupuesto);
-    expect(m.title).toEqual({ absolute: PAGINAS.presupuesto.titulo });
-    expect(m.description).toBe(PAGINAS.presupuesto.descripcion);
-    expect(m.alternates?.canonical).toBe("/presupuesto");
-    expect(m.openGraph).toMatchObject({ title: PAGINAS.presupuesto.titulo, url: "/presupuesto", locale: "es_ES" });
+    const m = metadatosPagina(PAGINAS.contacto);
+    expect(m.title).toEqual({ absolute: PAGINAS.contacto.titulo });
+    expect(m.description).toBe(PAGINAS.contacto.descripcion);
+    expect(m.alternates?.canonical).toBe("/contacto");
+    expect(m.openGraph).toMatchObject({ title: PAGINAS.contacto.titulo, url: "/contacto", locale: "es_ES" });
   });
 });
 
 describe("datosMigas", () => {
   it("genera un BreadcrumbList con posiciones y URLs absolutas", () => {
-    const datos = datosMigas(base, migasDe(PAGINAS.presupuesto));
+    const datos = datosMigas(base, migasDe(PAGINAS.contacto));
     expect(datos["@type"]).toBe("BreadcrumbList");
     expect(datos.itemListElement).toEqual([
       { "@type": "ListItem", position: 1, name: "Inicio", item: "https://noderia.es/" },
-      { "@type": "ListItem", position: 2, name: "Pide presupuesto", item: "https://noderia.es/presupuesto" },
+      { "@type": "ListItem", position: 2, name: "Contacto", item: "https://noderia.es/contacto" },
     ]);
   });
 });

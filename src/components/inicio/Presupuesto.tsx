@@ -27,11 +27,11 @@ export function Presupuesto({ desde = "mist", origen }: { desde?: Fondo; origen?
       <div className={`${CONTENEDOR} ${ESPACIADO_SECCION} grid gap-12 lg:grid-cols-12`}>
         <div className="lg:col-span-5">
           <CabeceraSeccion
-            etiqueta="Presupuesto"
+            etiqueta="Contacto"
             titulo="Cuéntanos cómo es tu taller"
             destacado="taller"
             idTitulo="titulo-presupuesto"
-            entradilla="Te preparamos un presupuesto a medida, sin compromiso."
+            entradilla="Te preparamos una propuesta y un presupuesto a medida."
             tono="oscuro"
           />
           <p className="mt-8 max-w-[62ch] text-white/70">

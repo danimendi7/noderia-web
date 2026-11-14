@@ -10,6 +10,8 @@ type Comunes = {
   /** Fondo sobre el que va el botón: cambia los colores para mantener el contraste del manual. */
   fondo?: Fondo;
   className?: string;
+  /** Nombre accesible completo cuando el texto visible es una abreviatura (debe empezar por ese texto). */
+  "aria-label"?: string;
 };
 
 type ComoEnlace = Comunes & { href: string; type?: never; disabled?: never; onClick?: never };
@@ -59,7 +61,7 @@ export function Boton(props: BotonProps) {
 
   if (props.href !== undefined) {
     return (
-      <Link href={props.href} className={clases}>
+      <Link href={props.href} className={clases} aria-label={props["aria-label"]}>
         {contenido}
       </Link>
     );
@@ -71,6 +73,7 @@ export function Boton(props: BotonProps) {
       disabled={props.disabled}
       onClick={props.onClick}
       className={clases}
+      aria-label={props["aria-label"]}
     >
       {contenido}
     </button>

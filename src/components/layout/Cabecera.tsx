@@ -1,11 +1,11 @@
 import { Boton } from "@/components/ui/Boton";
 import { Logo } from "@/components/marca/Logo";
-import { ENLACE_PRESUPUESTO, ENLACES_MENU } from "@/lib/navegacion";
+import { ENLACE_CONTACTO, ENLACES_MENU } from "@/lib/navegacion";
 import { EnlaceMenu } from "./EnlaceMenu";
 import { MenuMovil } from "./MenuMovil";
 import { MenuSoluciones } from "./MenuSoluciones";
 
-/** Menú fijo superior (SPEC v3 §1): logo · Soluciones ▾ · Caso de éxito · Quiénes somos · "Pide presupuesto". */
+/** Menú fijo superior (SPEC v3 §1): logo · Soluciones ▾ · Caso de éxito · Quiénes somos · "Hablemos" (→ /contacto, SPEC §12). */
 export function Cabecera() {
   return (
     <header className="fixed inset-x-0 top-0 z-50 border-b border-white/10 bg-midnight">
@@ -32,15 +32,17 @@ export function Cabecera() {
         </nav>
 
         <div className="hidden lg:block">
-          <Boton href={ENLACE_PRESUPUESTO} className="min-h-11 py-2 text-sm">
-            Pide presupuesto
+          <Boton href={ENLACE_CONTACTO} className="min-h-11 py-2 text-sm" aria-label="Hablemos de tu taller">
+            Hablemos
           </Boton>
         </div>
 
         {/* En móvil, la llamada principal también a mano (revisión T48); desde 380 px para que quepa con el logo. */}
         <div className="ml-auto hidden min-[380px]:block lg:hidden">
-          <Boton href={ENLACE_PRESUPUESTO} className="min-h-11 px-2.5 py-2 text-[0.8125rem] sm:px-4 sm:text-sm">
-            Presupuesto
+          <Boton href={ENLACE_CONTACTO} className="min-h-11 px-2.5 py-2 text-[0.8125rem] sm:px-4 sm:text-sm"
+            aria-label="Hablemos de tu taller"
+          >
+            Hablemos
           </Boton>
         </div>
         <MenuMovil />

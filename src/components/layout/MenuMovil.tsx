@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useId, useRef, useState } from "react";
 import { EnlaceMenu } from "./EnlaceMenu";
-import { ENLACE_PRESUPUESTO, ENLACES_MENU, SOLUCIONES } from "@/lib/navegacion";
+import { ENLACE_CONTACTO, ENLACES_MENU, SOLUCIONES } from "@/lib/navegacion";
 
 /**
  * Menú desplegable para móvil: botón con aria-expanded; se cierra con Escape, al elegir un enlace, al tocar fuera y al
@@ -135,11 +135,11 @@ export function MenuMovil() {
           ))}
         </ul>
         <Link
-          href={ENLACE_PRESUPUESTO}
+          href={ENLACE_CONTACTO}
           onClick={cerrar}
           className="mt-4 flex min-h-12 items-center justify-center rounded-xl bg-electric px-6 font-semibold text-white hover:bg-royal"
         >
-          Pide presupuesto
+          Hablemos de tu taller
         </Link>
       </nav>
     </div>

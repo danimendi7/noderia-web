@@ -83,7 +83,7 @@ describe("Qué incluye", () => {
       expect(img).toHaveAttribute("alt", "");
       expect(img).toHaveAttribute("loading", "lazy");
     }
-    expect(screen.getByRole("link", { name: /Pide presupuesto/ })).toHaveAttribute("href", "/presupuesto");
+    expect(screen.getByRole("link", { name: /Hablemos de tu taller/ })).toHaveAttribute("href", "/contacto");
   });
 });
 

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Logo } from "@/components/marca/Logo";
-import { ENLACE_PRESUPUESTO, ENLACES_HOME, ENLACES_LEGALES, ENLACES_MENU, SOLUCIONES } from "@/lib/navegacion";
+import { ENLACE_CONTACTO, ENLACES_HOME, ENLACES_LEGALES, ENLACES_MENU, SOLUCIONES } from "@/lib/navegacion";
 
 /**
  * Pie común: logo, frase, enlaces a secciones y legales, y ubicación. Sin email hasta tener dominio propio.
@@ -46,8 +46,8 @@ export function Pie() {
               </li>
             ))}
             <li>
-              <Link href={ENLACE_PRESUPUESTO} className="inline-flex min-h-11 items-center hover:text-aqua">
-                Pide presupuesto
+              <Link href={ENLACE_CONTACTO} className="inline-flex min-h-11 items-center hover:text-aqua">
+                Hablemos de tu taller
               </Link>
             </li>
           </ul>

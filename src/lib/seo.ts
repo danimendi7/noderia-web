@@ -22,7 +22,7 @@ export const PAGINAS = {
     nombre: "Diseño web",
     titulo: "Diseño web para talleres mecánicos y citas online | NoderIA",
     descripcion:
-      "Webs a medida para talleres mecánicos: rápidas, preparadas para Google y con reservas online conectadas a tu agenda. Pide presupuesto.",
+      "Webs a medida para talleres mecánicos: rápidas, preparadas para Google y con reservas online conectadas a tu agenda. Hablemos de tu taller.",
   },
   automatizaciones: {
     ruta: "/automatizaciones-talleres",
@@ -45,12 +45,12 @@ export const PAGINAS = {
     descripcion:
       "Equipo de programadores y expertos en comunicación en Donostia. Software a medida e inteligencia artificial aplicada a problemas reales de empresas.",
   },
-  presupuesto: {
-    ruta: "/presupuesto",
-    nombre: "Pide presupuesto",
-    titulo: "Pide presupuesto para tu taller | NoderIA",
+  contacto: {
+    ruta: "/contacto",
+    nombre: "Contacto",
+    titulo: "Contacto: hablemos de tu taller | NoderIA",
     descripcion:
-      "Cuéntanos cómo es tu taller y te preparamos un presupuesto a medida de software de gestión, web y automatizaciones, sin compromiso.",
+      "Primera consulta gratuita y sin compromiso. Cuéntanos cómo trabajas y te preparamos una propuesta y un presupuesto a medida.",
   },
 } as const;
 

@@ -49,7 +49,7 @@ describe("FormularioPresupuesto", () => {
     const accion = vi.fn(accionQueEnvia);
     render(<FormularioPresupuesto accion={accion} />);
     await act(async () => {
-      fireEvent.click(screen.getByRole("button", { name: "Pide tu presupuesto" }));
+      fireEvent.click(screen.getByRole("button", { name: "Hablemos de tu taller" }));
     });
     expect(accion).not.toHaveBeenCalled();
     const nombre = screen.getByLabelText(/^Tu nombre/);
@@ -65,7 +65,7 @@ describe("FormularioPresupuesto", () => {
     render(<FormularioPresupuesto accion={accionQueEnvia} />);
     rellenarValido();
     await act(async () => {
-      fireEvent.click(screen.getByRole("button", { name: "Pide tu presupuesto" }));
+      fireEvent.click(screen.getByRole("button", { name: "Hablemos de tu taller" }));
     });
     expect(await screen.findByText("¡Recibido! Te llamamos en menos de 24 horas laborables.")).toBeInTheDocument();
     expect(screen.getByRole("status")).toHaveFocus();
@@ -86,7 +86,7 @@ describe("FormularioPresupuesto", () => {
     render(<FormularioPresupuesto accion={accion} />);
     rellenarValido();
     await act(async () => {
-      fireEvent.click(screen.getByRole("button", { name: "Pide tu presupuesto" }));
+      fireEvent.click(screen.getByRole("button", { name: "Hablemos de tu taller" }));
     });
     expect(await screen.findByRole("alert")).toHaveTextContent("No hemos podido enviar tu solicitud.");
     expect(screen.getByLabelText(/^Tu nombre/)).toHaveValue("Ane Prueba");

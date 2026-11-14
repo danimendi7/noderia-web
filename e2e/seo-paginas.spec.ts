@@ -37,9 +37,9 @@ const PAGINAS = [
     tipos: ["BreadcrumbList", "AboutPage"],
   },
   {
-    ruta: "/presupuesto",
-    titulo: "Pide presupuesto para tu taller | NoderIA",
-    h1: "Pide presupuesto para tu taller",
+    ruta: "/contacto",
+    titulo: "Contacto: hablemos de tu taller | NoderIA",
+    h1: "Hablemos de tu taller",
     tipos: ["BreadcrumbList"],
   },
 ];
@@ -90,9 +90,9 @@ test("el sitemap incluye todas las páginas nuevas", async ({ request }) => {
   for (const { ruta } of PAGINAS) expect(xml).toContain(ruta);
 });
 
-test("/presupuesto tiene el formulario y tres razones", async ({ page }) => {
-  await page.goto("/presupuesto");
-  await expect(page.getByRole("button", { name: "Pide tu presupuesto" })).toBeVisible();
+test("/contacto tiene el formulario y tres razones", async ({ page }) => {
+  await page.goto("/contacto");
+  await expect(page.getByRole("button", { name: "Hablemos de tu taller" })).toBeVisible();
   for (const razon of ["A tu medida", "Base probada en un taller real", "Equipo cercano en Gipuzkoa"]) {
     await expect(page.getByRole("heading", { level: 3, name: razon })).toBeVisible();
   }
@@ -107,10 +107,10 @@ for (const servicio of SERVICIOS) {
     for (const otra of SERVICIOS.filter((s) => s !== servicio)) {
       await expect(main.locator(`a[href="${otra.ruta}"]`).first()).toBeVisible();
     }
-    await expect(main.getByRole("link", { name: "Pide presupuesto" }).first()).toHaveAttribute("href", "/presupuesto");
+    await expect(main.getByRole("link", { name: "Hablemos de tu taller" }).first()).toHaveAttribute("href", "/contacto");
     const preguntas = page.locator("#preguntas");
     expect(await preguntas.locator("h3 button").count()).toBeGreaterThanOrEqual(3);
-    await expect(page.getByRole("button", { name: "Pide tu presupuesto" })).toBeVisible();
+    await expect(page.getByRole("button", { name: "Hablemos de tu taller" })).toBeVisible();
     // Las ilustraciones con contenido tienen texto alternativo descriptivo (nada de "imagen 1").
     const alts = await main.locator("[data-ilustracion] img[alt]:not([alt=''])").evaluateAll((imgs) => imgs.map((i) => i.getAttribute("alt")!));
     expect(alts.length).toBeGreaterThanOrEqual(2);
@@ -158,7 +158,7 @@ test("/quienes-somos: secciones de la SPEC, sin nombres ni fotos de personas, y 
   const main = page.getByRole("main");
   // Solo el isotipo oficial: ninguna foto (imágenes con texto alternativo) en la página.
   await expect(main.locator("img[alt]:not([alt=''])")).toHaveCount(0);
-  for (const ruta of ["/software-gestion-talleres", "/diseno-web-talleres", "/automatizaciones-talleres", "/presupuesto"]) {
+  for (const ruta of ["/software-gestion-talleres", "/diseno-web-talleres", "/automatizaciones-talleres", "/contacto"]) {
     await expect(main.locator(`a[href="${ruta}"]`).first()).toBeVisible();
   }
 });

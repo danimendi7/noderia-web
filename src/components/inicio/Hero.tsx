@@ -1,7 +1,7 @@
 import { Fragment, type CSSProperties, type ReactNode } from "react";
 import { Boton } from "@/components/ui/Boton";
 import { ParallaxHero } from "./ParallaxHero";
-import { ANCLAS, ENLACE_PRESUPUESTO } from "@/lib/navegacion";
+import { ANCLAS, ENLACE_CONTACTO, PRIMERA_CONSULTA } from "@/lib/navegacion";
 
 type HeroProps = {
   /** Escena isométrica (T16/T17). Hasta entonces, el lado derecho solo lleva el fondo de nodos. */
@@ -56,11 +56,14 @@ export function Hero({ escena }: HeroProps) {
             por email y WhatsApp. Todo conectado y hecho a la medida de tu taller.
           </p>
           <div className="hero-entra mt-9 flex flex-wrap items-center gap-x-8 gap-y-4" style={orden(2)}>
-            <Boton href={ENLACE_PRESUPUESTO}>Pide presupuesto</Boton>
+            <Boton href={ENLACE_CONTACTO}>Hablemos de tu taller</Boton>
             <Boton href={`/#${ANCLAS.comoFunciona}`} variante="enlace" fondo="oscuro">
               Ver cómo funciona
             </Boton>
           </div>
+          <p className="hero-entra mt-4 text-sm text-white/70" style={orden(2)}>
+            {PRIMERA_CONSULTA}
+          </p>
         </div>
         {/* Escena más grande (sobresale hacia la derecha) y en capas con parallax (SPEC v3 §7). */}
         <div className="relative lg:col-span-6 xl:-mr-6">

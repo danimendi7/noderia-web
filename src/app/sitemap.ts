@@ -10,7 +10,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   }));
 }
 
-/** Home 1; páginas de servicio, caso y presupuesto 0,8; legales 0,3. */
+/** Home 1; páginas de servicio, caso, quiénes somos y contacto 0,8; legales 0,3. */
 function prioridad(ruta: string) {
   if (ruta === "/") return 1;
   return ["/aviso-legal", "/privacidad", "/cookies"].includes(ruta) ? 0.3 : 0.8;

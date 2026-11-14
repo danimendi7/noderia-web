@@ -10,7 +10,7 @@ const PAGINAS = [
   "/automatizaciones-talleres",
   "/casos/neumaticos-uria",
   "/quienes-somos",
-  "/presupuesto", "/aviso-legal", "/privacidad", "/cookies", "/pagina-que-no-existe"];
+  "/contacto", "/aviso-legal", "/privacidad", "/cookies", "/pagina-que-no-existe"];
 
 test.describe("axe", () => {
   // Con movimiento reducido, para medir el estado final y no un fotograma a mitad de animación.

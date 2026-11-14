@@ -22,7 +22,7 @@ export const RUTAS_PUBLICAS = [
   "/automatizaciones-talleres",
   "/casos/neumaticos-uria",
   "/quienes-somos",
-  "/presupuesto",
+  "/contacto",
   "/aviso-legal",
   "/privacidad",
   "/cookies",

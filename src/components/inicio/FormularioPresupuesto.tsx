@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { createContext, type FormEvent, type ReactNode, useActionState, useContext, useEffect, useId, useRef, useState } from "react";
+import { PRIMERA_CONSULTA } from "@/lib/navegacion";
 import { ESTADO_INICIAL, type EstadoFormulario, MENSAJE_GRACIAS } from "@/lib/presupuesto/estado";
 import {
   CAMPO_TRAMPA,
@@ -58,9 +59,11 @@ export function FormularioPresupuesto({ accion, origen = "home#presupuesto" }: P
     erroresCliente ?? (estado.estado === "errores" ? estado.errores : {});
   const valores = estado.estado === "errores" || estado.estado === "fallo" ? estado.valores : {};
 
+  // Foco dentro de este formulario (por `name`): con la página anterior oculta en el DOM, nunca salta a otro formulario.
+  const refFormulario = useRef<HTMLFormElement>(null);
   function enfocarPrimerError(lista: ErroresFormulario) {
     const primero = ORDEN_CAMPOS.find((campo) => lista[campo]);
-    if (primero) document.getElementById(idCampo(p, primero))?.focus();
+    if (primero) refFormulario.current?.querySelector<HTMLElement>(`[name="${primero}"]`)?.focus();
   }
 
   function alEnviar(evento: FormEvent<HTMLFormElement>) {
@@ -114,6 +117,7 @@ export function FormularioPresupuesto({ accion, origen = "home#presupuesto" }: P
   return (
     <PrefijoIds value={p}>
       <form
+        ref={refFormulario}
         action={enviar}
         onSubmit={alEnviar}
         noValidate
@@ -289,13 +293,16 @@ export function FormularioPresupuesto({ accion, origen = "home#presupuesto" }: P
           <MensajeError campo="consentimiento" error={errores.consentimiento} />
         </div>
 
-        <button
-          type="submit"
-          disabled={enviando}
-          className="mt-8 inline-flex min-h-12 w-full items-center justify-center rounded-xl bg-electric px-6 py-3 font-semibold text-white shadow-[0_8px_28px_-6px_rgb(0_104_224/0.75)] transition-[background-color,box-shadow] hover:bg-royal hover:shadow-[0_10px_32px_-6px_rgb(0_176_240/0.6)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aqua disabled:cursor-wait disabled:opacity-70 sm:w-auto"
-        >
-          {enviando ? "Enviando…" : "Pide tu presupuesto"}
-        </button>
+        <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-6">
+          <button
+            type="submit"
+            disabled={enviando}
+            className="inline-flex min-h-12 w-full items-center justify-center rounded-xl bg-electric px-6 py-3 font-semibold text-white shadow-[0_8px_28px_-6px_rgb(0_104_224/0.75)] transition-[background-color,box-shadow] hover:bg-royal hover:shadow-[0_10px_32px_-6px_rgb(0_176_240/0.6)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aqua disabled:cursor-wait disabled:opacity-70 sm:w-auto"
+          >
+            {enviando ? "Enviando…" : "Hablemos de tu taller"}
+          </button>
+          <p className="text-sm text-white/75">{PRIMERA_CONSULTA}</p>
+        </div>
       </form>
     </PrefijoIds>
   );

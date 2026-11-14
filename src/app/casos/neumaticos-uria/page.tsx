@@ -8,7 +8,7 @@ import {
   IMPLANTADO_URIA,
   RESULTADO_URIA,
 } from "@/lib/contenido/uria";
-import { ENLACE_PRESUPUESTO } from "@/lib/navegacion";
+import { ENLACE_CONTACTO } from "@/lib/navegacion";
 import { Migas } from "@/components/ui/Migas";
 import { metadatosPagina, migasDe, PAGINAS } from "@/lib/seo";
 
@@ -147,7 +147,7 @@ export default function CasoNeumaticosUria() {
             </h2>
             <p className="mt-3 text-lg text-white/80">Te preparamos un presupuesto a medida, sin compromiso.</p>
           </div>
-          <Boton href={ENLACE_PRESUPUESTO}>Pide presupuesto</Boton>
+          <Boton href={ENLACE_CONTACTO}>Hablemos de tu taller</Boton>
         </div>
       </section>
     </article>
