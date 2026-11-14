@@ -7,7 +7,7 @@ import { join } from "node:path";
 import sharp from "sharp";
 
 const ANCHOS = {
-  "taller-vacio": 1200,
+  "taller-vacio": 1400,
   "coche-averiado": 640,
   "coche-reparado": 640,
   "movil-formulario": 360,
