@@ -9,12 +9,37 @@
   --color-aqua: #00e5f0;
   --color-mist: #f4f7fb;
 
-  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
-  --font-display: var(--font-outfit), ui-sans-serif, system-ui, sans-serif;
+  /* Tras la fuente y su respaldo de next/font (Arial ajustado), el respaldo para sistemas sin Arial (T57, más abajo). */
+  --font-sans: var(--font-inter), "Inter Respaldo", ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-outfit), "Outfit Respaldo", ui-sans-serif, system-ui, sans-serif;
 
   --radius-xl: 12px;
   --radius-2xl: 20px;
   --radius-3xl: 28px;
+}
+
+/* Respaldo de las fuentes con las medidas de Arial donde no hay Arial (T57). next/font ajusta su respaldo ("Outfit Fallback",
+   "Inter Fallback") solo con local("Arial"); en Linux, ChromeOS o el Chromium de Lighthouse no existe y el texto caía en
+   DejaVu Sans sin ajustar: al llegar la fuente web el hero cambiaba de alto ~100 px (CLS 0,22). Liberation Sans y Arimo
+   tienen las mismas medidas que Arial, así que valen los mismos ajustes que calcula next/font (copiados de su CSS).
+   Va en las pilas de --font-sans/--font-display y no en la opción `fallback` de next/font: con Turbopack, esa opción
+   sustituye al respaldo de Arial en lugar de añadirse. */
+@font-face {
+  font-family: "Outfit Respaldo";
+  src: local("Liberation Sans"), local("LiberationSans"), local("Arimo");
+  ascent-override: 100.18%;
+  descent-override: 26.05%;
+  line-gap-override: 0%;
+  size-adjust: 99.82%;
+}
+
+@font-face {
+  font-family: "Inter Respaldo";
+  src: local("Liberation Sans"), local("LiberationSans"), local("Arimo");
+  ascent-override: 90.44%;
+  descent-override: 22.52%;
+  line-gap-override: 0%;
+  size-adjust: 107.12%;
 }
 
 /* Degradado de marca: Royal 0 % → Electric 40 % → Sky 75 % → Aqua 100 %, 120°.
