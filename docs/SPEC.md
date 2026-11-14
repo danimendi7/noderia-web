@@ -209,3 +209,13 @@ Cambios de producto respecto a lo anterior:
 - Hero de la home con un render nuevo de la escena (Higgsfield), manteniendo el H1 como LCP.
 - WhatsApp: confirmado en la home y en `/automatizaciones-talleres`; en el caso Uría, no.
 - La cinta debe dibujarse bien tras cualquier navegación del cliente, cambio de tamaño y carga de imágenes.
+
+## 13. Fase V5: últimos cambios (orden del 2026-11-14 17:30)
+
+Cambios de producto respecto a lo anterior:
+- Quiénes somos, intro del hero: "Estamos especializados en talleres mecánicos y de neumáticos, y conocemos a fondo su día a día: …" (el resto de la frase no cambia).
+- Quiénes somos, equipo: el diagrama Programación + Comunicación → Tu negocio pasa a una animación "Del código al cliente" ligada al scroll (editor de código genérico + móvil con un mensaje al cliente que se funden en la web de un taller con una cita confirmada y "Tu negocio"). Sin código real del proyecto ni datos reales; estado final con movimiento reducido.
+- Bento "Diseño completo de tu web nueva": ilustración nueva con fondo transparente, animada con código; sin vídeo en esa tarjeta ni rectángulos de fondo visibles en ninguna otra.
+- Cómo trabajamos: la cinta es una sola, con el mismo grosor y estilo, que recorre los 4 pasos y sigue hacia la siguiente sección.
+- Botones de pausa: no se ven salvo con el foco del teclado; clic o toque sobre la animación la pausa y la reanuda (WCAG 2.2.2). Con movimiento reducido no se reproduce nada.
+- Caso Uría (home y página del caso): captura del hero de su web en un marco de navegador, con el alt "Portada de la web de Neumáticos Uría en Hernani, diseñada por NoderIA".
