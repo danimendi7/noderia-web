@@ -767,26 +767,137 @@
   }
 }
 
-/* Quiénes somos (SPEC v3 §4): los nodos de la red se encienden en cadena. Solo opacidad y transform. */
+/* Quiénes somos (orden 2026-11-14, punto 5). Todo es decorativo; con movimiento reducido se ve completo y quieto. */
+
+/* Hero: el isotipo oficial se monta. Mientras, se ve la copia del SVG; si el JS no llega, el oficial sale a los 2,5 s. */
+.qs-isotipo-montaje {
+  opacity: 0;
+}
 @media (prefers-reduced-motion: no-preference) {
-  .qs-red-nodo {
-    transform-box: fill-box;
-    transform-origin: center;
-    /* Una sola vez y en menos de 5 s en total: no necesita botón de pausa (WCAG 2.2.2). */
-    animation: qs-pulso 3.2s ease-in-out 1 both;
-    animation-delay: calc(var(--i) * 0.2s);
+  .qs-isotipo .qs-isotipo-oficial {
+    animation: qs-isotipo-respaldo 0.5s ease 2.5s both;
+  }
+  .qs-isotipo[data-estado="animando"] .qs-isotipo-oficial {
+    animation: none;
+    opacity: 0;
+  }
+  .qs-isotipo[data-estado="animando"] .qs-isotipo-montaje {
+    opacity: 1;
+  }
+  .qs-isotipo[data-estado="montado"] .qs-isotipo-oficial {
+    animation: none;
+    opacity: 1;
+  }
+}
+@keyframes qs-isotipo-respaldo {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }
 
-@keyframes qs-pulso {
-  0%,
-  100% {
-    opacity: 0.55;
-    transform: scale(0.92);
+/* Equipo: los flujos se dibujan con el scroll (stroke-dashoffset de 1 a 0 con pathLength=1). */
+.qs-flujo {
+  stroke-dasharray: 1 1;
+  stroke-dashoffset: 0;
+}
+.qs-estela {
+  opacity: 0;
+  stroke-dasharray: 0.1 2;
+}
+.qs-pulso {
+  opacity: 0;
+  stroke-dasharray: 0.07 1.2;
+  stroke-dashoffset: 0.07;
+}
+.qs-negocio {
+  transition:
+    box-shadow 0.5s ease,
+    transform 0.5s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.qs-flujos[data-estado="unido"] .qs-negocio {
+  box-shadow:
+    0 0 0 6px rgb(0 229 240 / 0.18),
+    0 18px 48px -10px rgb(0 176 240 / 0.85);
+}
+@media (prefers-reduced-motion: no-preference) {
+  .qs-flujos[data-estado="unido"] .qs-negocio {
+    transform: scale(1.04);
   }
-  45% {
+  /* Dos pasadas de luz al unirse (menos de 5 s, sin botón de pausa: WCAG 2.2.2). */
+  .qs-flujos[data-estado="unido"] .qs-pulso {
+    animation: qs-pulso-recorre 1.5s cubic-bezier(0.45, 0, 0.3, 1) 2 both;
+  }
+  .qs-flujos[data-estado="unido"] .qs-pulso-der {
+    animation-delay: 0.25s;
+  }
+}
+@keyframes qs-pulso-recorre {
+  0% {
+    opacity: 0;
+    stroke-dashoffset: 0.07;
+  }
+  12% {
     opacity: 1;
-    transform: scale(1.08);
+  }
+  88% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    stroke-dashoffset: -1.05;
+  }
+}
+
+/* Inteligencia artificial: la red se enciende capa a capa al entrar en pantalla. */
+.qs-sinapsis {
+  stroke-opacity: 0.4;
+  transition: stroke-opacity 0.6s ease calc(var(--capa) * 0.16s);
+}
+.qs-neurona {
+  opacity: 0.75;
+  /* El destello al llegar un pulso escala la neurona desde su centro. */
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: opacity 0.5s ease calc(var(--capa) * 0.16s);
+}
+.qs-pulso-neuronal {
+  filter: drop-shadow(0 0 4px #00e5f0);
+}
+.qs-neuronal[data-estado="apagada"] .qs-sinapsis {
+  stroke-opacity: 0.08;
+}
+.qs-neuronal[data-estado="apagada"] .qs-neurona {
+  opacity: 0.15;
+}
+
+/* Titular palabra a palabra (CabeceraSeccion con `palabras`). Visible en el HTML; solo se oculta si el JS lo pide. */
+.titulo-palabra {
+  display: inline-block;
+}
+@media (prefers-reduced-motion: no-preference) {
+  [data-texto="oculto"] .titulo-palabra {
+    opacity: 0;
+    filter: blur(10px);
+    transform: translateY(0.35em);
+  }
+  [data-texto="visto"] .titulo-palabra {
+    animation: titulo-palabra-entra 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+    animation-delay: calc(var(--p) * 70ms + 120ms);
+  }
+}
+@keyframes titulo-palabra-entra {
+  from {
+    opacity: 0;
+    filter: blur(10px);
+    transform: translateY(0.35em);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+    transform: none;
   }
 }
 

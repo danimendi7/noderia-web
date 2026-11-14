@@ -34,4 +34,15 @@ describe("CabeceraSeccion", () => {
       render(<CabeceraSeccion etiqueta="E" titulo="Hola" destacado="adiós" idTitulo="t" tono="claro" />),
     ).toThrow();
   });
+
+  it("con palabras, parte el titular en palabras sin cambiar su nombre accesible", () => {
+    render(
+      <CabeceraSeccion etiqueta="E" titulo="Atentos cada día a la IA" destacado="a la IA" idTitulo="t" tono="oscuro" palabras />,
+    );
+    const titulo = screen.getByRole("heading", { level: 2, name: "Atentos cada día a la IA" });
+    const palabras = titulo.querySelectorAll(".titulo-palabra");
+    expect(palabras).toHaveLength(6);
+    expect(palabras[5]).toHaveClass("texto-marca-oscuro");
+    expect(titulo).not.toHaveAttribute("data-entra");
+  });
 });
