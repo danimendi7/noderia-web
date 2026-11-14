@@ -41,7 +41,10 @@ export function IsotipoAnimado() {
     let linea: gsap.core.Timeline | null = null;
     Promise.all([cargar(IMAGENES_CARGA.isotipo), cargar(IMAGENES_CARGA.mapa)]).then((listas) => {
       if (!vigente) return;
-      if (!listas.every(Boolean)) {
+      // Si las imágenes tardaron tanto que el respaldo del CSS ya está mostrando el oficial, no se monta encima.
+      const oficial = caja.querySelector<HTMLImageElement>(".qs-isotipo-oficial");
+      const respaldoVisible = oficial !== null && parseFloat(getComputedStyle(oficial).opacity) > 0;
+      if (!listas.every(Boolean) || respaldoVisible) {
         caja.dataset.estado = "montado";
         return;
       }

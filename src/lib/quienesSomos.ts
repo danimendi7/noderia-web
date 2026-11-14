@@ -94,3 +94,33 @@ export function recorridoAleatorio(nodos: NodoRed[], enlaces: EnlaceRed[], azar:
     camino.push(actual);
   }
 }
+
+type Punto = readonly [number, number];
+
+/** Curva de un nodo superior al punto de unión: sale en horizontal hacia el centro y baja en vertical. */
+function curvaHastaUnion([x, y]: Punto, [ux, uy]: Punto) {
+  const haciaDentro = (ux - x) * 0.6;
+  return `M${x} ${y} C${x + haciaDentro} ${y} ${ux} ${y + (uy - y) * 0.3} ${ux} ${uy}`;
+}
+
+const IZQUIERDA: Punto = [72, 70];
+const DERECHA: Punto = [328, 70];
+const UNION: Punto = [200, 165];
+const NEGOCIO: Punto = [200, 258];
+
+/**
+ * Diagrama del equipo (Programación + Comunicación → Tu negocio) en unidades de un lienzo de 400 × 300. El SVG y el
+ * HTML de los nodos usan los mismos puntos (en %), así los flujos salen del centro de cada nodo en cualquier ancho.
+ */
+export const DIAGRAMA_EQUIPO = {
+  ancho: 400,
+  alto: 300,
+  izquierda: IZQUIERDA,
+  derecha: DERECHA,
+  suma: [200, 70] as Punto,
+  union: UNION,
+  negocio: NEGOCIO,
+  caminoIzquierda: curvaHastaUnion(IZQUIERDA, UNION),
+  caminoDerecha: curvaHastaUnion(DERECHA, UNION),
+  caminoUnion: `M${UNION[0]} ${UNION[1]} L${NEGOCIO[0]} ${NEGOCIO[1]}`,
+} as const;

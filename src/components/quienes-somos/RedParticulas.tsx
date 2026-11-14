@@ -124,6 +124,7 @@ export function RedParticulas({ className = "" }: { className?: string }) {
     }
 
     let marco = 0;
+    let ultimo = 0;
     let visible = false;
     let inicio = 0;
     // Tras la deriva, el bucle solo sigue mientras el ratón se mueve por el hero (y un poco después, para asentarse).
@@ -131,6 +132,7 @@ export function RedParticulas({ className = "" }: { className?: string }) {
     const bucle = (ahora: number) => {
       if (!inicio) inicio = ahora;
       const segundos = (ahora - inicio) / 1000;
+      ultimo = segundos;
       pintar(segundos);
       if (segundos > DURACION_DERIVA && ahora > activoHasta) {
         marco = 0;
@@ -175,7 +177,11 @@ export function RedParticulas({ className = "" }: { className?: string }) {
       if (visible) arrancar();
       else parar();
     });
-    const tamano = new ResizeObserver(medir);
+    // Cambiar el tamaño del lienzo lo borra: si el bucle está parado, se repinta el último fotograma.
+    const tamano = new ResizeObserver(() => {
+      medir();
+      if (!marco) pintar(ultimo);
+    });
     pintar(0);
     // El primer fotograma ya está; el bucle arranca en un momento libre para no competir con la carga.
     const libre = window.requestIdleCallback ?? ((f: () => void) => window.setTimeout(f, 300));

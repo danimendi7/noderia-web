@@ -35,12 +35,53 @@ test("con animaciones: los flujos del equipo se unen con el scroll y la IA se en
   await flujos.evaluate((el) => el.scrollIntoView({ block: "start" }));
   await expect(flujos).toHaveAttribute("data-estado", "unido", { timeout: 5_000 });
   await expect.poll(desplazamiento).toBeLessThan(0.05);
+  // Las estelas de la punta solo se ven mientras se dibuja.
+  for (const estela of await flujos.locator(".qs-estela").all()) await expect(estela).toHaveCSS("opacity", "0");
 
   await page.locator("[data-red-neuronal]").scrollIntoViewIfNeeded();
-  await expect(seccionIa).toHaveAttribute("data-texto", "visto");
   await expect(page.locator("[data-red-neuronal]")).toHaveAttribute("data-estado", "encendida");
+  await page.locator("#titulo-ia").scrollIntoViewIfNeeded();
+  await expect(seccionIa).toHaveAttribute("data-texto", "visto");
   await expect(page.getByRole("heading", { level: 2, name: "Atentos cada día a la IA, con los pies en el suelo" })).toBeVisible();
   await expect(seccionIa.locator(".titulo-palabra").last()).toHaveCSS("opacity", "1", { timeout: 3_000 });
+});
+
+test("los flujos del equipo salen del centro de cada nodo y la cinta llega a Tu negocio", async ({ page }) => {
+  await page.goto("/quienes-somos");
+  const flujos = page.locator("[data-flujos-equipo]");
+  await flujos.scrollIntoViewIfNeeded();
+  const medidas = await flujos.evaluate((caja) => {
+    const enPantalla = (camino: SVGPathElement, largo: number) => {
+      const p = camino.getPointAtLength(largo);
+      const m = camino.getScreenCTM()!;
+      return { x: p.x * m.a + p.y * m.c + m.e, y: p.x * m.b + p.y * m.d + m.f };
+    };
+    const centro = (el: Element) => {
+      const r = el.getBoundingClientRect();
+      return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
+    };
+    const [izquierda, derecha] = [...caja.querySelectorAll<SVGPathElement>(".qs-flujo-lado")].slice(2);
+    const union = caja.querySelectorAll<SVGPathElement>(".qs-flujo-union")[1];
+    const nodos = [...caja.querySelectorAll(".rounded-full.bg-white")];
+    const negocio = caja.querySelector(".qs-negocio")!;
+    return {
+      salidas: [enPantalla(izquierda, 0), enPantalla(derecha, 0)],
+      nodos: nodos.map(centro),
+      llegada: enPantalla(union, union.getTotalLength()),
+      negocio: negocio.getBoundingClientRect(),
+    };
+  });
+  expect(medidas.nodos).toHaveLength(2);
+  medidas.salidas.forEach((salida, i) => {
+    expect(Math.abs(salida.x - medidas.nodos[i].x)).toBeLessThan(2);
+    expect(Math.abs(salida.y - medidas.nodos[i].y)).toBeLessThan(2);
+  });
+  // La cinta acaba debajo de la pastilla "Tu negocio" (por detrás de ella).
+  const { llegada, negocio } = medidas;
+  expect(llegada.x).toBeGreaterThan(negocio.left);
+  expect(llegada.x).toBeLessThan(negocio.right);
+  expect(llegada.y).toBeGreaterThan(negocio.top);
+  expect(llegada.y).toBeLessThan(negocio.bottom);
 });
 
 test.describe("con movimiento reducido", () => {

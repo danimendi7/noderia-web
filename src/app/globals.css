@@ -803,6 +803,10 @@
   stroke-dasharray: 1 1;
   stroke-dashoffset: 0;
 }
+.qs-estela {
+  opacity: 0;
+  stroke-dasharray: 0.1 2;
+}
 .qs-pulso {
   opacity: 0;
   stroke-dasharray: 0.07 1.2;
@@ -854,6 +858,9 @@
 }
 .qs-neurona {
   opacity: 0.75;
+  /* El destello al llegar un pulso escala la neurona desde su centro. */
+  transform-box: fill-box;
+  transform-origin: center;
   transition: opacity 0.5s ease calc(var(--capa) * 0.16s);
 }
 .qs-pulso-neuronal {

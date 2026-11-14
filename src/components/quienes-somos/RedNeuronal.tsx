@@ -25,30 +25,37 @@ export function RedNeuronal() {
     const caja = raiz.current;
     if (!caja) return;
     const seccion = caja.closest("section");
+    const titulo = seccion?.querySelector<HTMLElement>(".titulo-palabras") ?? null;
     const reducido = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reducido || typeof IntersectionObserver === "undefined") {
       caja.dataset.estado = "encendida";
       return;
     }
-    // Solo se prepara la entrada si la sección aún no se ve (como `EntradasAlScroll`): si ya está a la vista, se
-    // enciende sin esconder nada.
-    const yaVisible = caja.getBoundingClientRect().top < window.innerHeight * 0.85;
-    if (!yaVisible) {
-      caja.dataset.estado = "apagada";
-      if (seccion) seccion.dataset.texto = "oculto";
-    }
+    // Solo se prepara la entrada de lo que aún no se ve (como `EntradasAlScroll`). La red y el titular tienen cada uno
+    // su disparador: en móvil el titular va debajo de la red y, si no, aparecería fuera de la pantalla.
+    const porDebajo = (el: Element) => el.getBoundingClientRect().top > window.innerHeight * 0.85;
+    const redPendiente = porDebajo(caja);
+    const tituloPendiente = seccion !== null && titulo !== null && porDebajo(titulo);
+    if (redPendiente) caja.dataset.estado = "apagada";
+    if (tituloPendiente) seccion.dataset.texto = "oculto";
 
     const pulsos = [...caja.querySelectorAll<SVGCircleElement>("[data-pulso]")];
+    const estelas = [...caja.querySelectorAll<SVGLineElement>("[data-estela-pulso]")];
     const neuronas = [...caja.querySelectorAll<SVGGElement>("[data-neurona]")];
     let marco = 0;
     let temporizador = 0;
+    const ocultar = (i: number) => {
+      pulsos[i].setAttribute("opacity", "0");
+      estelas[i]?.setAttribute("opacity", "0");
+    };
     const encender = () => {
       caja.dataset.estado = "encendida";
-      if (seccion) seccion.dataset.texto = "visto";
       // Pulsos: cada uno sigue un recorrido de la primera a la última capa, con salidas escalonadas.
       const azar = aleatorio(11);
       const recorridos = pulsos.map(() => recorridoAleatorio(RED.nodos, RED.enlaces, azar));
       const salidas = pulsos.map((_, i) => 0.5 + i * 0.32);
+      // Última neurona que encendió cada pulso, para dar un solo destello por llegada.
+      const encendidas = pulsos.map(() => "");
       let inicio = 0;
       const paso = (ahora: number) => {
         if (!inicio) inicio = ahora;
@@ -60,47 +67,58 @@ export function RedNeuronal() {
           const local = t - salidas[i];
           const vuelta = tramos * POR_TRAMO + 0.3;
           const dentro = local >= 0 && t < DURACION_PULSOS ? local % vuelta : -1;
-          if (dentro < 0 || dentro > tramos * POR_TRAMO) {
-            pulso.setAttribute("opacity", "0");
-            return;
-          }
+          if (dentro < 0 || dentro > tramos * POR_TRAMO) return ocultar(i);
           const tramo = Math.min(Math.floor(dentro / POR_TRAMO), tramos - 1);
           const f = (dentro - tramo * POR_TRAMO) / POR_TRAMO;
           const a = RED.nodos[camino[tramo]];
           const b = RED.nodos[camino[tramo + 1]];
-          pulso.setAttribute("cx", `${a.x + (b.x - a.x) * f}`);
-          pulso.setAttribute("cy", `${a.y + (b.y - a.y) * f}`);
+          const x = a.x + (b.x - a.x) * f;
+          const y = a.y + (b.y - a.y) * f;
+          pulso.setAttribute("cx", `${x}`);
+          pulso.setAttribute("cy", `${y}`);
           pulso.setAttribute("opacity", "1");
-          if (f > 0.9) neuronas[camino[tramo + 1]]?.animate([{ opacity: 1 }, { opacity: 0.75 }], { duration: 380 });
+          // Estela: el trozo de enlace que el pulso acaba de recorrer.
+          const cola = Math.max(0, f - 0.45);
+          estelas[i]?.setAttribute("x1", `${a.x + (b.x - a.x) * cola}`);
+          estelas[i]?.setAttribute("y1", `${a.y + (b.y - a.y) * cola}`);
+          estelas[i]?.setAttribute("x2", `${x}`);
+          estelas[i]?.setAttribute("y2", `${y}`);
+          estelas[i]?.setAttribute("opacity", "1");
+          const llegada = `${Math.floor(local / vuelta)}-${tramo}`;
+          if (f > 0.9 && encendidas[i] !== llegada) {
+            encendidas[i] = llegada;
+            neuronas[camino[tramo + 1]]?.animate([{ opacity: 1, transform: "scale(1.25)" }, { opacity: 0.75, transform: "scale(1)" }], {
+              duration: 420,
+              easing: "ease-out",
+            });
+          }
         });
         if (t < DURACION_PULSOS) marco = requestAnimationFrame(paso);
-        else pulsos.forEach((p) => p.setAttribute("opacity", "0"));
+        else pulsos.forEach((_, i) => ocultar(i));
       };
       temporizador = window.setTimeout(() => (marco = requestAnimationFrame(paso)), 500);
     };
 
-    if (yaVisible) {
-      encender();
-      return () => {
-        cancelAnimationFrame(marco);
-        window.clearTimeout(temporizador);
-      };
-    }
     const observador = new IntersectionObserver(
-      ([entrada]) => {
-        if (!entrada.isIntersecting) return;
-        observador.disconnect();
-        encender();
+      (entradas) => {
+        for (const entrada of entradas) {
+          if (!entrada.isIntersecting) continue;
+          observador.unobserve(entrada.target);
+          if (entrada.target === caja) encender();
+          else if (seccion) seccion.dataset.texto = "visto";
+        }
       },
       { rootMargin: "0px 0px -15% 0px" },
     );
-    observador.observe(caja);
+    if (redPendiente) observador.observe(caja);
+    else encender();
+    if (tituloPendiente) observador.observe(titulo);
     return () => {
       observador.disconnect();
       cancelAnimationFrame(marco);
       window.clearTimeout(temporizador);
       caja.dataset.estado = "encendida";
-      if (seccion) seccion.dataset.texto = "visto";
+      if (seccion?.dataset.texto) seccion.dataset.texto = "visto";
     };
   }, []);
 
@@ -142,6 +160,9 @@ export function RedNeuronal() {
             </g>
           );
         })}
+        {Array.from({ length: PULSOS }, (_, i) => (
+          <line key={`estela-${i}`} data-estela-pulso x1="0" y1="0" x2="0" y2="0" stroke="#00E5F0" strokeWidth="2.4" strokeLinecap="round" opacity="0" />
+        ))}
         {Array.from({ length: PULSOS }, (_, i) => (
           <circle key={i} data-pulso r="3.6" cx="0" cy="0" fill="#FFFFFF" opacity="0" className="qs-pulso-neuronal" />
         ))}
