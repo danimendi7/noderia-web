@@ -59,7 +59,7 @@ export function ComoFunciona() {
 
         <div className="mt-12 grid gap-12 md:mt-16 lg:grid-cols-12 lg:gap-16">
           {/* Escenario fijo (solo escritorio y con movimiento): un vídeo en bucle de Higgsfield por paso (T36); solo se
-              reproduce el del paso activo y hay un botón de pausa común. Cada capa lleva el fondo detrás del vídeo
+              reproduce el del paso activo y se pausan todos con un clic sobre la escena o con su botón (visible solo con el foco). Cada capa lleva el fondo detrás del vídeo
               porque su transform crea un grupo aislado y el blanco del vídeo se funde (multiply) con ese fondo. */}
           <div className="escena-fija hidden lg:col-span-6 lg:block">
             <GrupoVideos etiqueta="Pausar vídeo de cómo funciona" className="sticky top-[max(6rem,calc(50vh+2rem-14.4rem))] aspect-[5/4] max-h-[min(34rem,calc(100vh-9rem))] w-full overflow-hidden rounded-3xl bg-midnight shadow-[0_40px_100px_-36px_rgb(0_104_224/0.7)] ring-1 ring-electric/20">

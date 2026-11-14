@@ -17,15 +17,19 @@ describe("VideoBucle", () => {
     expect(video).not.toHaveAttribute("autoplay");
   });
 
-  it("el grupo tiene un botón de pausa con aria-pressed", () => {
-    render(
+  it("el grupo se pausa con un clic sobre el vídeo y su botón solo se ve con el foco", async () => {
+    const { container } = render(
       <GrupoVideos etiqueta="Pausar vídeo de prueba">
         <VideoBucle nombre="movil-formulario" />
       </GrupoVideos>,
     );
-    const boton = screen.getByRole("button", { name: "Pausar vídeo de prueba" });
+    // El botón aparece al saber en el cliente que no hay movimiento reducido.
+    const boton = await screen.findByRole("button", { name: "Pausar vídeo de prueba" });
+    expect(boton.className).toContain("not-focus-visible:sr-only");
     expect(boton).toHaveAttribute("aria-pressed", "false");
-    fireEvent.click(boton);
+    fireEvent.click(container.querySelector("video")!);
     expect(boton).toHaveAttribute("aria-pressed", "true");
+    fireEvent.click(boton);
+    expect(boton).toHaveAttribute("aria-pressed", "false");
   });
 });

@@ -1,6 +1,7 @@
 "use client";
 
 import { createContext, type ReactNode, useContext, useEffect, useRef, useState } from "react";
+import { ZonaPausable } from "./ZonaPausable";
 
 /** Vídeos en bucle de Higgsfield publicados en public/video (mp4 H.264 + webm + poster), con su tamaño real. */
 export const VIDEOS = {
@@ -28,8 +29,9 @@ function useMovimientoReducido() {
 }
 
 /**
- * Agrupa uno o varios vídeos en bucle con un botón para pausarlos (WCAG 2.2.2: movimiento automático de más de
- * 5 s). Con movimiento reducido no hay botón porque los vídeos no se reproducen.
+ * Agrupa uno o varios vídeos en bucle que se pausan juntos (WCAG 2.2.2: movimiento automático de más de 5 s): con un
+ * clic o un toque sobre ellos, o con un botón que solo se ve con el foco del teclado (ZonaPausable). Con movimiento
+ * reducido no hay botón porque los vídeos no se reproducen.
  */
 export function GrupoVideos({
   children,
@@ -45,24 +47,15 @@ export function GrupoVideos({
   const reducido = useMovimientoReducido();
   return (
     <ContextoPausa.Provider value={pausado}>
-      {/* className debe incluir el posicionamiento (relative, sticky…): el botón va en la esquina inferior derecha. */}
-      <div className={className}>
+      <ZonaPausable
+        className={className}
+        pausado={pausado}
+        onAlternar={() => setPausado((p) => !p)}
+        etiqueta={etiqueta}
+        conBoton={!reducido}
+      >
         {children}
-        {reducido ? null : (
-          <button
-            type="button"
-            aria-pressed={pausado}
-            aria-label={etiqueta}
-            title={pausado ? etiqueta.replace("Pausar", "Reanudar") : etiqueta}
-            onClick={() => setPausado((p) => !p)}
-            className="absolute bottom-2 right-2 z-10 inline-flex size-11 items-center justify-center rounded-full border border-midnight/15 bg-white/85 text-midnight transition-colors hover:border-electric hover:text-electric focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-electric"
-          >
-            <svg aria-hidden="true" viewBox="0 0 24 24" className="size-5" fill="currentColor">
-              {pausado ? <path d="M8 5.5v13l10.5-6.5z" /> : <path d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z" />}
-            </svg>
-          </button>
-        )}
-      </div>
+      </ZonaPausable>
     </ContextoPausa.Provider>
   );
 }

@@ -47,8 +47,9 @@ for (const ruta of ["/", "/casos/neumaticos-uria"]) {
     await page.addInitScript((clave) => sessionStorage.setItem(clave, "1"), CLAVE_CARGA_VISTA);
     await page.goto(ruta);
     await expect(page.locator("h1")).toBeVisible();
-    // El botón de pausa de la escena aparece al hidratar: se espera a él antes de hacer la lista.
-    if (ruta === "/") await expect(page.getByRole("button", { name: "Pausar animación" })).toBeVisible({ timeout: 10_000 });
+    // El botón de pausa de la escena aparece al hidratar (oculto a la vista hasta que recibe el foco, T62): se espera
+    // a él antes de hacer la lista.
+    if (ruta === "/") await expect(page.getByRole("button", { name: "Pausar animación" })).toBeAttached({ timeout: 10_000 });
 
     // Todo lo que se puede enfocar y está a la vista (en móvil, el menú desplegable está cerrado).
     const esperados: string[] = await page.$$eval(

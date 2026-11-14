@@ -1,5 +1,6 @@
 import { expect, test } from "@playwright/test";
 import { CLAVE_CARGA_VISTA } from "../src/lib/pantallaCarga";
+import { enfocarConTeclado, esperarALaVista, esperarOculto } from "./pausa";
 
 // T36: vídeos en bucle de Higgsfield (orden 2026-11-13). Diferidos, con poster, nunca LCP y quietos con movimiento reducido.
 test.beforeEach(async ({ page }) => {
@@ -20,7 +21,7 @@ test("los vídeos llevan poster, van sin sonido y no cargan nada hasta acercarse
   }
 });
 
-test("el vídeo de cómo funciona se reproduce en bucle al llegar y se puede pausar", async ({ page }, info) => {
+test("el vídeo de cómo funciona se reproduce en bucle al llegar y se pausa con un clic sobre la escena", async ({ page }, info) => {
   test.skip(info.project.name === "movil", "La escena con vídeo solo existe en escritorio");
   await page.goto("/");
   const video = page.locator("#como-funciona video[data-video]").first();
@@ -28,7 +29,19 @@ test("el vídeo de cómo funciona se reproduce en bucle al llegar y se puede pau
   await expect(video).toHaveAttribute("autoplay", "");
   await expect.poll(() => video.evaluate((v: HTMLVideoElement) => !v.paused && v.currentTime > 0)).toBe(true);
   const boton = page.getByRole("button", { name: "Pausar vídeo de cómo funciona" });
-  await boton.click();
+  await esperarOculto(boton);
+  const escena = page.locator("#como-funciona [data-pausable]");
+  await escena.click();
+  await expect(boton).toHaveAttribute("aria-pressed", "true");
+  await expect.poll(() => video.evaluate((v: HTMLVideoElement) => v.paused)).toBe(true);
+  await escena.click();
+  await expect(boton).toHaveAttribute("aria-pressed", "false");
+  await expect.poll(() => video.evaluate((v: HTMLVideoElement) => !v.paused)).toBe(true);
+
+  // Con el teclado: el botón aparece al llegarle el foco y Espacio pausa.
+  await enfocarConTeclado(page, boton);
+  await esperarALaVista(boton);
+  await page.keyboard.press("Space");
   await expect(boton).toHaveAttribute("aria-pressed", "true");
   await expect.poll(() => video.evaluate((v: HTMLVideoElement) => v.paused)).toBe(true);
 });
