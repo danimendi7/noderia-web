@@ -1,12 +1,12 @@
 "use client";
 
-import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { MotionPathPlugin } from "gsap/MotionPathPlugin";
-import { type ReactNode, useRef, useState } from "react";
+import { type ReactNode, useCallback, useEffect, useRef, useState } from "react";
+import { enMomentoLibre } from "@/lib/momentoLibre";
 import { vigilarVisibilidad } from "@/lib/visibilidad";
 
-gsap.registerPlugin(useGSAP, MotionPathPlugin);
+gsap.registerPlugin(MotionPathPlugin);
 
 /** Duración de un ciclo, en segundos (SPEC: 10–12 s). */
 export const DURACION_BUCLE = 11;
@@ -25,6 +25,8 @@ const EN_LA_PUERTA = { xPercent: 46, yPercent: -36 };
  * Solo transform y opacity. Se pausa con la pestaña oculta o la escena fuera de pantalla.
  * Con prefers-reduced-motion no se anima: queda la escena estática (paso 3).
  * Mientras se anima, un botón permite pausarla y reanudarla (WCAG 2.2.2: movimiento de más de 5 s).
+ * El bucle se monta cuando el navegador queda libre, no al hidratar: montarlo (y llevarlo al paso 4) era la mayor parte
+ * de la tarea larga de la carga en móvil (T57). No hay salto: el HTML ya pinta ese mismo estado.
  */
 export function BucleEscena({ children }: { children: ReactNode }) {
   const raiz = useRef<HTMLDivElement>(null);
@@ -35,7 +37,7 @@ export function BucleEscena({ children }: { children: ReactNode }) {
   const [pausado, setPausado] = useState(false);
 
   /** Se mueve solo si se ve y nadie lo ha pausado. */
-  const aplicar = () => {
+  const aplicar = useCallback(() => {
     const tl = bucle.current;
     const elemento = raiz.current;
     if (!tl || !elemento) return;
@@ -43,11 +45,12 @@ export function BucleEscena({ children }: { children: ReactNode }) {
     if (enMarcha) tl.resume();
     else tl.pause();
     elemento.dataset.bucle = enMarcha ? "en-marcha" : "pausado";
-  };
+  }, []);
 
-  useGSAP(
-    () => {
-      const mm = gsap.matchMedia();
+  useEffect(() => {
+    let mm: gsap.MatchMedia | null = null;
+    const cancelar = enMomentoLibre(() => {
+      mm = gsap.matchMedia();
       mm.add("(prefers-reduced-motion: no-preference)", () => {
         const elemento = raiz.current;
         if (!elemento?.querySelector("[data-escena]")) return;
@@ -69,10 +72,12 @@ export function BucleEscena({ children }: { children: ReactNode }) {
           delete elemento.dataset.bucle;
         };
       });
-      return () => mm.revert();
-    },
-    { scope: raiz },
-  );
+    });
+    return () => {
+      cancelar();
+      mm?.revert();
+    };
+  }, [aplicar]);
 
   const alternar = () => {
     pausadoPorUsuario.current = !pausadoPorUsuario.current;
@@ -128,7 +133,9 @@ function crearBucle(q: Selector) {
       .to(
         luz,
         {
-          motionPath: { path: camino as SVGPathElement, align: camino as SVGPathElement, alignOrigin: [0.5, 0.5] },
+          // La luz es un círculo centrado en el origen del mismo SVG que el camino: sus x/y ya son las del trazado.
+          // Sin `align`, que medía el DOM e insertaba elementos temporales (recálculos forzados de estilo, T57).
+          motionPath: { path: camino as SVGPathElement },
           duration: duracion,
           ease: "power1.inOut",
         },

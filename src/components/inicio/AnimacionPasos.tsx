@@ -1,23 +1,26 @@
 "use client";
 
-import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { type ReactNode, useRef } from "react";
+import { type ReactNode, useEffect, useRef } from "react";
+import { enMomentoLibre } from "@/lib/momentoLibre";
 
-gsap.registerPlugin(useGSAP, ScrollTrigger);
+gsap.registerPlugin(ScrollTrigger);
 
 /**
  * "Cómo funciona" al hacer scroll (SPEC v2, S3): la línea se va llenando y el paso que cruza el centro de la
  * pantalla queda activo (`data-paso-activo`), lo que cambia la ilustración de la escena fija (CSS).
  * Solo transform y opacity. Con prefers-reduced-motion no se anima nada y no hay paso activo: todo visible.
+ * Se prepara cuando el navegador queda libre (la sección está bajo el primer pantallazo), no al hidratar (T57).
  */
 export function AnimacionPasos({ className = "", children }: { className?: string; children: ReactNode }) {
   const raiz = useRef<HTMLDivElement>(null);
 
-  useGSAP(
-    () => {
-      const mm = gsap.matchMedia();
+  useEffect(() => {
+    let mm: gsap.MatchMedia | null = null;
+    const cancelar = enMomentoLibre(() => {
+      // Con la sección como ámbito, los selectores no salen de ella (ni llegan a páginas guardadas por la navegación).
+      mm = gsap.matchMedia(raiz.current ?? undefined);
       mm.add("(prefers-reduced-motion: no-preference)", () => {
         const el = raiz.current;
         const lista = el?.querySelector("ol");
@@ -59,10 +62,12 @@ export function AnimacionPasos({ className = "", children }: { className?: strin
           });
         });
       });
-      return () => mm.revert();
-    },
-    { scope: raiz },
-  );
+    });
+    return () => {
+      cancelar();
+      mm?.revert();
+    };
+  }, []);
 
   return (
     <div ref={raiz} className={`pasos-raiz ${className}`}>
