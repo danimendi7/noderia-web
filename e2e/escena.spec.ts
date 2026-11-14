@@ -1,4 +1,5 @@
 import { test, expect } from "@playwright/test";
+import { enfocarConTeclado, esperarALaVista, esperarOculto } from "./pausa";
 
 test("la escena es decorativa y sus imágenes no tienen texto alternativo", async ({ page }) => {
   await page.goto("/");
@@ -64,14 +65,16 @@ test.describe("bucle de la escena", () => {
     await expect(bucle).toHaveAttribute("data-bucle", "pausado");
   });
 
-  test("se puede pausar y reanudar con un botón (WCAG 2.2.2)", async ({ page }) => {
+  test("clic o toque sobre la escena la pausa y la reanuda; el botón solo se ve con el teclado (WCAG 2.2.2)", async ({ page }) => {
     await page.goto("/");
     const bucle = page.locator("[data-bucle]");
     await expect(bucle).toHaveAttribute("data-bucle", "en-marcha");
 
     const boton = page.getByRole("button", { name: "Pausar animación" });
     await expect(boton).toHaveAttribute("aria-pressed", "false");
-    await boton.click();
+    await esperarOculto(boton);
+
+    await bucle.click();
     await expect(boton).toHaveAttribute("aria-pressed", "true");
     await expect(bucle).toHaveAttribute("data-bucle", "pausado");
 
@@ -80,9 +83,16 @@ test.describe("bucle de la escena", () => {
     await page.evaluate(() => window.scrollTo(0, 0));
     await expect(bucle).toHaveAttribute("data-bucle", "pausado");
 
-    await boton.press("Enter");
+    await bucle.click();
     await expect(boton).toHaveAttribute("aria-pressed", "false");
     await expect(bucle).toHaveAttribute("data-bucle", "en-marcha");
+
+    // Con el teclado: el botón aparece al llegarle el foco y Intro pausa.
+    await enfocarConTeclado(page, boton);
+    await esperarALaVista(boton);
+    await page.keyboard.press("Enter");
+    await expect(boton).toHaveAttribute("aria-pressed", "true");
+    await expect(bucle).toHaveAttribute("data-bucle", "pausado");
   });
 
   test.describe("con movimiento reducido", () => {
@@ -109,13 +119,15 @@ test.describe("bucle de la escena", () => {
   });
 });
 
-// Revisión final (T48): a 1280 px el botón para pausar la escena se ve entero (WCAG 2.2.2).
+// Revisión final (T48): a 1280 px el botón para pausar la escena, con el foco, se ve entero (WCAG 2.2.2).
 test("a 1280 px el botón de pausa de la escena queda dentro de la pantalla", async ({ page }, info) => {
   test.skip(info.project.name === "movil", "escritorio");
   await page.setViewportSize({ width: 1280, height: 800 });
   await page.goto("/");
   const pausa = page.getByRole("button", { name: "Pausar animación" });
-  await expect(pausa).toBeVisible({ timeout: 10_000 });
+  await expect(pausa).toBeAttached({ timeout: 10_000 });
+  await enfocarConTeclado(page, pausa);
+  await esperarALaVista(pausa);
   const caja = (await pausa.boundingBox())!;
   expect(caja.x + caja.width).toBeLessThanOrEqual(1280);
 });

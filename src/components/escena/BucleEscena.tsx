@@ -3,6 +3,7 @@
 import gsap from "gsap";
 import { MotionPathPlugin } from "gsap/MotionPathPlugin";
 import { type ReactNode, useCallback, useEffect, useRef, useState } from "react";
+import { ZonaPausable } from "@/components/movimiento/ZonaPausable";
 import { enMomentoLibre } from "@/lib/momentoLibre";
 import { vigilarVisibilidad } from "@/lib/visibilidad";
 
@@ -24,7 +25,8 @@ const EN_LA_PUERTA = { xPercent: 46, yPercent: -36 };
  * El final del ciclo deja todo como al principio, así que el siguiente empieza sin salto.
  * Solo transform y opacity. Se pausa con la pestaña oculta o la escena fuera de pantalla.
  * Con prefers-reduced-motion no se anima: queda la escena estática (paso 3).
- * Mientras se anima, un botón permite pausarla y reanudarla (WCAG 2.2.2: movimiento de más de 5 s).
+ * Mientras se anima, un clic o un toque sobre ella la pausa y la reanuda, y también un botón que solo se ve con el foco
+ * del teclado (WCAG 2.2.2: movimiento de más de 5 s; orden v5, punto 5).
  * El bucle se monta cuando el navegador queda libre, no al hidratar: montarlo (y llevarlo al paso 4) era la mayor parte
  * de la tarea larga de la carga en móvil (T57). No hay salto: el HTML ya pinta ese mismo estado.
  */
@@ -86,23 +88,16 @@ export function BucleEscena({ children }: { children: ReactNode }) {
   };
 
   return (
-    <div ref={raiz} className="relative">
+    <ZonaPausable
+      ref={raiz}
+      pausado={pausado}
+      onAlternar={alternar}
+      etiqueta="Pausar animación"
+      conBoton={animado}
+      claseBoton="bottom-2 left-2 border-white/40 bg-midnight/80 text-white hover:border-aqua hover:text-aqua"
+    >
       {children}
-      {animado ? (
-        <button
-          type="button"
-          aria-pressed={pausado}
-          aria-label="Pausar animación"
-          title={pausado ? "Reanudar animación" : "Pausar animación"}
-          onClick={alternar}
-          className="absolute bottom-2 left-2 inline-flex size-11 items-center justify-center rounded-full border border-white/40 bg-midnight/80 text-white transition-colors hover:border-aqua hover:text-aqua"
-        >
-          <svg aria-hidden="true" viewBox="0 0 24 24" className="size-5" fill="currentColor">
-            {pausado ? <path d="M8 5.5v13l10.5-6.5z" /> : <path d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z" />}
-          </svg>
-        </button>
-      ) : null}
-    </div>
+    </ZonaPausable>
   );
 }
 

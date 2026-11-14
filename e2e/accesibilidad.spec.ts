@@ -47,8 +47,9 @@ for (const ruta of ["/", "/casos/neumaticos-uria"]) {
     await page.addInitScript((clave) => sessionStorage.setItem(clave, "1"), CLAVE_CARGA_VISTA);
     await page.goto(ruta);
     await expect(page.locator("h1")).toBeVisible();
-    // El botón de pausa de la escena aparece al hidratar: se espera a él antes de hacer la lista.
-    if (ruta === "/") await expect(page.getByRole("button", { name: "Pausar animación" })).toBeVisible({ timeout: 10_000 });
+    // El botón de pausa de la escena aparece al hidratar (oculto a la vista hasta que recibe el foco, T62): se espera
+    // a él antes de hacer la lista.
+    if (ruta === "/") await expect(page.getByRole("button", { name: "Pausar animación" })).toBeAttached({ timeout: 10_000 });
 
     // Todo lo que se puede enfocar y está a la vista (en móvil, el menú desplegable está cerrado).
     const esperados: string[] = await page.$$eval(
@@ -60,9 +61,10 @@ for (const ruta of ["/", "/casos/neumaticos-uria"]) {
             if (h.closest("[inert], [aria-hidden='true']")) return false;
             if (h.tabIndex < 0) return false;
             const estilo = getComputedStyle(h);
-            // El enlace "Saltar al contenido" está oculto visualmente pero se enfoca.
+            // El enlace "Saltar al contenido" y los botones de pausa (T62) están ocultos visualmente pero se enfocan;
+            // dentro de algo con display: none (sin cajas) no se enfocan, como la escena con vídeo en móvil.
             const soloLectores = h.className.toString().includes("sr-only");
-            return soloLectores || (h.getClientRects().length > 0 && estilo.visibility !== "hidden");
+            return h.getClientRects().length > 0 && (soloLectores || estilo.visibility !== "hidden");
           })
           .map((el) => {
             const h = el as HTMLElement;
