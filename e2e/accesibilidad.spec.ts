@@ -61,9 +61,10 @@ for (const ruta of ["/", "/casos/neumaticos-uria"]) {
             if (h.closest("[inert], [aria-hidden='true']")) return false;
             if (h.tabIndex < 0) return false;
             const estilo = getComputedStyle(h);
-            // El enlace "Saltar al contenido" está oculto visualmente pero se enfoca.
+            // El enlace "Saltar al contenido" y los botones de pausa (T62) están ocultos visualmente pero se enfocan;
+            // dentro de algo con display: none (sin cajas) no se enfocan, como la escena con vídeo en móvil.
             const soloLectores = h.className.toString().includes("sr-only");
-            return soloLectores || (h.getClientRects().length > 0 && estilo.visibility !== "hidden");
+            return h.getClientRects().length > 0 && (soloLectores || estilo.visibility !== "hidden");
           })
           .map((el) => {
             const h = el as HTMLElement;
