@@ -2,6 +2,10 @@ import Link from "next/link";
 import type { CSSProperties } from "react";
 import { HiloConductor } from "@/components/inicio/HiloConductor";
 import { EntradasAlScroll } from "@/components/movimiento/EntradasAlScroll";
+import { FlujosEquipo } from "@/components/quienes-somos/FlujosEquipo";
+import { IsotipoAnimado } from "@/components/quienes-somos/IsotipoAnimado";
+import { RedNeuronal } from "@/components/quienes-somos/RedNeuronal";
+import { RedParticulas } from "@/components/quienes-somos/RedParticulas";
 import { TituloPagina } from "@/components/paginas/TituloPagina";
 import { Boton } from "@/components/ui/Boton";
 import { CabeceraSeccion } from "@/components/ui/CabeceraSeccion";
@@ -35,6 +39,7 @@ export default function QuienesSomos() {
           className="absolute -right-40 top-1/2 -z-10 size-[52rem] -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgb(0_104_224/0.42)_0%,rgb(0_48_192/0.16)_40%,transparent_68%)]"
         />
         <div aria-hidden="true" className="textura-nodos absolute inset-0 -z-10" />
+        <RedParticulas className="absolute inset-0 -z-10 h-full w-full" />
         <div className={`${CONTENEDOR} pb-20 pt-10 md:pt-14 lg:pb-28`}>
           <Migas migas={migasDe(PAGINAS.quienesSomos)} />
           <div className="mt-10 grid items-center gap-14 lg:grid-cols-12">
@@ -46,7 +51,7 @@ export default function QuienesSomos() {
               destacado="Donostia"
               intro="En NoderIA desarrollamos software a medida e implantamos soluciones con inteligencia artificial para que las empresas trabajen mejor. Hemos empezado por los talleres porque conocemos de cerca su día a día: el teléfono que no para, las citas en la libreta y los avisos que nadie tiene tiempo de mandar."
             />
-            <IsotipoConNodos />
+            <IsotipoAnimado />
           </div>
         </div>
       </section>
@@ -69,7 +74,7 @@ export default function QuienesSomos() {
               programan tu sistema, sin intermediarios.
             </p>
           </div>
-          <DosOficios />
+          <FlujosEquipo />
         </div>
       </section>
 
@@ -80,7 +85,7 @@ export default function QuienesSomos() {
           className="absolute -left-48 top-1/2 -z-10 size-[44rem] -translate-y-1/2 rounded-full bg-[radial-gradient(circle,rgb(0_104_224/0.32)_0%,transparent_65%)]"
         />
         <div className={`${CONTENEDOR} ${ESPACIADO_SECCION} grid items-center gap-14 lg:grid-cols-12`}>
-          <RedNodos />
+          <RedNeuronal />
           <div className="lg:col-span-6 lg:col-start-7">
             <CabeceraSeccion
               etiqueta="Inteligencia artificial"
@@ -88,6 +93,7 @@ export default function QuienesSomos() {
               destacado="con los pies en el suelo"
               idTitulo="titulo-ia"
               tono="oscuro"
+              palabras
             />
             <p data-entra="" className="texto-entradilla mt-6 max-w-[58ch] text-white/75">
               Seguimos día a día los avances en inteligencia artificial y en tecnología, y estudiamos qué problemas
@@ -179,116 +185,6 @@ export default function QuienesSomos() {
       {/* Versión corta de la cinta de la home (SPEC v3 §6). */}
       <HiloConductor />
     </>
-  );
-}
-
-/** Isotipo oficial (sin redibujar ni efectos sobre él) con un halo y una constelación de nodos detrás. */
-function IsotipoConNodos() {
-  return (
-    <div aria-hidden="true" data-cinta-inicio className="relative mx-auto w-full max-w-[22rem] sm:max-w-[28rem] lg:col-span-5 lg:max-w-none">
-      <svg viewBox="0 0 400 400" className="absolute inset-0 -z-10 size-full overflow-visible" fill="none">
-        <defs>
-          <linearGradient id="qs-nodos" x1="0" y1="1" x2="1" y2="0">
-            <stop offset="0" stopColor="#0030C0" />
-            <stop offset="0.4" stopColor="#0068E0" />
-            <stop offset="0.75" stopColor="#00B0F0" />
-            <stop offset="1" stopColor="#00E5F0" />
-          </linearGradient>
-          <radialGradient id="qs-halo">
-            <stop offset="0" stopColor="#0068E0" stopOpacity="0.55" />
-            <stop offset="1" stopColor="#0068E0" stopOpacity="0" />
-          </radialGradient>
-        </defs>
-        <circle cx="200" cy="200" r="190" fill="url(#qs-halo)" />
-        <path d="M20 300 C 90 260, 120 330, 200 300 S 330 230, 390 260" stroke="url(#qs-nodos)" strokeOpacity="0.45" strokeWidth="1.2" />
-        <path d="M10 110 C 80 140, 140 70, 220 90 S 340 60, 395 120" stroke="url(#qs-nodos)" strokeOpacity="0.35" strokeWidth="1" />
-        {[
-          [20, 300],
-          [200, 300],
-          [390, 260],
-          [10, 110],
-          [220, 90],
-          [395, 120],
-        ].map(([x, y]) => (
-          <circle key={`${x}-${y}`} cx={x} cy={y} r="4" fill="#00E5F0" className="qs-nodo" />
-        ))}
-      </svg>
-      <div className="flex aspect-square items-center justify-center">
-        {/* eslint-disable-next-line @next/next/no-img-element -- isotipo oficial ya optimizado (WebP), sin transformar */}
-        <img src="/carga/isotipo-n.webp" alt="" width={1186} height={811} className="w-[78%]" fetchPriority="low" />
-      </div>
-    </div>
-  );
-}
-
-/** Dos oficios unidos en un mismo sistema: programación y comunicación. Decorativo. */
-function DosOficios() {
-  const oficio = (icono: NombreIcono, texto: string) => (
-    <div className="flex flex-col items-center gap-3">
-      <span className="grid size-20 place-items-center rounded-full bg-white text-electric shadow-[0_16px_40px_-16px_rgb(0_104_224/0.6)] ring-1 ring-electric/15">
-        <Icono nombre={icono} className="size-9" />
-      </span>
-      <span className="font-display font-semibold">{texto}</span>
-    </div>
-  );
-  return (
-    <div aria-hidden="true" className="relative mx-auto w-full max-w-md lg:col-span-5 lg:col-start-8">
-      <svg viewBox="0 0 400 220" className="absolute inset-x-0 top-10 -z-10 h-40 w-full" fill="none">
-        <defs>
-          <linearGradient id="qs-oficios" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0" stopColor="#0030C0" />
-            <stop offset="0.5" stopColor="#00B0F0" />
-            <stop offset="1" stopColor="#0068E0" />
-          </linearGradient>
-        </defs>
-        <path d="M70 0 C 70 120, 200 80, 200 190 M330 0 C 330 120, 200 80, 200 190" stroke="url(#qs-oficios)" strokeWidth="2.5" strokeLinecap="round" />
-      </svg>
-      <div className="flex justify-between">
-        {oficio("panel", "Programación")}
-        {oficio("campana", "Comunicación")}
-      </div>
-      <div className="mt-24 flex justify-center">
-        <span className="bg-marca rounded-full px-6 py-3 font-display font-semibold text-white shadow-[0_16px_40px_-12px_rgb(0_104_224/0.7)]">
-          Tu negocio
-        </span>
-      </div>
-    </div>
-  );
-}
-
-/** Red de nodos que se encienden en cadena (con movimiento reducido, quieta). Decorativo. */
-function RedNodos() {
-  const nodos: [number, number][] = [
-    [60, 200],
-    [150, 90],
-    [170, 290],
-    [270, 170],
-    [360, 70],
-    [370, 300],
-  ];
-  const enlaces: [number, number][] = [
-    [0, 1],
-    [0, 2],
-    [1, 3],
-    [2, 3],
-    [3, 4],
-    [3, 5],
-    [1, 4],
-  ];
-  return (
-    <div aria-hidden="true" className="mx-auto w-full max-w-md lg:col-span-5">
-      <svg viewBox="0 0 420 360" className="w-full" fill="none">
-        {enlaces.map(([a, b]) => (
-          <line key={`${a}-${b}`} x1={nodos[a][0]} y1={nodos[a][1]} x2={nodos[b][0]} y2={nodos[b][1]} stroke="#0068E0" strokeOpacity="0.45" strokeWidth="1.5" />
-        ))}
-        {nodos.map(([x, y], i) => (
-          <g key={`${x}-${y}`} className="qs-red-nodo" style={{ "--i": i } as CSSProperties}>
-            <circle cx={x} cy={y} r="18" fill="#00E5F0" fillOpacity="0.12" />
-            <circle cx={x} cy={y} r={i === 3 ? 9 : 6} fill={i === 3 ? "#00E5F0" : "#00B0F0"} />
-          </g>
-        ))}
-      </svg>
-    </div>
   );
 }
 

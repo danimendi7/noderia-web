@@ -1,4 +1,5 @@
-import type { CSSProperties, ReactNode } from "react";
+import { type CSSProperties, Fragment, type ReactNode } from "react";
+import { palabrasDeTitulo } from "@/lib/titulos";
 
 export type Tono = "claro" | "oscuro";
 
@@ -13,6 +14,11 @@ type CabeceraSeccionProps = {
   entradilla?: ReactNode;
   tono: Tono;
   className?: string;
+  /**
+   * Titular que aparece palabra a palabra cuando la sección tiene `data-texto="visto"` (lo pone un componente de la
+   * sección, p. ej. `RedNeuronal`). El texto sigue entero en el HTML y en el nombre accesible.
+   */
+  palabras?: boolean;
 };
 
 /** Etiqueta + H2 + entradilla de cada sección de la home (SPEC v2, G3). */
@@ -24,6 +30,7 @@ export function CabeceraSeccion({
   entradilla,
   tono,
   className = "",
+  palabras = false,
 }: CabeceraSeccionProps) {
   const oscuro = tono === "oscuro";
   return (
@@ -31,9 +38,25 @@ export function CabeceraSeccion({
       <p data-entra="" data-entra-fundido="" className={`text-xs font-semibold uppercase tracking-[0.2em] sm:text-sm ${oscuro ? "text-aqua" : "text-electric"}`}>
         {etiqueta}
       </p>
-      <h2 id={idTitulo} data-entra="" style={{ "--i": 1 } as CSSProperties} className="titulo-seccion mt-4">
-        {destacado ? conDestacado(titulo, destacado, oscuro ? "texto-marca-oscuro" : "texto-marca-claro") : titulo}
-      </h2>
+      {palabras ? (
+        <h2 id={idTitulo} className="titulo-seccion titulo-palabras mt-4">
+          {palabrasDeTitulo(titulo, destacado).map(({ palabra, destacado: marca }, i) => (
+            <Fragment key={i}>
+              {i > 0 ? " " : null}
+              <span
+                className={`titulo-palabra ${marca ? (oscuro ? "texto-marca-oscuro" : "texto-marca-claro") : ""}`}
+                style={{ "--p": i } as CSSProperties}
+              >
+                {palabra}
+              </span>
+            </Fragment>
+          ))}
+        </h2>
+      ) : (
+        <h2 id={idTitulo} data-entra="" style={{ "--i": 1 } as CSSProperties} className="titulo-seccion mt-4">
+          {destacado ? conDestacado(titulo, destacado, oscuro ? "texto-marca-oscuro" : "texto-marca-claro") : titulo}
+        </h2>
+      )}
       {entradilla ? (
         <p data-entra="" style={{ "--i": 2 } as CSSProperties} className={`texto-entradilla mt-5 ${oscuro ? "text-white/75" : "text-midnight/75"}`}>{entradilla}</p>
       ) : null}
