@@ -65,12 +65,12 @@ describe("Qué incluye", () => {
     }
   });
 
-  it("cada bloque lleva su ilustración decorativa (el principal, un vídeo) salvo el de cierre, que enlaza al presupuesto", () => {
+  it("cada bloque lleva su ilustración decorativa (el principal, sin vídeo) salvo el de cierre, que enlaza al presupuesto", () => {
     const { container } = render(<QueIncluye />);
-    expect(container.querySelector('[data-bloque="grande"] video')).toHaveAttribute("data-video", "web-taller");
-    expect(screen.getByRole("button", { name: "Pausar vídeo de la web" })).toHaveAttribute("aria-pressed", "false");
+    expect(container.querySelector("video")).toBeNull();
     const ilustraciones = [...container.querySelectorAll("[data-ilustracion]")].map((e) => e.getAttribute("data-ilustracion"));
     expect(ilustraciones).toEqual([
+      "web-taller",
       "monitor-orden",
       "movil-formulario",
       "portal-clientes-flotas",

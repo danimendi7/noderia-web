@@ -956,3 +956,66 @@
   outline: 2px solid var(--color-electric);
   outline-offset: 2px;
 }
+
+/* "Diseño completo de tu web nueva" (orden 2026-11-14 17:30, punto 3): ilustración con fondo transparente animada con
+   CSS, sin vídeo. Al pasar el ratón por la tarjeta (o con el foco dentro, o una vez al entrar en pantalla en pantallas
+   táctiles: data-activa) flota, la pantalla se ilumina y el móvil, en su propia capa, se desliza un poco. El móvil
+   crece un 8 % mientras se desliza, así tapa siempre la copia que queda debajo, en la imagen base. */
+.web-nueva-luz {
+  opacity: 0;
+  background:
+    linear-gradient(115deg, transparent 35%, rgb(255 255 255 / 0.6) 50%, transparent 65%) no-repeat,
+    radial-gradient(120% 90% at 50% 40%, rgb(0 229 240 / 0.38), rgb(0 104 224 / 0.12) 70%);
+  background-size:
+    250% 100%,
+    100% 100%;
+  background-position:
+    120% 0,
+    0 0;
+  mix-blend-mode: screen;
+}
+.web-nueva-movil {
+  transform-origin: 85.9% 68.1%;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .web-nueva-cuerpo {
+    transition: transform 0.6s cubic-bezier(0.34, 1.4, 0.64, 1);
+  }
+  .web-nueva-movil {
+    transition: transform 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) 0.06s;
+  }
+  .web-nueva-luz {
+    transition:
+      opacity 0.45s ease,
+      background-position 1.1s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .web-nueva-sombra {
+    transition:
+      transform 0.6s cubic-bezier(0.34, 1.4, 0.64, 1),
+      opacity 0.6s ease;
+  }
+  .group:hover .web-nueva-cuerpo,
+  .group:focus-within .web-nueva-cuerpo,
+  .web-nueva[data-activa] .web-nueva-cuerpo {
+    transform: translateY(-2.5%) rotate(-1deg);
+  }
+  .group:hover .web-nueva-movil,
+  .group:focus-within .web-nueva-movil,
+  .web-nueva[data-activa] .web-nueva-movil {
+    transform: translate(0.6%, -1.6%) scale(1.08);
+  }
+  .group:hover .web-nueva-luz,
+  .group:focus-within .web-nueva-luz,
+  .web-nueva[data-activa] .web-nueva-luz {
+    opacity: 1;
+    background-position:
+      -20% 0,
+      0 0;
+  }
+  .group:hover .web-nueva-sombra,
+  .group:focus-within .web-nueva-sombra,
+  .web-nueva[data-activa] .web-nueva-sombra {
+    transform: scale(0.85);
+    opacity: 0.6;
+  }
+}

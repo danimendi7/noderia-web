@@ -1,5 +1,5 @@
+import { IlustracionWebNueva } from "@/components/inicio/IlustracionWebNueva";
 import { Flotante } from "@/components/movimiento/Flotante";
-import { GrupoVideos, VideoBucle } from "@/components/movimiento/VideoBucle";
 import { Boton } from "@/components/ui/Boton";
 import { Ilustracion } from "@/components/ui/Ilustracion";
 import { Seccion } from "@/components/ui/Seccion";
@@ -119,7 +119,7 @@ function Bloque({ titulo, texto, ilustracion, forma, href }: (typeof BLOQUES)[nu
   const textos = (
     <div>
       <h3 className={`font-semibold tracking-[-0.01em] ${forma === "grande" ? "text-2xl sm:text-[1.75rem]" : "text-xl"}`}>
-        {/* El enlace cubre toda la tarjeta con su ::after; el botón de pausa del vídeo queda por encima. */}
+        {/* El enlace cubre toda la tarjeta con su ::after. */}
         <Link
           href={href}
           className="rounded-md after:absolute after:inset-0 after:z-10 after:rounded-3xl after:content-[''] group-hover:text-electric focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-electric"
@@ -138,12 +138,8 @@ function Bloque({ titulo, texto, ilustracion, forma, href }: (typeof BLOQUES)[nu
     return (
       <TarjetaSpotlight como="div" className={`${TARJETA} flex-col gap-6 p-7 sm:p-9`}>
         {textos}
-        {/* Vídeo en bucle de Higgsfield (T36) con poster; con movimiento reducido se queda en el poster. */}
-        <GrupoVideos etiqueta="Pausar vídeo de la web" className="relative z-20 order-first mx-auto md:order-none md:mt-auto w-full max-w-[24rem] lg:max-w-[26rem]">
-          <Flotante>
-            <VideoBucle nombre="web-taller" className="aspect-square w-full" />
-          </Flotante>
-        </GrupoVideos>
+        {/* Ilustración con fondo transparente animada con código, sin vídeo (orden 2026-11-14 17:30, punto 3). */}
+        <IlustracionWebNueva className="order-first mx-auto w-full max-w-[24rem] md:order-none md:mt-auto lg:max-w-[26rem]" />
       </TarjetaSpotlight>
     );
   }

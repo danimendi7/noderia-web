@@ -17,7 +17,7 @@ const ANCHOS = {
   "ficha-cliente-vehiculo": 640,
   "calendario-recordatorio": 640,
   "llave-entrega": 320,
-  "web-taller": 960,
+  "web-taller": 944, // orden 2026-11-14 17:30, punto 3: ilustración nueva con fondo transparente
   "portal-clientes-flotas": 640,
   "email-automatizado": 640,
   newsletter: 640,

@@ -54,3 +54,68 @@ test("a 390 px cada tarjeta del bento tiene la ilustración arriba y el texto a 
     expect(t.arriba, t.titulo!).toBe(true);
   }
 });
+
+// Orden 2026-11-14 17:30, punto 3: "Diseño completo de tu web nueva" con la ilustración nueva (fondo transparente),
+// sin vídeo y animada con código al pasar el ratón.
+test.describe("ilustración de la web nueva", () => {
+  test.beforeEach(async ({ page }) => {
+    await page.addInitScript((clave) => sessionStorage.setItem(clave, "1"), CLAVE_CARGA_VISTA);
+  });
+
+  test("la tarjeta no tiene vídeo y su imagen es la nueva, con canal alfa, en AVIF y WebP", async ({ page, request }) => {
+    await page.goto("/");
+    const tarjeta = page.locator('[data-bloque="grande"]');
+    await expect(tarjeta.locator("video")).toHaveCount(0);
+    const ilustracion = tarjeta.locator('[data-ilustracion="web-taller"]');
+    await expect(ilustracion).toHaveAttribute("aria-hidden", "true");
+    await expect(ilustracion.locator('source[type="image/avif"]').first()).toHaveAttribute("srcset", "/escena/web-taller.avif");
+    await expect(ilustracion.locator("img").first()).toHaveAttribute("src", "/escena/web-taller.webp");
+    // WebP con alfa: cabecera RIFF/WEBP con un bloque VP8X cuyo bit de alfa está activo (o VP8L).
+    const webp = Buffer.from(await (await request.get("/escena/web-taller.webp")).body());
+    const tipo = webp.subarray(12, 16).toString("ascii");
+    expect(tipo === "VP8L" || (tipo === "VP8X" && (webp[20] & 0x10) !== 0)).toBe(true);
+    expect((await request.get("/escena/web-taller.avif")).status()).toBe(200);
+  });
+
+  test("al pasar el ratón la ilustración flota, la pantalla se ilumina y el móvil se desliza", async ({ page }, info) => {
+    test.skip(info.project.name === "movil", "Hover: solo con ratón");
+    await page.goto("/");
+    const tarjeta = page.locator('[data-bloque="grande"]');
+    await tarjeta.scrollIntoViewIfNeeded();
+    const ilustracion = tarjeta.locator('[data-ilustracion="web-taller"]');
+    const estado = () =>
+      ilustracion.evaluate((el) => ({
+        cuerpo: getComputedStyle(el.querySelector(".web-nueva-cuerpo")!).transform,
+        movil: getComputedStyle(el.querySelector(".web-nueva-movil")!).transform,
+        luz: getComputedStyle(el.querySelector(".web-nueva-luz")!).opacity,
+      }));
+    expect(await estado()).toEqual({ cuerpo: "none", movil: "none", luz: "0" });
+    await tarjeta.hover();
+    await expect.poll(async () => (await estado()).luz).toBe("1");
+    const encima = await estado();
+    expect(encima.cuerpo).not.toBe("none");
+    expect(encima.movil).toMatch(/^matrix\(1\.08/);
+  });
+
+  test("en pantallas táctiles el efecto se hace al entrar en pantalla", async ({ page }, info) => {
+    test.skip(info.project.name !== "movil", "Táctil");
+    await page.goto("/");
+    const ilustracion = page.locator('[data-bloque="grande"] [data-ilustracion="web-taller"]');
+    await expect(ilustracion).not.toHaveAttribute("data-activa");
+    await ilustracion.scrollIntoViewIfNeeded();
+    await expect(ilustracion).toHaveAttribute("data-activa", "");
+  });
+
+  test.describe("con movimiento reducido", () => {
+    test.use({ reducedMotion: "reduce" });
+    test("no se mueve nada al pasar el ratón", async ({ page }, info) => {
+      test.skip(info.project.name === "movil", "Hover: solo con ratón");
+      await page.goto("/");
+      const tarjeta = page.locator('[data-bloque="grande"]');
+      await tarjeta.hover();
+      await page.waitForTimeout(700);
+      const movil = await tarjeta.locator(".web-nueva-movil").evaluate((el) => getComputedStyle(el).transform);
+      expect(movil).toBe("none");
+    });
+  });
+});
