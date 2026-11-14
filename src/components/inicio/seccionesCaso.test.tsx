@@ -70,12 +70,12 @@ describe("Cómo trabajamos", () => {
     ]);
   });
 
-  it("sin JavaScript la línea de tiempo está completa: los 4 nodos encendidos y 3 tramos que los unen", () => {
+  it("sin JavaScript la línea de tiempo está completa: los 4 nodos encendidos y sin tramos propios (los une la cinta)", () => {
     const { container } = render(<ComoTrabajamos />);
     const pasos = container.querySelectorAll("ol > li");
     expect([...pasos].every((p) => p.hasAttribute("data-encendido"))).toBe(true);
-    const tramos = container.querySelectorAll("[data-tramo]");
-    expect(tramos).toHaveLength(3);
-    tramos.forEach((t) => expect(t.closest("[aria-hidden='true']")).not.toBeNull());
+    expect(container.querySelector("ol")).toHaveAttribute("data-hilo-linea");
+    expect(container.querySelectorAll("[data-tramo], .linea-tramo")).toHaveLength(0);
+    container.querySelectorAll(".linea-nodo").forEach((n) => expect(n).toHaveAttribute("aria-hidden", "true"));
   });
 });

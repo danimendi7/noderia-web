@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { construirHilo, longitudParaY, margenesHilo, medidasCinta } from "./hilo";
+import { construirHilo, longitudParaY, margenesHilo, medidasCinta, repartirTramoHorizontal } from "./hilo";
 
 const base = {
   inicio: { x: 900, y: 700 },
@@ -37,22 +37,61 @@ describe("construirHilo", () => {
     }
   });
 
-  it("en una línea de tiempo entra por el borde del primer nodo y sale por el del último, sin cruzar en diagonal por debajo (SPEC v3 §5.4)", () => {
-    const linea = { y: 2000, izquierda: 120, derecha: 1300 };
-    const paradas = [base.paradas[0], { ...base.paradas[1], linea }, base.paradas[2]];
+  // Orden 2026-11-14 17:30, punto 4: la misma cinta recorre la línea de tiempo por dentro, sin cortes.
+  const horizontal = {
+    orientacion: "horizontal" as const,
+    radio: 22,
+    nodos: [134, 446, 758, 1070].map((x) => ({ x, y: 2000 })),
+  };
+  const vertical = {
+    orientacion: "vertical" as const,
+    radio: 22,
+    nodos: [2000, 2150, 2300, 2450].map((y) => ({ x: 38, y })),
+  };
+  const subtrayectos = (d: string) => d.match(/M/g)?.length ?? 0;
+
+  it("una línea de tiempo horizontal se recorre de izquierda a derecha en un solo trazo, por el centro de los nodos", () => {
+    const paradas = [base.paradas[0], { ...base.paradas[1], linea: horizontal }, base.paradas[2]];
     const hilo = construirHilo({ ...base, paradas, modo: "serpiente" });
-    // La segunda parada está a la izquierda: entra por la izquierda del primer nodo y salta al último.
-    expect(hilo.d).toContain("L120 2000 M1300 2000");
-    // Sale hacia el margen derecho y baja recto a la tercera parada, que sigue a la derecha.
+    expect(subtrayectos(hilo.d)).toBe(1);
+    // La parada de la sección va a la izquierda aunque por turno le tocara la derecha, y el tramo recto cruza a la
+    // altura de los nodos del margen izquierdo al derecho.
+    expect(hilo.paradas[1].x).toBe(56);
+    expect(hilo.lineas).toHaveLength(1);
+    expect(hilo.lineas[0].desde).toEqual({ x: 112, y: 2000 });
+    expect(hilo.lineas[0].hasta).toEqual({ x: 1328, y: 2000 });
+    expect(hilo.d).toContain("L1328 2000");
+    // Sale por la derecha y la parada siguiente sigue a la derecha.
     expect(hilo.paradas[2]).toEqual({ x: 1384, y: 2600 });
-    const tras = hilo.d.slice(hilo.d.indexOf("M1300 2000"));
-    expect(tras).toContain("1384 2056");
-    expect(tras).toMatch(/L1384 \d+(\.\d)? L1384 2600/);
+    for (const n of horizontal.nodos) {
+      expect(n.x).toBeGreaterThan(hilo.lineas[0].desde.x);
+      expect(n.x).toBeLessThan(hilo.lineas[0].hasta.x);
+    }
+  });
+
+  it("una línea de tiempo vertical (móvil) se recorre por la columna de los nodos y vuelve al margen", () => {
+    const paradas = [base.paradas[0], { ...base.paradas[1], y: 1900, linea: vertical }, base.paradas[2]];
+    const hilo = construirHilo({ ...base, paradas, izquierda: 6, modo: "recto" });
+    expect(subtrayectos(hilo.d)).toBe(1);
+    expect(hilo.lineas[0].desde).toEqual({ x: 38, y: 1978 });
+    expect(hilo.lineas[0].hasta).toEqual({ x: 38, y: 2472 });
+    expect(hilo.d).toContain("L38 2472");
+    expect(hilo.d.startsWith("M6 700")).toBe(true);
+    expect(hilo.d.endsWith("L6 3300")).toBe(true);
+  });
+
+  it("en tableta (serpiente) una línea vertical también se recorre por dentro, desde el margen izquierdo", () => {
+    const paradas = [base.paradas[0], { ...base.paradas[1], y: 1900, linea: vertical }, base.paradas[2]];
+    const hilo = construirHilo({ ...base, paradas, modo: "serpiente" });
+    expect(subtrayectos(hilo.d)).toBe(1);
+    expect(hilo.paradas[1].x).toBe(56);
+    expect(hilo.d).toContain("L38 2472");
   });
 
   it("en recto es una línea vertical por el margen izquierdo", () => {
     const hilo = construirHilo({ ...base, izquierda: 6, modo: "recto" });
     expect(hilo.d).toBe("M6 700 L6 3300");
+    expect(hilo.lineas).toEqual([]);
     expect(hilo.paradas.every((p) => p.x === 6)).toBe(true);
   });
 });
@@ -106,5 +145,31 @@ describe("medidasCinta en móvil", () => {
   it("la esfera y su halo no llegan a las etiquetas, que empiezan a 16 px (la cinta va a 6 px)", () => {
     const m = medidasCinta(390);
     expect(6 + m.halo).toBeLessThan(16);
+  });
+});
+
+describe("repartirTramoHorizontal", () => {
+  // Bajada (y 1400→2000, l 0→600), tramo horizontal a y=2000 (l 600→1600) y salida (y 2000→2400, l 1600→2000).
+  const tabla = [
+    ...Array.from({ length: 61 }, (_, i) => ({ longitud: i * 10, y: 1400 + i * 10 })),
+    ...Array.from({ length: 100 }, (_, i) => ({ longitud: 610 + i * 10, y: 2000 })),
+    ...Array.from({ length: 40 }, (_, i) => ({ longitud: 1610 + i * 10, y: 2010 + i * 10 })),
+  ];
+  const tramo = { y: 2000, l0: 600, l1: 1600, antes: 200, despues: 150, holgura: 100 };
+  const repartida = repartirTramoHorizontal(tabla, tramo);
+
+  it("sigue siendo creciente, así que sirve para longitudParaY", () => {
+    for (let i = 1; i < repartida.length; i++) expect(repartida[i].y).toBeGreaterThanOrEqual(repartida[i - 1].y);
+  });
+
+  it("el tramo horizontal se rellena poco a poco entre y - antes e y + despues", () => {
+    expect(longitudParaY(repartida, 1800)).toBeCloseTo(600, 0);
+    expect(longitudParaY(repartida, 1975)).toBeCloseTo(1100, 0);
+    expect(longitudParaY(repartida, 2150)).toBeCloseTo(1600, 0);
+  });
+
+  it("fuera de la ventana (y holgura) no cambia nada", () => {
+    expect(longitudParaY(repartida, 1650)).toBe(longitudParaY(tabla, 1650));
+    expect(longitudParaY(repartida, 2300)).toBe(longitudParaY(tabla, 2300));
   });
 });
