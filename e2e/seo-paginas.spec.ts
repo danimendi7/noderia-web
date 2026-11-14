@@ -20,7 +20,7 @@ const PAGINAS = [
   },
   {
     ruta: "/automatizaciones-talleres",
-    titulo: "Recordatorios y avisos automáticos para talleres | NoderIA",
+    titulo: "Recordatorios de ITV y avisos para talleres | NoderIA",
     h1: "Recordatorios y avisos automáticos para talleres",
     tipos: ["BreadcrumbList", "Service", "FAQPage"],
   },
@@ -32,7 +32,7 @@ const PAGINAS = [
   },
   {
     ruta: "/quienes-somos",
-    titulo: "Quiénes somos: software e IA para empresas | NoderIA",
+    titulo: "Empresa de software e IA en Donostia | NoderIA",
     h1: "Software e inteligencia artificial para empresas, desde Donostia",
     tipos: ["BreadcrumbList", "AboutPage"],
   },
