@@ -9,7 +9,8 @@ test.beforeEach(async ({ page }) => {
 test("los vídeos llevan poster, van sin sonido y no cargan nada hasta acercarse", async ({ page }) => {
   await page.goto("/");
   const videos = page.locator("video[data-video]");
-  expect(await videos.count()).toBe(6);
+  // Los 5 de "Cómo funciona": el bento ya no lleva vídeo (orden 2026-11-14 17:30, punto 3).
+  expect(await videos.count()).toBe(5);
   for (const video of await videos.all()) {
     await expect(video).toHaveAttribute("preload", "none");
     await expect(video).toHaveAttribute("loop", "");
@@ -19,13 +20,14 @@ test("los vídeos llevan poster, van sin sonido y no cargan nada hasta acercarse
   }
 });
 
-test("el vídeo del bento se reproduce en bucle al llegar y se puede pausar", async ({ page }) => {
+test("el vídeo de cómo funciona se reproduce en bucle al llegar y se puede pausar", async ({ page }, info) => {
+  test.skip(info.project.name === "movil", "La escena con vídeo solo existe en escritorio");
   await page.goto("/");
-  const video = page.locator('[data-bloque="grande"] video');
+  const video = page.locator("#como-funciona video[data-video]").first();
   await video.scrollIntoViewIfNeeded();
   await expect(video).toHaveAttribute("autoplay", "");
   await expect.poll(() => video.evaluate((v: HTMLVideoElement) => !v.paused && v.currentTime > 0)).toBe(true);
-  const boton = page.getByRole("button", { name: "Pausar vídeo de la web" });
+  const boton = page.getByRole("button", { name: "Pausar vídeo de cómo funciona" });
   await boton.click();
   await expect(boton).toHaveAttribute("aria-pressed", "true");
   await expect.poll(() => video.evaluate((v: HTMLVideoElement) => v.paused)).toBe(true);
@@ -50,10 +52,12 @@ test.describe("con movimiento reducido", () => {
 
   test("no se reproduce ningún vídeo: se ve el poster y no hay botón de pausa", async ({ page }) => {
     await page.goto("/");
-    const video = page.locator('[data-bloque="grande"] video');
-    await video.scrollIntoViewIfNeeded();
+    // Con movimiento reducido la escena con vídeo ni se muestra: los pasos llevan su imagen fija.
+    await page.locator("#como-funciona").scrollIntoViewIfNeeded();
     await page.waitForTimeout(800);
-    expect(await video.evaluate((v: HTMLVideoElement) => v.paused && !v.autoplay)).toBe(true);
+    for (const video of await page.locator("video[data-video]").all()) {
+      expect(await video.evaluate((v: HTMLVideoElement) => v.paused && !v.autoplay)).toBe(true);
+    }
     await expect(page.getByRole("button", { name: /Pausar vídeo/ })).toHaveCount(0);
   });
 });

@@ -1,6 +1,6 @@
 /** Piezas isométricas de Higgsfield publicadas en public/escena (WebP + AVIF), con su tamaño real. */
 export const ILUSTRACIONES = {
-  "web-taller": { ancho: 960, alto: 1189 },
+  "web-taller": { ancho: 944, alto: 910 },
   "monitor-orden": { ancho: 400, alto: 502 },
   "movil-formulario": { ancho: 360, alto: 406 },
   "portal-clientes-flotas": { ancho: 640, alto: 670 },

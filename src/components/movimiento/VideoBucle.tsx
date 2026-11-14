@@ -4,7 +4,6 @@ import { createContext, type ReactNode, useContext, useEffect, useRef, useState 
 
 /** Vídeos en bucle de Higgsfield publicados en public/video (mp4 H.264 + webm + poster), con su tamaño real. */
 export const VIDEOS = {
-  "web-taller": { ancho: 720, alto: 720 },
   "movil-formulario": { ancho: 720, alto: 720 },
   "burbuja-aviso": { ancho: 720, alto: 720 },
   "ficha-cliente-vehiculo": { ancho: 720, alto: 720 },
