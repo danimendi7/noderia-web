@@ -144,7 +144,7 @@ test("la home tiene los H2 de la SPEC v3 §2", async ({ page }) => {
 test("/quienes-somos: secciones de la SPEC, sin nombres ni fotos de personas, y cierre con enlaces a las soluciones", async ({ page }) => {
   await page.goto("/quienes-somos");
   for (const h2 of [
-    "Programadores y expertos en comunicación, en el mismo equipo",
+    "Tecnología y comunicación, en el mismo equipo",
     "Atentos cada día a la IA, con los pies en el suelo",
     "Cómo entendemos nuestro trabajo",
     "Por qué NoderIA",
@@ -160,5 +160,23 @@ test("/quienes-somos: secciones de la SPEC, sin nombres ni fotos de personas, y 
   await expect(main.locator("img[alt]:not([alt=''])")).toHaveCount(0);
   for (const ruta of ["/software-gestion-talleres", "/diseno-web-talleres", "/automatizaciones-talleres", "/contacto"]) {
     await expect(main.locator(`a[href="${ruta}"]`).first()).toBeVisible();
+  }
+});
+
+// Orden 2026-11-14, punto 4: texto exacto del equipo y ningún reparto en perfiles separados en toda la web.
+test("/quienes-somos: el párrafo del equipo es el de la orden", async ({ page }) => {
+  await page.goto("/quienes-somos");
+  const seccion = page.locator("section", { has: page.getByRole("heading", { level: 2, name: "Tecnología y comunicación, en el mismo equipo" }) });
+  await expect(seccion.locator("p").filter({ hasText: "Somos un equipo" })).toHaveText(
+    "Somos un equipo de programadores y especialistas en comunicación. Unimos las dos formas de mirar un proyecto: construimos sistemas fiables que funcionan cada día y, a la vez, cuidamos que tu web, tus mensajes y tus avisos hablen el idioma de tus clientes. Y trabajas directamente con quienes diseñan y programan tu sistema, sin intermediarios.",
+  );
+});
+
+test("ninguna página describe perfiles separados («los primeros… los segundos…»)", async ({ page }, info) => {
+  test.skip(info.project.name === "movil", "Basta con una pasada");
+  for (const ruta of ["/", "/software-gestion-talleres", "/diseno-web-talleres", "/automatizaciones-talleres", "/casos/neumaticos-uria", "/quienes-somos", "/contacto"]) {
+    await page.goto(ruta);
+    const texto = (await page.locator("body").innerText()).toLowerCase();
+    expect(texto, ruta).not.toMatch(/los primeros|los segundos|departamento/);
   }
 });

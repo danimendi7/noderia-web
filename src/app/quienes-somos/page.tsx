@@ -57,16 +57,16 @@ export default function QuienesSomos() {
           <div className="lg:col-span-6">
             <CabeceraSeccion
               etiqueta="El equipo"
-              titulo="Programadores y expertos en comunicación, en el mismo equipo"
+              titulo="Tecnología y comunicación, en el mismo equipo"
               destacado="en el mismo equipo"
               idTitulo="titulo-equipo"
               tono="claro"
             />
             <p data-entra="" className="texto-entradilla mt-6 max-w-[58ch] text-midnight/75">
-              Somos un equipo de programadores y de especialistas en comunicación. Los primeros construyen sistemas
-              fiables que funcionan todos los días; los segundos se aseguran de que tu web, tus mensajes y tus avisos
-              hablen el idioma de tus clientes. Por eso no entregamos solo software: entregamos una forma más clara y
-              eficaz de relacionarte con ellos.
+              Somos un equipo de programadores y especialistas en comunicación. Unimos las dos formas de mirar un
+              proyecto: construimos sistemas fiables que funcionan cada día y, a la vez, cuidamos que tu web, tus
+              mensajes y tus avisos hablen el idioma de tus clientes. Y trabajas directamente con quienes diseñan y
+              programan tu sistema, sin intermediarios.
             </p>
           </div>
           <DosOficios />
