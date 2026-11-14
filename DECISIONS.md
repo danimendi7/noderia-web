@@ -4,6 +4,7 @@ Registro de lo que Claude decidió por su cuenta. Una entrada por decisión, la 
 
 | Fecha | Decisión | Alternativa descartada | Motivo |
 | --- | --- | --- | --- |
+| 2026-11-14 | La cinta (T49) mide solo los elementos visibles (`getClientRects().length > 0`), reintenta hasta 20 veces si aún falta algo y se recalcula con `resize` y la carga de cada imagen; el formulario usa ids con `useId` | Desactivar `cacheComponents` o forzar un remontaje con `key` por ruta | La causa es que Next 16 conserva la página anterior oculta (`display: none`) en el DOM; desactivarlo empeora la navegación y afectaría a toda la web. Medir lo visible es local y fácil de deshacer |
 | 2026-11-13 | Revisión final v3 (T48) con dos subagentes en paralelo (guías de interfaz + accesibilidad; SEO + crítica de diseño) y correcciones aplicadas por Skynet | Hacer las cuatro revisiones en el hilo principal | Lecturas independientes y sin sesgo de quien hizo el trabajo; el detalle queda en `docs/revisiones/T48-revision-v3.md` |
 | 2026-11-13 | Se mantienen los titles de la SPEC v3 aunque el auditor SEO propone otros para Quiénes somos y Automatizaciones | Cambiarlos | La SPEC fija esos titles y no hay datos de búsqueda que justifiquen el cambio; queda como recomendación para Dani |
 | 2026-11-13 | Botón "Presupuesto" en la cabecera móvil desde 380 px, con la letra a 13 px | Mostrarlo desde 430 px | A 390 px (el móvil más común) también debe verse; reduciendo huecos y tamaño cabe entero (comprobado a 380, 390 y 414 px) |
