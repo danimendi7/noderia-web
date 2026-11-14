@@ -49,7 +49,7 @@ export default function QuienesSomos() {
               etiqueta="Quiénes somos"
               titulo="Software e inteligencia artificial para empresas, desde Donostia"
               destacado="Donostia"
-              intro="En NoderIA desarrollamos software a medida e implantamos soluciones con inteligencia artificial para que las empresas trabajen mejor. Hemos empezado por los talleres porque conocemos de cerca su día a día: el teléfono que no para, las citas en la libreta y los avisos que nadie tiene tiempo de mandar."
+              intro="En NoderIA desarrollamos software a medida e implantamos soluciones con inteligencia artificial para que las empresas trabajen mejor. Estamos especializados en talleres mecánicos y de neumáticos, y conocemos a fondo su día a día: el teléfono que no para, las citas en la libreta y los avisos que nadie tiene tiempo de mandar."
             />
             <IsotipoAnimado />
           </div>

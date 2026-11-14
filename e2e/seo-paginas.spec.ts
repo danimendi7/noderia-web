@@ -163,6 +163,16 @@ test("/quienes-somos: secciones de la SPEC, sin nombres ni fotos de personas, y 
   }
 });
 
+// Orden 2026-11-14 17:30, punto 1: intro del hero de Quiénes somos.
+test("/quienes-somos: la intro dice que estamos especializados en talleres mecánicos y de neumáticos", async ({ page }) => {
+  await page.goto("/quienes-somos");
+  const intro = page.locator("section", { has: page.locator("#titulo-pagina") }).locator("p").filter({ hasText: "En NoderIA" });
+  await expect(intro).toHaveText(
+    "En NoderIA desarrollamos software a medida e implantamos soluciones con inteligencia artificial para que las empresas trabajen mejor. Estamos especializados en talleres mecánicos y de neumáticos, y conocemos a fondo su día a día: el teléfono que no para, las citas en la libreta y los avisos que nadie tiene tiempo de mandar.",
+  );
+  await expect(page.locator("body")).not.toContainText("Hemos empezado por los talleres");
+});
+
 // Orden 2026-11-14, punto 4: texto exacto del equipo y ningún reparto en perfiles separados en toda la web.
 test("/quienes-somos: el párrafo del equipo es el de la orden", async ({ page }) => {
   await page.goto("/quienes-somos");
