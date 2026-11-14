@@ -50,24 +50,92 @@ for (const ancho of [320, 768, 1920]) {
   });
 }
 
-// SPEC v3 §5.4: en escritorio el hilo se integra como la línea de tiempo de "Cómo trabajamos" (entra por el primer
-// nodo y sale por el último) en lugar de cruzar en diagonal por debajo.
-test("en escritorio el hilo entra y sale de la línea de tiempo de Cómo trabajamos a la altura de sus nodos", async ({ page }, info) => {
-  test.skip(info.project.name === "movil", "escritorio");
+// Orden 2026-11-14 17:30, punto 4: la misma cinta, con el mismo grosor y estilo, entra en el paso 1 de "Cómo
+// trabajamos", recorre los 4 pasos por detrás de los nodos y sale por el paso 4 hacia la siguiente sección, sin cortes.
+test("la cinta recorre la línea de tiempo de Cómo trabajamos sin cortes ni tramos finos", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
-  await page.setViewportSize({ width: 1440, height: 900 });
   await page.goto("/");
-  await expect(page.locator("svg[data-hilo]")).toBeAttached({ timeout: 10_000 });
-  const { d, y } = await page.evaluate(() => {
-    const nodo = document.querySelector("[data-hilo-linea] .linea-nodo")!.getBoundingClientRect();
-    const trazo = document.querySelector<SVGPathElement>("svg[data-hilo] path[stroke^='url']")!;
-    return { d: trazo.getAttribute("d")!, y: nodo.top + nodo.height / 2 + scrollY };
+  await expect(page.locator("svg[data-cinta]")).toHaveAttribute("data-estado", "completo", { timeout: 10_000 });
+  const medidas = await page.evaluate(() => {
+    const svg = document.querySelector<SVGSVGElement>("svg[data-cinta]")!;
+    const principal = svg.querySelector<SVGPathElement>('[data-cinta-trazo="principal"]')!;
+    const total = principal.getTotalLength();
+    const muestras: { x: number; y: number }[] = [];
+    for (let l = 0; l <= total; l += 2) {
+      const p = principal.getPointAtLength(l);
+      muestras.push({ x: p.x, y: p.y });
+    }
+    const distancia = (q: { x: number; y: number }) => Math.min(...muestras.map((m) => Math.hypot(m.x - q.x, m.y - q.y)));
+    const nodos = [...document.querySelectorAll("[data-hilo-linea] .linea-nodo")].map((n) => {
+      const r = n.getBoundingClientRect();
+      return { x: r.left + r.width / 2, y: r.top + r.height / 2 + scrollY, radio: r.width / 2 };
+    });
+    // Puntos intermedios entre nodos seguidos: la cinta también pasa por ahí (no hay huecos entre pasos).
+    const entreNodos = nodos.slice(1).map((n, i) => ({ x: (n.x + nodos[i].x) / 2, y: (n.y + nodos[i].y) / 2 }));
+    const siguiente = document.querySelector('section[aria-labelledby="titulo-como-trabajamos"]')!.nextElementSibling!.getBoundingClientRect();
+    const ultimo = nodos[nodos.length - 1];
+    return {
+      d: principal.getAttribute("d")!,
+      grosores: [...svg.querySelectorAll("[data-cinta-trazo]")].map((t) => t.getAttribute("stroke-width")),
+      distanciasNodos: nodos.map(distancia),
+      distanciasEntre: entreNodos.map(distancia),
+      // Tras el último nodo la cinta sigue hasta la sección siguiente.
+      llegaAbajo: muestras.some((m) => m.y > siguiente.top + scrollY + 20 && m.y > ultimo.y),
+      huecos: svg.querySelectorAll("mask circle").length,
+      nodos: nodos.length,
+      tramosViejos: document.querySelectorAll(".linea-tramo").length,
+      // El cuerpo de la cinta (brillo, cinta y reflejo) va enmascarado: pasa por detrás de los nodos.
+      enmascarada: !!svg.querySelector("[data-cinta-cuerpo]")?.getAttribute("mask"),
+    };
   });
-  const salto = d.match(/L(\d+(?:\.\d)?) (\d+(?:\.\d)?) M(\d+(?:\.\d)?) (\d+(?:\.\d)?)/);
-  expect(salto).not.toBeNull();
-  expect(Math.abs(Number(salto![2]) - y)).toBeLessThan(2);
-  expect(Number(salto![3])).toBeGreaterThan(Number(salto![1]));
+  expect(medidas.nodos).toBe(4);
+  // Un solo trazo continuo: sin saltos (M) en todo el recorrido.
+  expect(medidas.d.match(/M/g)).toHaveLength(1);
+  for (const d of medidas.distanciasNodos) expect(d).toBeLessThan(1.5);
+  for (const d of medidas.distanciasEntre) expect(d).toBeLessThan(1.5);
+  expect(medidas.llegaAbajo).toBe(true);
+  // Mismo grosor en todo el recorrido: los trazos de la cinta no cambian en la línea de tiempo y no quedan tramos aparte.
+  expect(new Set(medidas.grosores).size).toBe(3);
+  expect(medidas.tramosViejos).toBe(0);
+  expect(medidas.huecos).toBe(4);
+  expect(medidas.enmascarada).toBe(true);
+  // Sin pista tenue: solo el brillo, la cinta y el reflejo.
+  expect(medidas.grosores).toHaveLength(3);
 });
+
+test("al hacer scroll la cinta rellena la línea de tiempo del paso 1 al 4 y sigue hacia la sección siguiente", async ({ page }) => {
+  await page.goto("/");
+  const cinta = page.locator("svg[data-cinta]");
+  await expect(cinta).toHaveAttribute("data-estado", "scroll");
+  const lista = page.locator("ol[data-hilo-linea]");
+  await expect(lista).toHaveAttribute("data-animado", "");
+  const pasos = lista.locator(":scope > li");
+  const encendidos = () => pasos.evaluateAll((lis) => lis.map((li) => li.hasAttribute("data-encendido")));
+  const dibujado = () =>
+    cinta.locator('[data-cinta-trazo="principal"]').evaluate((p: SVGPathElement) => p.getTotalLength() - parseFloat(getComputedStyle(p).strokeDashoffset));
+  expect(await encendidos()).toEqual([false, false, false, false]);
+  // Bajando poco a poco, los nodos se encienden en orden (nunca uno sin el anterior) y la cinta avanza.
+  const vistos = new Set<string>();
+  let antes = await dibujado();
+  const inicio = await lista.evaluate((ol) => ol.getBoundingClientRect().top + scrollY - innerHeight);
+  for (let y = inicio; y < inicio + innerHeightDe(page) * 1.6; y += 60) {
+    await page.evaluate((destino) => scrollTo(0, destino), y);
+    await page.waitForTimeout(120);
+    const e = await encendidos();
+    expect(e.indexOf(false) === -1 || e.slice(e.indexOf(false)).every((v) => !v)).toBe(true);
+    vistos.add(e.filter(Boolean).length.toString());
+    const ahora = await dibujado();
+    expect(ahora).toBeGreaterThanOrEqual(antes - 1);
+    antes = ahora;
+  }
+  await expect.poll(encendidos).toEqual([true, true, true, true]);
+  // Se ha pasado por estados intermedios: la línea se rellena con el scroll, no de golpe.
+  expect(vistos.size).toBeGreaterThanOrEqual(3);
+});
+
+function innerHeightDe(page: import("@playwright/test").Page) {
+  return page.viewportSize()!.height;
+}
 
 // SPEC v3 §6: cinta con volumen inspirada en la N del isotipo.
 test("la cinta tiene el grosor de la SPEC, un reflejo desplazado y una esfera con degradado en cada parada", async ({ page }, info) => {

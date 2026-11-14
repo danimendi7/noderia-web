@@ -573,11 +573,8 @@
   }
 }
 
-/* Línea de tiempo de "Cómo trabajamos" (SPEC v2, S7). Sin --progreso (sin JS o con movimiento reducido) está completa. */
-.linea-tiempo li {
-  --llenado: clamp(0, calc(var(--progreso, 1) * var(--tramos) - var(--indice)), 1);
-}
-
+/* Línea de tiempo de "Cómo trabajamos" (SPEC v2, S7): la cinta pasa por detrás de los nodos y los enciende al llegar
+   (orden 2026-11-14 17:30, punto 4). Sin JavaScript o con movimiento reducido todos están encendidos. */
 .linea-nodo {
   background: #fff;
   color: rgb(0 16 44 / 0.55);
@@ -595,41 +592,6 @@
     inset 0 0 0 1.5px rgb(255 255 255 / 0.25),
     0 0 0 6px rgb(0 229 240 / 0.14),
     0 10px 24px -10px rgb(0 104 224 / 0.8);
-}
-
-.linea-tramo {
-  left: calc(1.375rem - 1px);
-  top: calc(2.75rem + 6px);
-  bottom: calc(-2.5rem + 6px);
-  width: 2px;
-  border-radius: 9999px;
-  background: rgb(0 16 44 / 0.08);
-  overflow: hidden;
-}
-
-.linea-tramo-relleno {
-  background: linear-gradient(180deg, #0068e0, #00b0f0 60%, #00e5f0);
-  transform-origin: top;
-  transform: scaleY(var(--llenado));
-}
-
-@media (width >= 64rem) {
-  /* En escritorio la línea de tiempo es un tramo de la cinta (SPEC v3 §5.4 y §6): más gruesa y con brillo. */
-  .linea-tramo {
-    top: calc(1.375rem - 4px);
-    bottom: auto;
-    left: calc(2.75rem + 4px);
-    right: calc(-2rem + 4px);
-    width: auto;
-    height: 8px;
-    box-shadow: 0 0 14px rgb(0 104 224 / 0.18);
-  }
-
-  .linea-tramo-relleno {
-    background: linear-gradient(90deg, #0068e0, #00b0f0 60%, #00e5f0);
-    transform-origin: left;
-    transform: scaleX(var(--llenado));
-  }
 }
 
 /* Formulario de presupuesto (SPEC v2, S9): tarjeta de cristal sobre Midnight y foco luminoso Aqua. */

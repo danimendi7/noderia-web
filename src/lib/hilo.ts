@@ -7,8 +7,7 @@ export type DatosHilo = {
   inicio: Punto;
   /**
    * Paradas: una por sección, a la altura de su etiqueta, con el `y` de arriba de la sección (frontera).
-   * `linea`: si la sección tiene una línea de tiempo horizontal, el hilo entra por el borde de su primer nodo
-   * y sale por el del último (entre medias, la propia línea de tiempo hace de hilo; SPEC v3 §5.4).
+   * `linea`: si la sección tiene una línea de tiempo, la cinta la recorre por dentro, de su primer nodo al último.
    */
   paradas: { y: number; frontera: number; linea?: LineaHilo }[];
   /** Llegada (junto al logo del pie), con la frontera del pie. */
@@ -20,13 +19,22 @@ export type DatosHilo = {
   modo: "serpiente" | "recto";
 };
 
-/** Línea de tiempo horizontal: `y` del centro de los nodos y x de los bordes exteriores del primero y del último. */
-export type LineaHilo = { y: number; izquierda: number; derecha: number };
+/**
+ * Línea de tiempo de una sección (orden 2026-11-14 17:30, punto 4): la cinta entra en el primer nodo, pasa por detrás
+ * de todos (centros en `nodos`, de radio `radio`) y sale por el último. Horizontal en escritorio, vertical en tableta y
+ * móvil.
+ */
+export type LineaHilo = { orientacion: "horizontal" | "vertical"; nodos: Punto[]; radio: number };
 
-export type Hilo = { d: string; paradas: Punto[]; final: Punto };
+/** Tramo recto de la cinta que atraviesa una línea de tiempo (de `desde` a `hasta`), con sus nodos. */
+export type TramoLinea = LineaHilo & { desde: Punto; hasta: Punto };
 
-/** Radio de las esquinas con las que el hilo entra y sale de la línea de tiempo. */
+export type Hilo = { d: string; paradas: Punto[]; final: Punto; lineas: TramoLinea[] };
+
+/** Radio de las esquinas con las que el hilo entra y sale de la línea de tiempo horizontal. */
 const RADIO_LINEA = 56;
+/** Alto de las curvas con las que la cinta entra y sale de una línea de tiempo vertical. */
+const CURVA_VERTICAL = 36;
 
 const r = (n: number) => Math.round(n * 10) / 10;
 
@@ -36,14 +44,38 @@ const r = (n: number) => Math.round(n * 10) / 10;
  */
 export function construirHilo(datos: DatosHilo): Hilo {
   const { inicio, paradas, final, izquierda, derecha, modo } = datos;
+  const lineas: TramoLinea[] = [];
+
+  /**
+   * Línea de tiempo vertical (tableta y móvil): desde el margen izquierdo `x` la cinta se curva hacia la columna de
+   * los nodos justo encima del primero, baja recta por detrás de todos y, bajo el último, vuelve al margen.
+   */
+  const recorrerVertical = (partes: string[], x: number, linea: LineaHilo): Punto => {
+    const nx = linea.nodos[0].x;
+    const arriba = linea.nodos[0].y - linea.radio;
+    const abajo = linea.nodos[linea.nodos.length - 1].y + linea.radio;
+    const c = CURVA_VERTICAL;
+    partes.push(`L${r(x)} ${r(arriba - c)}`);
+    partes.push(`C${r(x)} ${r(arriba - c / 2)} ${r(nx)} ${r(arriba - c / 2)} ${r(nx)} ${r(arriba)}`);
+    partes.push(`L${r(nx)} ${r(abajo)}`);
+    partes.push(`C${r(nx)} ${r(abajo + c / 2)} ${r(x)} ${r(abajo + c / 2)} ${r(x)} ${r(abajo + c)}`);
+    lineas.push({ ...linea, desde: { x: nx, y: arriba }, hasta: { x: nx, y: abajo } });
+    return { x, y: abajo + c };
+  };
+
   if (modo === "recto") {
     const x = izquierda;
     const puntos = paradas.map((p) => ({ x, y: p.y }));
-    return { d: `M${r(x)} ${r(inicio.y)} L${r(x)} ${r(final.y)}`, paradas: puntos, final: { x, y: final.y } };
+    const partes = [`M${r(x)} ${r(inicio.y)}`];
+    for (const parada of paradas) if (parada.linea?.orientacion === "vertical") recorrerVertical(partes, x, parada.linea);
+    partes.push(`L${r(x)} ${r(final.y)}`);
+    return { d: partes.join(" "), paradas: puntos, final: { x, y: final.y }, lineas };
   }
 
   const lado = (i: number) => (i % 2 === 0 ? derecha : izquierda);
-  const puntos = paradas.map((p, i) => ({ x: lado(i), y: p.y }));
+  // Una sección con línea de tiempo siempre se recorre de izquierda a derecha (del paso 1 al último): su parada va a
+  // la izquierda.
+  const puntos = paradas.map((p, i) => ({ x: p.linea ? izquierda : lado(i), y: p.y }));
   const partes = [`M${r(inicio.x)} ${r(inicio.y)}`];
 
   // De la escena a la primera parada: curva suave hacia el margen.
@@ -65,33 +97,33 @@ export function construirHilo(datos: DatosHilo): Hilo {
     partes.push(`L${r(hasta.x)} ${r(hasta.y)}`);
   };
 
-  /** Desde la parada baja por su margen, entra en la línea de tiempo, salta al otro extremo y sale al otro margen. */
-  const recorrerLinea = (parada: Punto, linea: LineaHilo): Punto => {
-    const desdeIzquierda = parada.x < (izquierda + derecha) / 2;
-    const entrada = desdeIzquierda ? linea.izquierda : linea.derecha;
-    const salida = desdeIzquierda ? linea.derecha : linea.izquierda;
-    const otroLado = desdeIzquierda ? derecha : izquierda;
-    const sentido = desdeIzquierda ? 1 : -1;
+  /**
+   * Línea de tiempo horizontal (escritorio): desde la parada (margen izquierdo) baja hasta la altura de los nodos,
+   * gira y la atraviesa en recto por detrás de todos los nodos, sin cortes; al otro lado gira y baja por el margen
+   * derecho.
+   */
+  const recorrerHorizontal = (parada: Punto, linea: LineaHilo): Punto => {
+    const y = linea.nodos[0].y;
     const k = RADIO_LINEA;
-    partes.push(`L${r(parada.x)} ${r(linea.y - k)}`);
-    partes.push(`C${r(parada.x)} ${r(linea.y)} ${r(parada.x)} ${r(linea.y)} ${r(parada.x + sentido * k)} ${r(linea.y)}`);
-    partes.push(`L${r(entrada)} ${r(linea.y)}`);
-    partes.push(`M${r(salida)} ${r(linea.y)}`);
-    partes.push(`L${r(otroLado - sentido * k)} ${r(linea.y)}`);
-    partes.push(`C${r(otroLado)} ${r(linea.y)} ${r(otroLado)} ${r(linea.y)} ${r(otroLado)} ${r(linea.y + k)}`);
-    return { x: otroLado, y: linea.y + k };
+    partes.push(`L${r(izquierda)} ${r(y - k)}`);
+    partes.push(`C${r(izquierda)} ${r(y)} ${r(izquierda)} ${r(y)} ${r(izquierda + k)} ${r(y)}`);
+    partes.push(`L${r(derecha - k)} ${r(y)}`);
+    partes.push(`C${r(derecha)} ${r(y)} ${r(derecha)} ${r(y)} ${r(derecha)} ${r(y + k)}`);
+    lineas.push({ ...linea, desde: { x: izquierda + k, y }, hasta: { x: derecha - k, y } });
+    return { x: derecha, y: y + k };
   };
 
-  // Punto desde el que se sigue tras cada parada (si recorre una línea de tiempo, el extremo opuesto).
+  // Punto desde el que se sigue tras cada parada (si recorre una línea de tiempo, el final de ese recorrido).
   const salidas = puntos.map((p) => p);
   const recorrer = (i: number) => {
     const linea = paradas[i].linea;
-    if (linea) salidas[i] = recorrerLinea(puntos[i], linea);
+    if (!linea) return;
+    salidas[i] = linea.orientacion === "horizontal" ? recorrerHorizontal(puntos[i], linea) : recorrerVertical(partes, puntos[i].x, linea);
   };
   recorrer(0);
   for (let i = 1; i < puntos.length; i++) {
-    // Tras una línea de tiempo el hilo ya está en el otro margen: la parada siguiente va en ese mismo lado.
-    if (paradas[i - 1].linea) puntos[i] = { x: salidas[i - 1].x, y: puntos[i].y };
+    // Tras una línea de tiempo la parada siguiente va en el margen por el que ha salido la cinta.
+    if (paradas[i - 1].linea && !paradas[i].linea) puntos[i] = { x: salidas[i - 1].x, y: puntos[i].y };
     cruzar(salidas[i - 1], puntos[i], paradas[i].frontera);
     salidas[i] = puntos[i];
     recorrer(i);
@@ -99,7 +131,32 @@ export function construirHilo(datos: DatosHilo): Hilo {
   const llegada = { x: izquierda, y: final.y };
   cruzar(salidas[salidas.length - 1] ?? primera, llegada, final.frontera);
 
-  return { d: partes.join(" "), paradas: puntos, final: llegada };
+  return { d: partes.join(" "), paradas: puntos, final: llegada, lineas };
+}
+
+/**
+ * Reparte el scroll de una línea de tiempo horizontal (orden 2026-11-14 17:30, punto 4). La tabla longitud → y sirve
+ * para que la punta de la cinta siga a la pantalla, pero un tramo horizontal tiene una sola `y`: se dibujaría de golpe.
+ * Aquí ese tramo (longitudes `l0`–`l1`, a la altura `y`) se reparte entre `y - antes` e `y + despues`, y lo que va
+ * justo antes y justo después (la bajada y la salida, `holgura` px) se comprime para dejarle sitio. Fuera de esa
+ * ventana la tabla no cambia, así que la punta sigue yendo a la altura de la pantalla que le toca.
+ */
+export function repartirTramoHorizontal(
+  tabla: { longitud: number; y: number }[],
+  tramo: { y: number; l0: number; l1: number; antes: number; despues: number; holgura: number },
+) {
+  const { y, l0, l1, antes, despues, holgura } = tramo;
+  const desde = y - antes - holgura;
+  const hasta = y + despues + holgura;
+  return tabla.map(({ longitud, y: yy }) => {
+    if (longitud < l0) {
+      if (yy < desde) return { longitud, y: yy };
+      return { longitud, y: desde + (Math.min(yy, y) - desde) * (holgura / (antes + holgura)) };
+    }
+    if (longitud <= l1) return { longitud, y: y - antes + ((longitud - l0) / Math.max(1, l1 - l0)) * (antes + despues) };
+    if (yy > hasta) return { longitud, y: yy };
+    return { longitud, y: y + despues + (Math.max(yy, y) - y) * (holgura / (despues + holgura)) };
+  });
 }
 
 /** x del hilo en cada margen: a medio camino entre el borde de la pantalla y el contenido (mínimo 10 px). */
