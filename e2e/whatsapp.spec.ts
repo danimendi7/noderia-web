@@ -13,7 +13,9 @@ for (const ruta of ["/", "/automatizaciones-talleres"]) {
 test("el caso Uría no menciona WhatsApp en ninguna parte (texto, metadatos ni datos estructurados)", async ({ page, request }) => {
   const respuesta = await request.get("/casos/neumaticos-uria");
   expect(respuesta.ok()).toBe(true);
-  expect((await respuesta.text()).toLowerCase()).not.toContain("whatsapp");
+  // Sin el dominio: en los previews lleva el nombre de la rama (p. ej. «…-t55-whatsapp-…») en las URL absolutas.
+  const dominio = new URL(respuesta.url()).host;
+  expect((await respuesta.text()).split(dominio).join("").toLowerCase()).not.toContain("whatsapp");
 
   await page.goto("/casos/neumaticos-uria");
   // También lo que se pinta en el cliente (menú desplegable, pie…).
