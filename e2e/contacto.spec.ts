@@ -26,10 +26,17 @@ test("no queda ningún «Pide presupuesto» en la web", async ({ page }, info) =
   }
 });
 
-test("/presupuesto redirige con un 301 a /contacto", async ({ request }) => {
+test("/presupuesto redirige con un 301 a /contacto", async ({ playwright, baseURL }) => {
+  // Sin "x-vercel-set-bypass-cookie": con ella, Vercel responde antes con un 307 a la misma URL para poner la cookie.
+  const bypass = process.env.VERCEL_AUTOMATION_BYPASS_SECRET;
+  const request = await playwright.request.newContext({
+    baseURL,
+    extraHTTPHeaders: bypass ? { "x-vercel-protection-bypass": bypass } : {},
+  });
   const respuesta = await request.get("/presupuesto", { maxRedirects: 0 });
   expect(respuesta.status()).toBe(301);
   expect(new URL(respuesta.headers().location, "http://x").pathname).toBe("/contacto");
+  await request.dispose();
 });
 
 test("/contacto: title, H1, subtítulo y la línea de primera consulta junto al formulario", async ({ page }) => {
