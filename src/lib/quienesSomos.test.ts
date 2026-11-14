@@ -4,7 +4,6 @@ import {
   cantidadParticulas,
   crearParticulas,
   crearRedNeuronal,
-  DIAGRAMA_EQUIPO,
   empujeRaton,
   recorridoAleatorio,
 } from "./quienesSomos";
@@ -54,38 +53,5 @@ describe("crearRedNeuronal", () => {
     const { nodos, enlaces } = crearRedNeuronal([3, 4, 4, 2], 420, 360);
     const camino = recorridoAleatorio(nodos, enlaces, aleatorio(1));
     expect(camino.map((i) => nodos[i].capa)).toEqual([0, 1, 2, 3]);
-  });
-});
-
-describe("DIAGRAMA_EQUIPO", () => {
-  const numeros = (d: string) => (d.match(/-?\d+(\.\d+)?/g) ?? []).map(Number);
-  const inicio = (d: string) => numeros(d).slice(0, 2);
-  const fin = (d: string) => numeros(d).slice(-2);
-
-  it("cada flujo sale del centro de su nodo y llega al punto de unión", () => {
-    const d = DIAGRAMA_EQUIPO;
-    expect(inicio(d.caminoIzquierda)).toEqual([...d.izquierda]);
-    expect(inicio(d.caminoDerecha)).toEqual([...d.derecha]);
-    expect(fin(d.caminoIzquierda)).toEqual([...d.union]);
-    expect(fin(d.caminoDerecha)).toEqual([...d.union]);
-  });
-
-  it("la cinta unida baja del punto de unión hasta Tu negocio", () => {
-    const d = DIAGRAMA_EQUIPO;
-    expect(inicio(d.caminoUnion)).toEqual([...d.union]);
-    expect(fin(d.caminoUnion)).toEqual([...d.negocio]);
-    expect(d.negocio[1]).toBeGreaterThan(d.union[1]);
-  });
-
-  it("es simétrico y cabe en el lienzo", () => {
-    const d = DIAGRAMA_EQUIPO;
-    expect(d.izquierda[0] + d.derecha[0]).toBe(d.ancho);
-    expect(d.union[0]).toBe(d.ancho / 2);
-    for (const [x, y] of [d.izquierda, d.derecha, d.union, d.negocio, d.suma]) {
-      expect(x).toBeGreaterThan(0);
-      expect(x).toBeLessThan(d.ancho);
-      expect(y).toBeGreaterThan(0);
-      expect(y).toBeLessThan(d.alto);
-    }
   });
 });

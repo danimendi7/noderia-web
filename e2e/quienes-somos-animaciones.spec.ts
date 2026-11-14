@@ -1,5 +1,5 @@
 import AxeBuilder from "@axe-core/playwright";
-import { expect, test } from "@playwright/test";
+import { expect, test, type Page } from "@playwright/test";
 import { CLAVE_CARGA_VISTA } from "../src/lib/pantallaCarga";
 
 // Orden 2026-11-14, punto 5: animaciones de Quiénes somos (hero, equipo e inteligencia artificial).
@@ -21,23 +21,95 @@ test("con animaciones: el isotipo se monta y queda el oficial; la red de partíc
   await expect(lienzo).toHaveAttribute("data-estado", "quieto", { timeout: 9_000 });
 });
 
-test("con animaciones: los flujos del equipo se unen con el scroll y la IA se enciende al llegar", async ({ page }) => {
+/** Lleva el scroll a un punto (0–1) del recorrido de "Del código al cliente": de "top 75%" a "bottom bottom". */
+async function irA(page: Page, progreso: number) {
+  await page.locator("[data-del-codigo]").evaluate((caja: HTMLElement, p) => {
+    const arriba = caja.getBoundingClientRect().top + window.scrollY;
+    const inicio = arriba - window.innerHeight * 0.75;
+    const fin = arriba + caja.offsetHeight - window.innerHeight;
+    window.scrollTo(0, inicio + (fin - inicio) * p);
+  }, progreso);
+}
+
+const MENSAJE = "Hola Ana, tu coche ya está listo. Puedes pasar a recogerlo cuando quieras.";
+
+// Orden 2026-11-14 17:30, punto 2: "Del código al cliente", ligada al scroll.
+test("con animaciones: el código y el mensaje se escriben solos y se funden en la web del taller", async ({ page }) => {
   await page.goto("/quienes-somos");
-  const flujos = page.locator("[data-flujos-equipo]");
-  await expect(flujos).toHaveAttribute("data-estado", "scroll");
-  const desplazamiento = () =>
-    flujos.locator(".qs-flujo-union").last().evaluate((p) => parseFloat(getComputedStyle(p).strokeDashoffset));
-  expect(await desplazamiento()).toBeGreaterThan(0.9);
+  const caja = page.locator("[data-del-codigo]");
+  await expect(caja).toHaveAttribute("data-estado", "scroll");
+  await expect(caja).toHaveAttribute("role", "img");
+  await expect(caja).toHaveAttribute("aria-label", /^Del código al cliente/);
+  const codigo = () => caja.locator(".dcc-linea code").allInnerTexts().then((l) => l.join("\n"));
+  const [izquierda, derecha] = await caja.locator(".dcc-mitad").all();
+
+  // Al empezar: las dos mitades se ven, el código está a medio escribir y la web del taller aún no.
+  await irA(page, 0.2);
+  await expect(caja).toHaveAttribute("data-fase", "escribiendo");
+  await expect(izquierda).toBeVisible();
+  await expect(derecha).toBeVisible();
+  await expect(izquierda).toContainText("Programación");
+  await expect(derecha).toContainText("Comunicación");
+  await expect.poll(codigo).toMatch(/agenda\.crear/);
+  expect(await codigo()).not.toMatch(/avisos\.enviar/);
+  await expect(caja.locator(".dcc-redaccion")).not.toBeEmpty();
+  await expect(caja.locator(".dcc-aviso")).toBeHidden();
+
+  // Escrito del todo: el mensaje se ha enviado.
+  await irA(page, 0.49);
+  await expect.poll(codigo).toMatch(/await avisos\.enviar\(cita, "listo"\);/);
+  await expect(caja.locator(".dcc-burbuja")).toContainText(MENSAJE);
+  await expect(caja.locator(".dcc-burbuja")).toHaveCSS("opacity", "1");
+  await expect(caja.locator(".dcc-redaccion")).toBeEmpty();
+
+  // Al final: las mitades se han fundido y queda la web del taller con la cita confirmada y "Tu negocio".
+  await irA(page, 1);
+  await expect(caja).toHaveAttribute("data-fase", "final");
+  await expect(izquierda).toBeHidden();
+  await expect(derecha).toBeHidden();
+  await expect(caja.locator(".dcc-aviso")).toContainText("Cita confirmada");
+  await expect(caja.locator(".dcc-aviso")).toHaveCSS("opacity", "1");
+  await expect(caja.locator(".dcc-negocio")).toHaveText("Tu negocio");
+  await expect(caja.locator(".dcc-negocio")).toHaveCSS("opacity", "1");
+  await expect(caja.locator(".dcc-costura")).toHaveCSS("opacity", "0");
+
+  // Y vuelve atrás con el scroll.
+  await irA(page, 0.2);
+  await expect(caja).toHaveAttribute("data-fase", "escribiendo");
+  await expect(izquierda).toBeVisible();
+});
+
+test("en la fusión, la cinta de la marca hace de costura entre las dos mitades", async ({ page }, info) => {
+  await page.goto("/quienes-somos");
+  const caja = page.locator("[data-del-codigo]");
+  await expect(caja).toHaveAttribute("data-estado", "scroll");
+  await irA(page, 0.62);
+  await expect(caja).toHaveAttribute("data-fase", "fusion");
+  const costura = caja.locator(".dcc-costura");
+  await expect(costura).toBeVisible();
+  await expect(costura).toHaveCSS("background-image", /linear-gradient/);
+  // La costura va entre las dos mitades: en escritorio, a su lado; en móvil (una encima de otra), en medio.
+  await irA(page, 0.4);
+  const [caja1, caja2] = (await Promise.all((await caja.locator(".dcc-mitad").all()).map((m) => m.boundingBox()))).map((b) => b!);
+  const movil = info.project.name === "movil";
+  if (movil) expect(caja1.y + caja1.height).toBeLessThanOrEqual(caja2.y + 1);
+  else expect(caja1.x + caja1.width).toBeLessThanOrEqual(caja2.x + 1);
+  const c = (await costura.boundingBox())!;
+  if (movil) {
+    expect(c.y).toBeGreaterThanOrEqual(caja1.y + caja1.height / 2);
+    expect(c.y + c.height).toBeLessThanOrEqual(caja2.y + caja2.height / 2);
+  } else {
+    expect(c.x).toBeGreaterThanOrEqual(caja1.x + caja1.width / 2);
+    expect(c.x + c.width).toBeLessThanOrEqual(caja2.x + caja2.width / 2);
+  }
+});
+
+test("con animaciones: la IA se enciende al llegar", async ({ page }) => {
+  await page.goto("/quienes-somos");
   // Al cargar, la sección de IA aún no se ve: su titular y su red esperan.
   const seccionIa = page.locator("section", { has: page.locator("#titulo-ia") });
   await expect(seccionIa).toHaveAttribute("data-texto", "oculto");
   await expect(page.locator("[data-red-neuronal]")).toHaveAttribute("data-estado", "apagada");
-  await flujos.evaluate((el) => el.scrollIntoView({ block: "start" }));
-  await expect(flujos).toHaveAttribute("data-estado", "unido", { timeout: 5_000 });
-  await expect.poll(desplazamiento).toBeLessThan(0.05);
-  // Las estelas de la punta solo se ven mientras se dibuja.
-  for (const estela of await flujos.locator(".qs-estela").all()) await expect(estela).toHaveCSS("opacity", "0");
-
   await page.locator("[data-red-neuronal]").scrollIntoViewIfNeeded();
   await expect(page.locator("[data-red-neuronal]")).toHaveAttribute("data-estado", "encendida");
   await page.locator("#titulo-ia").scrollIntoViewIfNeeded();
@@ -46,42 +118,14 @@ test("con animaciones: los flujos del equipo se unen con el scroll y la IA se en
   await expect(seccionIa.locator(".titulo-palabra").last()).toHaveCSS("opacity", "1", { timeout: 3_000 });
 });
 
-test("los flujos del equipo salen del centro de cada nodo y la cinta llega a Tu negocio", async ({ page }) => {
+test("sin scroll horizontal a 320 px durante toda la animación", async ({ page }) => {
+  await page.setViewportSize({ width: 320, height: 640 });
   await page.goto("/quienes-somos");
-  const flujos = page.locator("[data-flujos-equipo]");
-  await flujos.scrollIntoViewIfNeeded();
-  const medidas = await flujos.evaluate((caja) => {
-    const enPantalla = (camino: SVGPathElement, largo: number) => {
-      const p = camino.getPointAtLength(largo);
-      const m = camino.getScreenCTM()!;
-      return { x: p.x * m.a + p.y * m.c + m.e, y: p.x * m.b + p.y * m.d + m.f };
-    };
-    const centro = (el: Element) => {
-      const r = el.getBoundingClientRect();
-      return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
-    };
-    const [izquierda, derecha] = [...caja.querySelectorAll<SVGPathElement>(".qs-flujo-lado")].slice(2);
-    const union = caja.querySelectorAll<SVGPathElement>(".qs-flujo-union")[1];
-    const nodos = [...caja.querySelectorAll(".rounded-full.bg-white")];
-    const negocio = caja.querySelector(".qs-negocio")!;
-    return {
-      salidas: [enPantalla(izquierda, 0), enPantalla(derecha, 0)],
-      nodos: nodos.map(centro),
-      llegada: enPantalla(union, union.getTotalLength()),
-      negocio: negocio.getBoundingClientRect(),
-    };
-  });
-  expect(medidas.nodos).toHaveLength(2);
-  medidas.salidas.forEach((salida, i) => {
-    expect(Math.abs(salida.x - medidas.nodos[i].x)).toBeLessThan(2);
-    expect(Math.abs(salida.y - medidas.nodos[i].y)).toBeLessThan(2);
-  });
-  // La cinta acaba debajo de la pastilla "Tu negocio" (por detrás de ella).
-  const { llegada, negocio } = medidas;
-  expect(llegada.x).toBeGreaterThan(negocio.left);
-  expect(llegada.x).toBeLessThan(negocio.right);
-  expect(llegada.y).toBeGreaterThan(negocio.top);
-  expect(llegada.y).toBeLessThan(negocio.bottom);
+  for (const p of [0, 0.3, 0.62, 0.8, 1]) {
+    await irA(page, p);
+    await page.waitForTimeout(200);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(320);
+  }
 });
 
 test.describe("con movimiento reducido", () => {
@@ -94,10 +138,18 @@ test.describe("con movimiento reducido", () => {
     await expect(isotipo.locator("img.qs-isotipo-oficial")).toHaveCSS("opacity", "1");
     await expect(page.locator("canvas[data-red-particulas]")).toHaveAttribute("data-estado", "quieto");
 
-    const flujos = page.locator("[data-flujos-equipo]");
-    await expect(flujos).toHaveAttribute("data-estado", "unido");
-    for (const flujo of await flujos.locator(".qs-flujo").all()) await expect(flujo).toHaveCSS("stroke-dashoffset", "0px");
-    await expect(flujos.locator(".qs-pulso").first()).toHaveCSS("opacity", "0");
+    // "Del código al cliente": directamente el estado final, sin contenedor alto ni escenario fijo.
+    const caja = page.locator("[data-del-codigo]");
+    await expect(caja).toHaveAttribute("data-estado", "final");
+    await caja.scrollIntoViewIfNeeded();
+    for (const mitad of await caja.locator(".dcc-mitad").all()) await expect(mitad).toBeHidden();
+    await expect(caja.locator(".dcc-aviso")).toBeVisible();
+    await expect(caja.locator(".dcc-aviso")).toContainText("Cita confirmada");
+    await expect(caja.locator(".dcc-negocio")).toBeVisible();
+    await expect(caja.locator(".dcc-resultado")).toHaveCSS("clip-path", "none");
+    const alto = await caja.evaluate((el: HTMLElement) => el.offsetHeight / window.innerHeight);
+    expect(alto).toBeLessThan(1.2);
+    await expect(caja.locator(".dcc-escenario")).toHaveCSS("position", "static");
 
     await expect(page.locator("[data-red-neuronal]")).toHaveAttribute("data-estado", "encendida");
     const seccionIa = page.locator("section", { has: page.locator("#titulo-ia") });
