@@ -27,7 +27,7 @@ export const PAGINAS = {
   automatizaciones: {
     ruta: "/automatizaciones-talleres",
     nombre: "Automatizaciones",
-    titulo: "Recordatorios y avisos automáticos para talleres | NoderIA",
+    titulo: "Recordatorios de ITV y avisos para talleres | NoderIA",
     descripcion:
       "Recordatorios de ITV y revisiones, confirmaciones de cita y avisos por email y WhatsApp que se envían solos. Automatiza tu taller con NoderIA.",
   },
@@ -41,7 +41,7 @@ export const PAGINAS = {
   quienesSomos: {
     ruta: "/quienes-somos",
     nombre: "Quiénes somos",
-    titulo: "Quiénes somos: software e IA para empresas | NoderIA",
+    titulo: "Empresa de software e IA en Donostia | NoderIA",
     descripcion:
       "Equipo de programadores y expertos en comunicación en Donostia. Software a medida e inteligencia artificial aplicada a problemas reales de empresas.",
   },
