@@ -75,3 +75,24 @@ test.describe("formulario oscuro (SPEC v2, S9)", () => {
     await expect(nombre).toHaveCSS("outline-color", "rgb(0, 229, 240)");
   });
 });
+
+// Con `cacheComponents` la página anterior queda oculta en el DOM al navegar: las etiquetas del formulario de la página
+// nueva deben apuntar a sus propios campos, no a los de la página oculta.
+for (const [desde, hasta] of [
+  ["/", "/software-gestion-talleres"],
+  ["/software-gestion-talleres", "/"],
+]) {
+  test(`de ${desde} a ${hasta}, los dos formularios no comparten ids y las etiquetas apuntan a los campos visibles`, async ({ page }) => {
+    await page.goto(desde);
+    await page.locator(`a[href="${hasta}"]`).first().evaluate((a: HTMLAnchorElement) => a.click());
+    await expect(page).toHaveURL(new RegExp(`${hasta === "/" ? "" : hasta}/?$`));
+    await expect(page.locator("form").filter({ visible: true })).toHaveCount(1);
+    // Ningún id repetido entre los dos formularios (el visible y el de la página oculta).
+    const repetidos = await page.evaluate(() => {
+      const ids = [...document.querySelectorAll("form [id]")].map((e) => e.id);
+      return ids.filter((id, i) => ids.indexOf(id) !== i);
+    });
+    expect(repetidos).toEqual([]);
+    await expect(page.getByLabel("Tu nombre").filter({ visible: true })).toHaveCount(1);
+  });
+}

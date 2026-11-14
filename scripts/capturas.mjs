@@ -2,6 +2,8 @@
 // Uso: node scripts/capturas.mjs <tarea> <antes|despues> [selector-css ...]
 //   BASE_URL=<url> node scripts/capturas.mjs T27 antes '#que-incluye'
 // Con RUTA=/presupuesto captura otra página (por defecto, la home). Sin selector captura la página completa. Se guardan en docs/capturas/<tarea>/<fase>-<ancho>-<nombre>.jpg.
+// Con VOLVER_DE=/quienes-somos, tras cargar se navega a esa página con la navegación del cliente y se vuelve con Atrás
+// (para el fallo de la cinta que desaparecía al volver, orden 2026-11-14).
 // Se omite la pantalla de carga (sessionStorage) y se emula movimiento reducido: así cada captura muestra
 // el estado final de las animaciones y es reproducible. Con MOVIMIENTO=1 se captura con animaciones
 // (lo que se ve en pantalla con el elemento centrado), para efectos que solo existen con movimiento.
@@ -44,6 +46,14 @@ try {
     await contexto.addInitScript(() => sessionStorage.setItem("noderia:pantalla-carga-vista", "1"));
     const pagina = await contexto.newPage();
     await pagina.goto(new URL(ruta, base).toString(), { waitUntil: "networkidle" });
+    if (process.env.VOLVER_DE) {
+      await pagina.waitForTimeout(1500);
+      await pagina.locator(`a[href="${process.env.VOLVER_DE}"]`).first().evaluate((a) => a.click());
+      await pagina.waitForURL((url) => url.pathname === process.env.VOLVER_DE);
+      await pagina.waitForTimeout(1500);
+      await pagina.goBack();
+      await pagina.waitForTimeout(1500);
+    }
     // Recorre la página para que se carguen las imágenes diferidas.
     await pagina.evaluate(async () => {
       for (let y = 0; y < document.body.scrollHeight; y += 600) {

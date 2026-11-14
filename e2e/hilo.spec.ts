@@ -151,3 +151,54 @@ for (const ruta of ["/", "/software-gestion-talleres", "/quienes-somos"]) {
     expect(choques).toEqual([]);
   });
 }
+
+// Orden 2026-11-14, punto 1: la cinta desaparecía al volver a la home con la navegación del cliente (enlace o Atrás).
+async function cintaVisibleConTrazado(page: import("@playwright/test").Page) {
+  const hilo = page.locator("svg[data-hilo]:visible");
+  await expect(hilo).toHaveCount(1, { timeout: 10_000 });
+  await expect(hilo).toHaveAttribute("data-estado", /scroll|completo/);
+  await expect(hilo).toBeVisible();
+  const medidas = await hilo.evaluate((svg) => {
+    const trazo = svg.querySelector<SVGPathElement>('[data-cinta-trazo="principal"]')!;
+    const caja = svg.getBoundingClientRect();
+    return { longitud: trazo.getTotalLength(), ancho: caja.width, alto: caja.height, alturaPagina: document.documentElement.scrollHeight };
+  });
+  expect(medidas.longitud).toBeGreaterThan(500);
+  expect(medidas.ancho).toBeGreaterThan(200);
+  // La cinta ocupa la página que se ve, no una página oculta que se conserva en memoria.
+  expect(Math.abs(medidas.alto - medidas.alturaPagina)).toBeLessThan(80);
+}
+
+for (const destino of ["/quienes-somos", "/casos/neumaticos-uria", "/software-gestion-talleres"]) {
+  test(`la cinta sigue visible al volver a la home desde ${destino} con un enlace y con Atrás`, async ({ page }) => {
+    await page.goto("/");
+    await cintaVisibleConTrazado(page);
+    // Ida con la navegación del cliente y vuelta con el enlace del logo.
+    await page.locator(`a[href="${destino}"]`).first().evaluate((a: HTMLAnchorElement) => a.click());
+    await expect(page).toHaveURL(new RegExp(`${destino}$`));
+    if (destino !== "/casos/neumaticos-uria") await cintaVisibleConTrazado(page);
+    await page.locator('header a[href="/"]').first().click();
+    await expect(page).toHaveURL(/\/$/);
+    await cintaVisibleConTrazado(page);
+    // Otra vez a la página y vuelta con Atrás.
+    await page.locator(`a[href="${destino}"]`).first().evaluate((a: HTMLAnchorElement) => a.click());
+    await expect(page).toHaveURL(new RegExp(`${destino}$`));
+    await page.goBack();
+    await expect(page).toHaveURL(/\/$/);
+    await cintaVisibleConTrazado(page);
+  });
+}
+
+test("la cinta se recalcula al cambiar el tamaño de la ventana después de navegar", async ({ page }, info) => {
+  test.skip(info.project.name === "movil", "Los anchos se fijan a mano: basta con una pasada");
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto("/");
+  await cintaVisibleConTrazado(page);
+  await page.locator('a[href="/quienes-somos"]').first().evaluate((a: HTMLAnchorElement) => a.click());
+  await expect(page).toHaveURL(/quienes-somos$/);
+  await page.goBack();
+  await cintaVisibleConTrazado(page);
+  await page.setViewportSize({ width: 900, height: 900 });
+  await expect.poll(() => page.locator("svg[data-hilo]:visible").getAttribute("width")).toBe("900");
+  await cintaVisibleConTrazado(page);
+});

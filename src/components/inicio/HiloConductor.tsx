@@ -13,6 +13,14 @@ type Geometria = Hilo & { alto: number; ancho: number; movil: boolean };
 const ALTURA_PUNTA = 0.62;
 
 /**
+ * Con `cacheComponents`, Next conserva las páginas visitadas ocultas (`display: none`) en el DOM al navegar. Solo se mide
+ * lo que se ve, para no mezclar la página actual con las que están guardadas.
+ */
+function visible(el: Element | null): el is HTMLElement {
+  return !!el && el.getClientRects().length > 0;
+}
+
+/**
  * Punto de parada de una sección: lo marcado con `data-cinta-parada` o, si no, la etiqueta que va encima del primer
  * H2 (o el propio H2 si no lleva etiqueta).
  */
@@ -28,9 +36,9 @@ function paradaDe(seccion: HTMLElement): HTMLElement | null {
  * para en cada sección y acaba en el logo del pie.
  */
 function medir(): Geometria | null {
-  const secciones = [...document.querySelectorAll<HTMLElement>("main section[data-fondo]")];
-  const escena = document.querySelector<HTMLElement>('[data-cinta-inicio], [data-pieza="taller"]');
-  const logoPie = document.querySelector<HTMLElement>("footer img");
+  const secciones = [...document.querySelectorAll<HTMLElement>("main section[data-fondo]")].filter(visible);
+  const escena = [...document.querySelectorAll('[data-cinta-inicio], [data-pieza="taller"]')].find(visible);
+  const logoPie = [...document.querySelectorAll("footer img")].find(visible);
   if (secciones.length < 2 || !escena || !logoPie) return null;
 
   const y0 = window.scrollY;
@@ -86,21 +94,42 @@ export function HiloConductor() {
   const punta = useRef<SVGGElement>(null);
   const raiz = useRef<SVGSVGElement>(null);
 
-  // Medir al cargar (en un momento libre) y cuando cambie el tamaño de la página.
+  // Medir al cargar (en un momento libre), al volver a la página con la navegación del cliente (el efecto se vuelve a
+  // ejecutar), cuando cambie el tamaño de la página o de la ventana y cuando termine de cargar una imagen. Si aún falta
+  // algo por pintar (la escena, el pie), se reintenta unas cuantas veces en lugar de dejar la cinta sin dibujar.
   useEffect(() => {
     let marco = 0;
+    let reintento = 0;
+    let intentos = 0;
     const recalcular = () => {
       cancelAnimationFrame(marco);
-      marco = requestAnimationFrame(() => setGeo(medir()));
+      marco = requestAnimationFrame(() => {
+        const nueva = medir();
+        if (nueva) {
+          intentos = 0;
+          setGeo((vieja) => (vieja && vieja.d === nueva.d && vieja.alto === nueva.alto && vieja.ancho === nueva.ancho ? vieja : nueva));
+        } else if (intentos++ < 20) {
+          window.clearTimeout(reintento);
+          reintento = window.setTimeout(recalcular, 250);
+        }
+      });
     };
     const libre = window.requestIdleCallback ?? ((f: () => void) => window.setTimeout(f, 200));
     const id = libre(recalcular);
     const observador = typeof ResizeObserver === "undefined" ? null : new ResizeObserver(recalcular);
     observador?.observe(document.body);
+    const alCargar = (e: Event) => {
+      if (e.target instanceof HTMLImageElement) recalcular();
+    };
+    document.addEventListener("load", alCargar, true);
+    window.addEventListener("resize", recalcular);
     return () => {
       cancelAnimationFrame(marco);
+      window.clearTimeout(reintento);
       if (typeof id === "number") (window.cancelIdleCallback ?? window.clearTimeout)(id);
       observador?.disconnect();
+      document.removeEventListener("load", alCargar, true);
+      window.removeEventListener("resize", recalcular);
     };
   }, []);
 
