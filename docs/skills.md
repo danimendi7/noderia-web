@@ -1,6 +1,6 @@
 # Skills de Skynet en este proyecto
 
-Actualizado: 2026-11-13 (orden de la fase V3, 19:18). Antes: orden del rediseño V2. Ya aparecen en la sesión `web-design-guidelines`, `vercel-react-best-practices`, `ui-ux-pro-max`, `design-taste-frontend`, `motion` y los MCP `magic` (21st.dev) e Higgsfield.
+Actualizado: 2026-11-14 (orden de la fase V4, 09:52). Sin cambios en las skills disponibles; para la V4 se usan además `magic` (21st.dev) y Higgsfield en Quiénes somos y el hero. Antes: orden de la fase V3 (2026-11-13 19:18). Antes: orden del rediseño V2. Ya aparecen en la sesión `web-design-guidelines`, `vercel-react-best-practices`, `ui-ux-pro-max`, `design-taste-frontend`, `motion` y los MCP `magic` (21st.dev) e Higgsfield.
 
 ## Las que uso y para qué
 
