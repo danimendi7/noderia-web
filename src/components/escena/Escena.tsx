@@ -23,7 +23,7 @@ type Pieza = {
   px: [number, number];
 };
 
-const TALLER = { nombre: "taller-vacio", x: 170, y: 120, ancho: 660, proporcion: 1108 / 1200, px: [1200, 1108] as [number, number] } satisfies Pieza;
+const TALLER = { nombre: "taller-vacio", x: 170, y: 120, ancho: 660, proporcion: 1293 / 1400, px: [1400, 1293] as [number, number] } satisfies Pieza;
 // Coche colocado a ojo con referencia-taller-con-coche.png: 23 % / 45 % / 36 % del taller.
 const COCHE = {
   x: TALLER.x + 0.23 * TALLER.ancho,
