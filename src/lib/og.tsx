@@ -6,6 +6,16 @@ export const TAMANO_OG = { width: 1200, height: 630 };
 
 const DEGRADADO = "linear-gradient(120deg, #0068E0 0%, #00B0F0 50%, #00E5F0 100%)";
 
+// Fuentes y logo se leen al cargar el módulo (en el build), no al pedir la imagen: así las rutas
+// `opengraph-image` no leen archivos por petición, Next las prerenderiza y en Cloudflare se sirven
+// desde los assets del Worker, donde no existe el sistema de archivos del proyecto.
+const [extraBold, semiBold, logo] = await Promise.all([
+  readFile(join(process.cwd(), "src/assets/fuentes/Outfit-ExtraBold.ttf")),
+  readFile(join(process.cwd(), "src/assets/fuentes/Outfit-SemiBold.ttf")),
+  // Logo oficial para fondo oscuro (480 × 102), sin redibujar.
+  readFile(join(process.cwd(), "public/marca/logo-noderia-fondo-oscuro.png")),
+]);
+
 type ImagenOgProps = {
   /** Etiqueta en mayúsculas sobre el titular. */
   etiqueta: string;
@@ -16,12 +26,6 @@ type ImagenOgProps = {
 
 /** Imagen para compartir (Open Graph) de cualquier página, con los colores, la tipografía y el logo oficial. */
 export async function imagenOg({ etiqueta, titulo, destacado }: ImagenOgProps) {
-  const [extraBold, semiBold, logo] = await Promise.all([
-    readFile(join(process.cwd(), "src/assets/fuentes/Outfit-ExtraBold.ttf")),
-    readFile(join(process.cwd(), "src/assets/fuentes/Outfit-SemiBold.ttf")),
-    // Logo oficial para fondo oscuro (480 × 102), sin redibujar.
-    readFile(join(process.cwd(), "public/marca/logo-noderia-fondo-oscuro.png")),
-  ]);
   const inicio = destacado && titulo.endsWith(destacado) ? titulo.slice(0, -destacado.length) : titulo;
   const resaltado = destacado && titulo.endsWith(destacado) ? destacado : null;
   const largo = titulo.length > 42;
