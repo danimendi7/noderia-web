@@ -1,3 +1,4 @@
+import { CapturaWebUria } from "@/components/casos/CapturaWebUria";
 import { LogoUria } from "@/components/marca/LogoUria";
 import { Boton } from "@/components/ui/Boton";
 import { Seccion } from "@/components/ui/Seccion";
@@ -66,6 +67,9 @@ export function CasoUria() {
           </Boton>
         </div>
       </div>
+
+      {/* La web de Uría, debajo de la cita y del resumen: no tapa ni mueve la cita ni el logo (T63). */}
+      <CapturaWebUria className="mx-auto mt-16 max-w-5xl sm:mt-20" />
     </Seccion>
   );
 }

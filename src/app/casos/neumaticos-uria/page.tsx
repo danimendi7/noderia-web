@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { CapturaWebUria } from "@/components/casos/CapturaWebUria";
 import { LogoUria } from "@/components/marca/LogoUria";
 import { Boton } from "@/components/ui/Boton";
 import { Icono } from "@/components/ui/Icono";
@@ -99,6 +100,8 @@ export default function CasoNeumaticosUria() {
               </li>
             ))}
           </ul>
+          {/* La web pública que les hicimos, tal como ha quedado (T63). */}
+          <CapturaWebUria className="mx-auto mt-14 max-w-5xl sm:mt-16" />
         </div>
       </section>
 
