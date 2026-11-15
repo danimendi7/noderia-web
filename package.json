@@ -15,6 +15,7 @@
     "test": "vitest run",
     "verify": "npm run lint && npm run typecheck && npm run test",
     "e2e": "playwright test",
+    "e2e:cloudflare": "E2E_CLOUDFLARE=1 playwright test",
     "lighthouse": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/lighthouse.mjs"
   },
   "dependencies": {
