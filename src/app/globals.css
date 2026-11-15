@@ -993,3 +993,29 @@
     opacity: 0.6;
   }
 }
+
+/* Caso Uría (T63): el marco de navegador llega un poco inclinado y se endereza al subir por la pantalla. Solo en
+   escritorio, con movimiento y donde el navegador tenga líneas de tiempo de scroll; si no, se queda recto. */
+@media (width >= 64rem) and (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .marco-navegador-escena {
+      perspective: 1800px;
+    }
+
+    .marco-navegador {
+      transform-origin: 50% 100%;
+      animation: marco-endereza linear both;
+      animation-timeline: view();
+      animation-range: entry 10% cover 45%;
+    }
+  }
+}
+
+@keyframes marco-endereza {
+  from {
+    transform: rotateX(9deg) translateY(1.5rem) scale(0.97);
+  }
+  to {
+    transform: none;
+  }
+}

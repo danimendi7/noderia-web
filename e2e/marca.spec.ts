@@ -34,7 +34,7 @@ test("cabecera y pie muestran el logo oficial cargado, sin el logo de texto prov
 test("el caso Uría muestra el logo oficial en Midnight sobre fondo claro", async ({ page }) => {
   for (const ruta of ["/", "/casos/neumaticos-uria"]) {
     await page.goto(ruta);
-    const imagen = page.getByRole("img", { name: "Neumáticos Uría" });
+    const imagen = page.getByRole("img", { name: "Neumáticos Uría", exact: true });
     await imagen.scrollIntoViewIfNeeded();
     await expect(imagen).toHaveJSProperty("complete", true);
     expect(await imagen.evaluate((i: HTMLImageElement) => i.naturalWidth)).toBeGreaterThan(0);

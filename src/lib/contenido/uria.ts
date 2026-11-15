@@ -17,3 +17,15 @@ export const RESULTADO_URIA =
   "Ya gestionan sus citas con su propio sistema, sin depender de terceros.";
 
 export const RUTA_CASO_URIA = "/casos/neumaticos-uria";
+
+/** Captura del hero de la web de Uría (orden 2026-11-14 17:30, punto 6). El alt es el de la orden, literal. */
+export const CAPTURA_WEB_URIA = {
+  alt: "Portada de la web de Neumáticos Uría en Hernani, diseñada por NoderIA",
+  /** Texto de la barra de dirección del marco (decorativo): el que propone la orden. */
+  direccion: "neumaticosuria.com",
+  ruta: "/casos/uria-hero-web",
+  anchos: [640, 1280, 1920] as const,
+  /** Tamaño de la captura original (1917×907); reserva el hueco y evita saltos (CLS). */
+  ancho: 1917,
+  alto: 907,
+};
