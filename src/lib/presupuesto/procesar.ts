@@ -19,8 +19,13 @@ export function hashIp(ip: string | null, sal: string): string {
   return createHash("sha256").update(`${sal}:${ip ?? "desconocida"}`).digest("hex");
 }
 
-/** Primera IP de la cabecera x-forwarded-for (la del visitante en Vercel). */
+/**
+ * IP del visitante. En Cloudflare la da `cf-connecting-ip` (la pone Cloudflare y el visitante no puede
+ * falsearla); si no está (en local), la primera de x-forwarded-for o x-real-ip.
+ */
 export function ipDeCabeceras(cabeceras: { get(nombre: string): string | null }): string | null {
+  const cloudflare = cabeceras.get("cf-connecting-ip")?.trim();
+  if (cloudflare) return cloudflare;
   const reenviada = cabeceras.get("x-forwarded-for");
   if (reenviada) return reenviada.split(",")[0]!.trim() || null;
   return cabeceras.get("x-real-ip");

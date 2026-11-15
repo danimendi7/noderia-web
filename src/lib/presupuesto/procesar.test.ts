@@ -63,6 +63,10 @@ describe("procesarSolicitud", () => {
 });
 
 describe("ipDeCabeceras", () => {
+  it("en Cloudflare usa cf-connecting-ip antes que x-forwarded-for", () => {
+    const h = new Headers({ "cf-connecting-ip": "192.0.2.44", "x-forwarded-for": "203.0.113.7, 10.0.0.1" });
+    expect(ipDeCabeceras(h)).toBe("192.0.2.44");
+  });
   it("toma la primera IP de x-forwarded-for", () => {
     const h = new Headers({ "x-forwarded-for": "203.0.113.7, 10.0.0.1" });
     expect(ipDeCabeceras(h)).toBe("203.0.113.7");

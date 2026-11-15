@@ -38,6 +38,19 @@ test("el caso Uría muestra el logo oficial en Midnight sobre fondo claro", asyn
     await imagen.scrollIntoViewIfNeeded();
     await expect(imagen).toHaveJSProperty("complete", true);
     expect(await imagen.evaluate((i: HTMLImageElement) => i.naturalWidth)).toBeGreaterThan(0);
-    expect(decodeURIComponent((await imagen.getAttribute("src")) ?? "")).toContain("logo-uria-midnight.png");
+    expect(decodeURIComponent((await imagen.getAttribute("src")) ?? "")).toContain("logo-uria-midnight.webp");
   }
+});
+
+test("ninguna imagen pasa por la optimización de next/image (en Cloudflare no existe)", async ({ page }) => {
+  const optimizadas: string[] = [];
+  page.on("request", (peticion) => {
+    if (new URL(peticion.url()).pathname.startsWith("/_next/image")) optimizadas.push(peticion.url());
+  });
+  for (const ruta of ["/", "/casos/neumaticos-uria", "/quienes-somos"]) {
+    await page.goto(ruta);
+    await page.waitForLoadState("networkidle");
+  }
+  expect(optimizadas).toEqual([]);
+  await expect(page.locator('img[src*="/_next/image"]')).toHaveCount(0);
 });

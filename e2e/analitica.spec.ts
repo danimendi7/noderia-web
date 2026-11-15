@@ -4,7 +4,7 @@ import { test, expect } from "@playwright/test";
 // (cabecera x-vercel-set-bypass-cookie); un visitante real no la recibe.
 const COOKIES_DE_PRUEBAS = new Set(["_vercel_jwt"]);
 
-test("la web no crea cookies (analítica sin cookies, sin banner)", async ({ page, context }) => {
+test("la web no crea cookies (sin banner de cookies)", async ({ page, context }) => {
   await page.goto("/");
   await page.waitForLoadState("networkidle");
   await page.getByRole("link", { name: "Ver el caso completo" }).first().click();

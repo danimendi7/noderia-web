@@ -60,6 +60,13 @@ function ico(pngs) {
 }
 
 const kb = async (f) => `${((await stat(f)).size / 1024).toFixed(0)} KB`;
+
+/** Escribe junto al PNG publicado su copia en WebP sin pérdida (los mismos píxeles, menos peso). */
+async function webpSinPerdida(rutaPng) {
+  const rutaWebp = rutaPng.replace(/\.png$/, ".webp");
+  const i = await sharp(rutaPng).webp({ lossless: true, exact: true, effort: 6 }).toFile(rutaWebp);
+  console.log(`${rutaWebp.split("/").pop()}: ${i.width}x${i.height} · ${await kb(rutaWebp)}`);
+}
 await mkdir(publico, { recursive: true });
 
 // Logo horizontal para fondo oscuro (cabecera y pie sobre Midnight). Se muestra a ~160 px: 3× = 480 px.
@@ -67,12 +74,15 @@ const oscuro = await recortar(join(marca, "logos/Logo NoderIA fondo oscuro.png")
 const rutaOscuro = join(publico, "logo-noderia-fondo-oscuro.png");
 const iOscuro = await oscuro.clone().resize({ width: 480 }).png({ compressionLevel: 9 }).toFile(rutaOscuro);
 console.log(`logo-noderia-fondo-oscuro.png: ${iOscuro.width}x${iOscuro.height} · ${await kb(rutaOscuro)}`);
+// Versión WebP sin pérdida (mismos píxeles) para la web: en Cloudflare no hay optimización de next/image (T68).
+await webpSinPerdida(rutaOscuro);
 
 // Logo de Uría en Midnight (sobre blanco o Mist). Se muestra a ~180 px: 3× = 540 px.
 const uria = await recortar(join(marca, "clientes/logo-uria-midnight.png"));
 const rutaUria = join(publico, "logo-uria-midnight.png");
 const iUria = await uria.clone().resize({ width: 540 }).png({ compressionLevel: 9 }).toFile(rutaUria);
 console.log(`logo-uria-midnight.png: ${iUria.width}x${iUria.height} · ${await kb(rutaUria)}`);
+await webpSinPerdida(rutaUria);
 
 // Isotipo (favicon, iconos e imagen para compartir).
 const isotipo = sharp(join(marca, "pantalla-carga/isotipo-N-recortado.png"));

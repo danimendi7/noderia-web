@@ -1,8 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
 
-/** PNG oficial "Logo NoderIA fondo oscuro", recortado y reducido con scripts/optimizar-marca.mjs (480 × 102). */
-const LOGO = { src: "/marca/logo-noderia-fondo-oscuro.png", ancho: 480, alto: 102 };
+/** Logo oficial "NoderIA fondo oscuro", recortado y reducido con scripts/optimizar-marca.mjs (480 × 102), en WebP sin pérdida. */
+const LOGO = { src: "/marca/logo-noderia-fondo-oscuro.webp", ancho: 480, alto: 102 };
 /** Ancho en pantalla: por encima del mínimo del manual para el logo horizontal (140 px). */
 const ANCHO = 160;
 

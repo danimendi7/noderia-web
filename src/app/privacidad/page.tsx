@@ -66,7 +66,7 @@ export default function Privacidad() {
         proveedores técnicos que hacen funcionar la web:
       </p>
       <ul>
-        <li>Vercel (alojamiento de la web).</li>
+        <li>Cloudflare (alojamiento de la web).</li>
         <li>Supabase (base de datos donde se guarda tu solicitud).</li>
         <li>El proveedor de correo que nos avisa de cada solicitud nueva, si está activado (Resend).</li>
       </ul>
