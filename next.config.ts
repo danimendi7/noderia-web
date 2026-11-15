@@ -19,3 +19,8 @@ const nextConfig: NextConfig = {
 };
 
 export default nextConfig;
+
+// Enlaza `next dev` con el entorno de Cloudflare (bindings de wrangler.jsonc) para desarrollar en local.
+// https://opennext.js.org/cloudflare/get-started
+import { initOpenNextCloudflareForDev } from "@opennextjs/cloudflare";
+initOpenNextCloudflareForDev();
