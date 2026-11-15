@@ -22,6 +22,8 @@
       "service": "noderia-web",
     },
   ],
+  // Las variables puestas en el panel de Cloudflare no se borran al desplegar (no hay "vars" aquí).
+  "keep_vars": true,
   "observability": {
     "enabled": true,
   },

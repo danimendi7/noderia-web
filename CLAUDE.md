@@ -7,15 +7,17 @@
 - Supabase: Postgres + Auth. Clientes en src/lib/supabase (client.ts y server.ts)
 - Vitest + Testing Library para unidad (archivos *.test.ts(x) junto al código)
 - Playwright para e2e (carpeta e2e/), en escritorio y móvil
-- Despliegue: Vercel vía GitHub (un preview por rama, producción = main)
+- Despliegue: Cloudflare Workers con OpenNext vía GitHub (Workers Builds, producción = main). Guía: docs/DESPLIEGUE-CLOUDFLARE.md
 
 ## Comandos
 - Instalar: `npm ci`
 - Verificar todo (lint + tipos + tests): `npm run verify`
 - App en local: `npm run dev`
 - e2e en local: `npx playwright test` (arranca la app sola)
-- e2e contra un preview o producción: `BASE_URL=<url> npx playwright test`
-  (la cabecera de bypass de Vercel se añade sola si existe VERCEL_AUTOMATION_BYPASS_SECRET)
+- e2e contra el Worker de Cloudflare en local: `npm run e2e:cloudflare`
+- e2e contra un preview: `BASE_URL=<url> npx playwright test`
+- Contra producción, solo la prueba de humo: `BASE_URL="$PRODUCTION_URL" npx playwright test e2e/humo.spec.ts --project=escritorio`
+  (nunca el e2e completo ni Lighthouse con varias pasadas contra producción)
 - Nueva migración: `npx supabase migration new <nombre>`
 - Aplicar migraciones a staging: `npx supabase db push --yes --remote="$STAGING_DB_URL"`
 
