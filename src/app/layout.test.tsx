@@ -1,6 +1,6 @@
-import { Analytics } from "@vercel/analytics/next";
 import { isValidElement, type ReactNode } from "react";
 import { describe, expect, it, vi } from "vitest";
+import { JsonLd } from "@/components/ui/JsonLd";
 import RootLayout from "./layout";
 
 vi.mock("next/font/google", () => ({
@@ -16,8 +16,8 @@ function contiene(nodo: ReactNode, tipo: unknown): boolean {
 }
 
 describe("RootLayout", () => {
-  it("incluye Vercel Web Analytics", () => {
+  it("incluye los datos estructurados de la empresa en todas las páginas", () => {
     const arbol = RootLayout({ children: null, params: Promise.resolve({}) });
-    expect(contiene(arbol, Analytics)).toBe(true);
+    expect(contiene(arbol, JsonLd)).toBe(true);
   });
 });

@@ -20,10 +20,6 @@ export default function Cookies() {
       <h2>Qué usamos</h2>
       <ul>
         <li>
-          <strong>Estadísticas de visitas sin cookies</strong> (Vercel Web Analytics): cuenta las visitas de
-          forma agregada y anónima, sin guardar nada en tu navegador y sin seguirte entre webs.
-        </li>
-        <li>
           <strong>Almacenamiento de sesión</strong> del navegador para recordar que ya has visto la animación
           de entrada y no repetírtela mientras navegas. Se borra al cerrar la pestaña y no sale de tu
           navegador.

@@ -1,7 +1,7 @@
 import Image from "next/image";
 
-/** PNG oficial de Uría en Midnight, recortado y reducido con scripts/optimizar-marca.mjs (540 × 261). */
-const LOGO = { src: "/marca/logo-uria-midnight.png", ancho: 540, alto: 261 };
+/** Logo oficial de Uría en Midnight, recortado y reducido con scripts/optimizar-marca.mjs (540 × 261), en WebP sin pérdida. */
+const LOGO = { src: "/marca/logo-uria-midnight.webp", ancho: 540, alto: 261 };
 const ANCHO = 168;
 
 /**

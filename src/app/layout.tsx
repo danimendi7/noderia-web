@@ -1,4 +1,3 @@
-import { Analytics } from "@vercel/analytics/next";
 import type { Metadata, Viewport } from "next";
 import { Inter, Outfit } from "next/font/google";
 import { Cabecera } from "@/components/layout/Cabecera";
@@ -61,8 +60,6 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <Pie />
         {/* Organization + LocalBusiness en todas las páginas (SPEC v3 §1). */}
         <JsonLd datos={datosEstructuradosEmpresa(urlDelSitio())} />
-        {/* Vercel Web Analytics: sin cookies, no necesita banner. */}
-        <Analytics />
       </body>
     </html>
   );
