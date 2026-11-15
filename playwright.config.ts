@@ -27,6 +27,13 @@ export default defineConfig({
     ? undefined
     : cloudflare
       ? // Build de OpenNext y preview en workerd, el mismo runtime que Cloudflare Workers.
-        { command: "npm run preview -- --port 8787", url: baseURL, reuseExistingServer: true, timeout: 300_000 }
+        // La URL pública se fija en el build: la del propio Worker local, para que canonical y sitemap coincidan.
+        {
+          command: "npm run preview -- --port 8787",
+          url: baseURL,
+          reuseExistingServer: true,
+          timeout: 300_000,
+          env: { NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL ?? baseURL },
+        }
       : { command: "npm run dev", url: baseURL, reuseExistingServer: true, timeout: 120_000 },
 });
