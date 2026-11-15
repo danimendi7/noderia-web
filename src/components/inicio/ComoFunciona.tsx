@@ -6,6 +6,9 @@ import type { NombreIlustracion } from "@/lib/ilustraciones";
 import { ANCLAS } from "@/lib/navegacion";
 import { AnimacionPasos } from "./AnimacionPasos";
 
+/** Degradado claro de las escenas. El escenario lleva el mismo debajo para que nunca asome otro color al cambiar de paso. */
+const FONDO_ESCENA = "bg-[radial-gradient(64%_64%_at_50%_54%,#ffffff_0%,#f1f8ff_40%,#bde6fb_68%,#4aaeea_88%,#0068e0_100%)]";
+
 const PASOS: { titulo: string; texto: string; ilustracion: NombreIlustracion & NombreVideo }[] = [
   {
     titulo: "El cliente pide cita desde tu web, a cualquier hora",
@@ -60,11 +63,13 @@ export function ComoFunciona() {
         <div className="mt-12 grid gap-12 md:mt-16 lg:grid-cols-12 lg:gap-16">
           {/* Escenario fijo (solo escritorio y con movimiento): un vídeo en bucle de Higgsfield por paso (T36); solo se
               reproduce el del paso activo y se pausan todos con un clic sobre la escena o con su botón (visible solo con el foco). Cada capa lleva el fondo detrás del vídeo
-              porque su transform crea un grupo aislado y el blanco del vídeo se funde (multiply) con ese fondo. */}
+              porque su transform crea un grupo aislado y el blanco del vídeo se funde (multiply) con ese fondo. El escenario lleva
+              el mismo degradado (no Midnight) y la escena nueva entra encima de la anterior, que no se va hasta quedar tapada:
+              así no asoma ningún borde oscuro en el cambio (orden 2026-11-15 11:13). */}
           <div className="escena-fija hidden lg:col-span-6 lg:block">
-            <GrupoVideos etiqueta="Pausar vídeo de cómo funciona" className="sticky top-[max(6rem,calc(50vh+2rem-14.4rem))] aspect-[5/4] max-h-[min(34rem,calc(100vh-9rem))] w-full overflow-hidden rounded-3xl bg-midnight shadow-[0_40px_100px_-36px_rgb(0_104_224/0.7)] ring-1 ring-electric/20">
+            <GrupoVideos etiqueta="Pausar vídeo de cómo funciona" className={`sticky top-[max(6rem,calc(50vh+2rem-14.4rem))] aspect-[5/4] max-h-[min(34rem,calc(100vh-9rem))] w-full overflow-hidden rounded-3xl ${FONDO_ESCENA} shadow-[0_40px_100px_-36px_rgb(0_104_224/0.7)] ring-1 ring-electric/20`}>
               {PASOS.map((paso, indice) => (
-                <div key={paso.ilustracion} aria-hidden="true" data-escena-paso={indice + 1} className="escena-paso absolute inset-0 bg-[radial-gradient(64%_64%_at_50%_54%,#ffffff_0%,#f1f8ff_40%,#bde6fb_68%,#4aaeea_88%,#0068e0_100%)]">
+                <div key={paso.ilustracion} aria-hidden="true" data-escena-paso={indice + 1} className={`escena-paso absolute inset-0 ${FONDO_ESCENA}`}>
                   <VideoBucle nombre={paso.ilustracion} paso={indice + 1} className="size-full object-cover" />
                   {indice === PASOS.length - 1 ? (
                     <Ilustracion nombre="llave-entrega" className="escena-llave absolute bottom-[12%] right-[10%] w-[22%]" />

@@ -163,12 +163,15 @@
 }
 
 /* "Cómo funciona" (SPEC v2, S3): escena fija que cambia con el paso activo (data-paso-activo lo pone GSAP). */
+/* La escena nueva entra encima (z-index) con un fundido y de scale(1.04) a 1: nunca más pequeña que el marco. La que sale
+   espera a quedar tapada (0,5 s) antes de desvanecerse y vuelve a 1.04 ya invisible, así a mitad del cambio no se
+   transparenta el fondo (orden 2026-11-15 11:13: borde oscuro en los cambios de paso). */
 .escena-paso {
   opacity: 0;
-  transform: translateY(14px) scale(0.96);
+  transform: scale(1.04);
   transition:
-    opacity 0.5s ease,
-    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    opacity 0.3s ease 0.5s,
+    transform 0s linear 0.8s;
 }
 
 [data-paso-activo="1"] [data-escena-paso="1"],
@@ -177,8 +180,12 @@
 [data-paso-activo="4"] [data-escena-paso="4"],
 [data-paso-activo="5"] [data-escena-paso="5"],
 .pasos-raiz:not([data-paso-activo]) [data-escena-paso="1"] {
+  z-index: 1;
   opacity: 1;
   transform: none;
+  transition:
+    opacity 0.5s ease,
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .escena-llave {
@@ -224,6 +231,11 @@
 @media (prefers-reduced-motion: reduce) {
   .escena-fija {
     display: none !important;
+  }
+
+  .escena-paso,
+  .escena-llave {
+    transition: none !important;
   }
 
   .escena-fija + * {
