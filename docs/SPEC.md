@@ -219,3 +219,8 @@ Cambios de producto respecto a lo anterior:
 - Cómo trabajamos: la cinta es una sola, con el mismo grosor y estilo, que recorre los 4 pasos y sigue hacia la siguiente sección.
 - Botones de pausa: no se ven salvo con el foco del teclado; clic o toque sobre la animación la pausa y la reanuda (WCAG 2.2.2). Con movimiento reducido no se reproduce nada.
 - Caso Uría (home y página del caso): captura del hero de su web en un marco de navegador, con el alt "Portada de la web de Neumáticos Uría en Hernani, diseñada por NoderIA".
+
+## 14. Fase V6: dos arreglos finales (orden del 2026-11-15 11:13)
+
+- «Cómo funciona» (home): en ningún cambio de escena entre pasos (1 a 5 y vuelta atrás) se ve un borde oscuro alrededor de la imagen. El marco tiene el mismo fondo claro que las escenas y las escenas nunca quedan más pequeñas que el marco al cambiar. Con movimiento reducido el cambio es instantáneo. Lo mismo para cualquier otra escena con capas que se funden.
+- Caso Uría: se hace el punto 6 de la V5 (§13) con la captura ya recibida: marco de navegador minimalista, inclinación leve solo en escritorio, AVIF/WebP con srcset 640/1280/1920, carga diferida y el alt de la orden, sin tapar la cita de Mónica ni el logo de Uría.
