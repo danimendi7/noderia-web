@@ -1,6 +1,6 @@
 # Skills de Skynet en este proyecto
 
-Actualizado: 2026-11-15 (orden de las 11:13, dos arreglos finales). Sin cambios en las skills disponibles; se usan `superpowers:systematic-debugging` (borde negro de «Cómo funciona»), `frontend-design` y `vercel-react-best-practices` (marco de navegador e imagen responsive). Antes: 2026-11-14 (orden de la fase V5, 17:30). Sin cambios en las skills disponibles; para la V5 se usan sobre todo `frontend-design`, `motion`, `vercel-react-best-practices` y Context7 (GSAP ScrollTrigger). Antes: orden de la fase V4 (09:52). Sin cambios en las skills disponibles; para la V4 se usan además `magic` (21st.dev) y Higgsfield en Quiénes somos y el hero. Antes: orden de la fase V3 (2026-11-13 19:18). Antes: orden del rediseño V2. Ya aparecen en la sesión `web-design-guidelines`, `vercel-react-best-practices`, `ui-ux-pro-max`, `design-taste-frontend`, `motion` y los MCP `magic` (21st.dev) e Higgsfield.
+Actualizado: 2026-11-15 (orden de las 17:36, migración a Cloudflare). Sin cambios en las skills disponibles; para la V7 se usan Context7 (documentación de OpenNext para Cloudflare y de Wrangler), `superpowers:verification-before-completion` y `engineering:deploy-checklist` (guía de despliegue). Antes: 2026-11-15 (orden de las 11:13, dos arreglos finales). Sin cambios en las skills disponibles; se usan `superpowers:systematic-debugging` (borde negro de «Cómo funciona»), `frontend-design` y `vercel-react-best-practices` (marco de navegador e imagen responsive). Antes: 2026-11-14 (orden de la fase V5, 17:30). Sin cambios en las skills disponibles; para la V5 se usan sobre todo `frontend-design`, `motion`, `vercel-react-best-practices` y Context7 (GSAP ScrollTrigger). Antes: orden de la fase V4 (09:52). Sin cambios en las skills disponibles; para la V4 se usan además `magic` (21st.dev) y Higgsfield en Quiénes somos y el hero. Antes: orden de la fase V3 (2026-11-13 19:18). Antes: orden del rediseño V2. Ya aparecen en la sesión `web-design-guidelines`, `vercel-react-best-practices`, `ui-ux-pro-max`, `design-taste-frontend`, `motion` y los MCP `magic` (21st.dev) e Higgsfield.
 
 ## Las que uso y para qué
 
@@ -20,7 +20,8 @@ Actualizado: 2026-11-15 (orden de las 11:13, dos arreglos finales). Sin cambios 
 | marketing:content-creation | Pulir la redacción de las páginas nuevas de la V3 sin añadir datos, cifras ni promesas |
 | design:design-critique, design:accessibility-review, web-design-guidelines, marketing:seo-audit | Revisión final de la V3 (T48), hecha por dos subagentes en paralelo y con las correcciones aplicadas |
 | `@axe-core/playwright` (dependencia, no skill) | Escaneo WCAG 2.1 AA en el e2e |
-| Context7 (MCP) | Documentación al día de GSAP, Motion y Next.js 16 |
+| Context7 (MCP) | Documentación al día de GSAP, Motion, Next.js 16 y OpenNext para Cloudflare |
+| engineering:deploy-checklist | Pasos y comprobaciones de `docs/DESPLIEGUE-CLOUDFLARE.md` (V7) |
 
 ## Las que echo en falta
 
@@ -30,3 +31,4 @@ Actualizado: 2026-11-15 (orden de las 11:13, dos arreglos finales). Sin cambios 
 | Conector de datos de búsqueda (p. ej. Ahrefs, ya en la lista de MCP de la cuenta, sin autorizar) | Ahrefs (`plugin:marketing:ahrefs`) | Volúmenes y dificultad reales para elegir titles y términos por página, en lugar de búsquedas «razonables» | Medio: necesita una cuenta de pago y autorizarlo |
 | `supabase/agent-skills` | Supabase (`npx skills add supabase/agent-skills`) | Guía específica de RLS y migraciones | Bajo |
 | Una skill de vídeo para web (p. ej. compresión con ffmpeg y comprobación de peso/códec) | No conozco una fuente fiable; hoy se hace con un script propio | Repetir siempre igual la conversión a mp4 H.264 + webm < 2,5 MB | Bajo |
+| Skills oficiales de Cloudflare (Workers, Wrangler) | Cloudflare publica skills para agentes en GitHub (comprobar el repositorio oficial de la organización `cloudflare` antes de añadirlas) | Guía al día de `wrangler.jsonc`, límites del plan gratuito y despliegue de Workers | Bajo |
