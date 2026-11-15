@@ -224,3 +224,11 @@ Cambios de producto respecto a lo anterior:
 
 - «Cómo funciona» (home): en ningún cambio de escena entre pasos (1 a 5 y vuelta atrás) se ve un borde oscuro alrededor de la imagen. El marco tiene el mismo fondo claro que las escenas y las escenas nunca quedan más pequeñas que el marco al cambiar. Con movimiento reducido el cambio es instantáneo. Lo mismo para cualquier otra escena con capas que se funden.
 - Caso Uría: se hace el punto 6 de la V5 (§13) con la captura ya recibida: marco de navegador minimalista, inclinación leve solo en escritorio, AVIF/WebP con srcset 640/1280/1920, carga diferida y el alt de la orden, sin tapar la cita de Mónica ni el logo de Uría.
+
+## 15. Fase V7: hosting en Cloudflare Workers (orden del 2026-11-15 17:36)
+
+- La web pasa de Vercel a Cloudflare Workers (plan gratuito) con el adaptador OpenNext (`@opennextjs/cloudflare`), en una cuenta nueva de Cloudflare. Dani conecta el repo en el panel siguiendo `docs/DESPLIEGUE-CLOUDFLARE.md`; Skynet no toca secretos, `.github/` ni Vercel.
+- Límites del plan gratuito: Worker ≤ 3 MiB comprimido y 10 ms de CPU por petición. Las páginas de marketing se generan estáticas en el build y se sirven como assets; solo el envío del formulario (Supabase y Resend) se ejecuta en el Worker. Las imágenes no usan la optimización de `next/image` de Vercel ni Cloudflare Images (ya están en AVIF/WebP).
+- Vercel Web Analytics deja de usarse (no funciona fuera de Vercel).
+- Nada cambia para el visitante: mismas páginas, cinta, animaciones, vídeos, formulario, redirección 301 de `/presupuesto`, sitemap, robots y metadata.
+- Pruebas: nunca el e2e completo ni Lighthouse contra producción; contra producción solo una prueba de humo de 5–6 tests al cerrar y una pasada de Lighthouse por ruta.
