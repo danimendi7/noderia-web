@@ -24,9 +24,11 @@ test("un email o teléfono no válidos se marcan", async ({ page }) => {
 test("un envío válido se guarda y muestra el mensaje de gracias", async ({ page, isMobile }) => {
   // Una sola vez por ejecución: el límite es de 5 envíos por hora y por IP.
   test.skip(isMobile, "solo en escritorio para no agotar el límite de envíos");
-  if (!process.env.BASE_URL) {
-    // En local no hay proxy: una IP ficticia por ejecución evita el límite.
-    await page.setExtraHTTPHeaders({ "x-forwarded-for": `198.51.100.${Math.floor(Math.random() * 250) + 1}` });
+  if (new URL(test.info().project.use.baseURL ?? "http://localhost").hostname === "localhost") {
+    // En local (next dev o el Worker de wrangler) no hay proxy delante: una IP ficticia por ejecución evita
+    // el límite. En Cloudflare la cabecera cf-connecting-ip la pone siempre Cloudflare.
+    const ip = `198.51.100.${Math.floor(Math.random() * 250) + 1}`;
+    await page.setExtraHTTPHeaders({ "x-forwarded-for": ip, "cf-connecting-ip": ip });
   }
   await page.goto("/#presupuesto");
   await page.getByLabel("Tu nombre").fill("Prueba automática");

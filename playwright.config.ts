@@ -1,7 +1,10 @@
 import { defineConfig, devices } from "@playwright/test";
 
-// Sin BASE_URL: arranca la app en local. Con BASE_URL: prueba un preview o producción de Vercel.
-const baseURL = process.env.BASE_URL ?? "http://localhost:3000";
+// Sin BASE_URL: arranca la app en local (`next dev`, o el Worker de Cloudflare con E2E_CLOUDFLARE=1,
+// que es lo que hace `npm run e2e:cloudflare`). Con BASE_URL: prueba un preview desplegado.
+// Producción solo con la prueba de humo (e2e/humo.spec.ts): nunca el e2e completo (DECISIONS.md).
+const cloudflare = process.env.E2E_CLOUDFLARE === "1";
+const baseURL = process.env.BASE_URL ?? (cloudflare ? "http://localhost:8787" : "http://localhost:3000");
 const bypass = process.env.VERCEL_AUTOMATION_BYPASS_SECRET;
 
 export default defineConfig({
@@ -22,5 +25,8 @@ export default defineConfig({
   ],
   webServer: process.env.BASE_URL
     ? undefined
-    : { command: "npm run dev", url: baseURL, reuseExistingServer: true, timeout: 120_000 },
+    : cloudflare
+      ? // Build de OpenNext y preview en workerd, el mismo runtime que Cloudflare Workers.
+        { command: "npm run preview -- --port 8787", url: baseURL, reuseExistingServer: true, timeout: 300_000 }
+      : { command: "npm run dev", url: baseURL, reuseExistingServer: true, timeout: 120_000 },
 });
