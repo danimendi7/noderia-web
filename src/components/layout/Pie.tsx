@@ -1,9 +1,11 @@
 import Link from "next/link";
+import { ContactoPie } from "@/components/contacto/DatosContacto";
 import { Logo } from "@/components/marca/Logo";
 import { ENLACE_CONTACTO, ENLACES_HOME, ENLACES_LEGALES, ENLACES_MENU, SOLUCIONES } from "@/lib/navegacion";
 
 /**
- * Pie común: logo, frase, enlaces a secciones y legales, y ubicación. Sin email hasta tener dominio propio.
+ * Pie común: logo, frase, ubicación y contacto (email, teléfono y WhatsApp: orden 2026-11-16 11:01, punto 2), y enlaces a
+ * secciones y legales.
  * Lleva una textura de nodos muy sutil (SPEC v2, S10); en la home, el hilo conductor acaba en un punto Aqua junto al logo.
  */
 export function Pie() {
@@ -17,6 +19,7 @@ export function Pie() {
             Tu web y tu sistema de gestión, a medida de tu taller y conectados entre sí.
           </p>
           <p className="text-sm">Donostia / San Sebastián</p>
+          <ContactoPie />
         </div>
 
         <nav aria-label="Soluciones">

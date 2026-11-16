@@ -1,3 +1,5 @@
+import { EMAIL, TELEFONO_INTERNACIONAL } from "@/lib/contenido/contacto";
+
 /**
  * URL pública de la web. Con dominio propio, definir NEXT_PUBLIC_SITE_URL (p. ej. https://noderia.es).
  * Si no, se usa la URL de producción que Vercel expone en el build; en local, localhost.
@@ -28,7 +30,7 @@ export const RUTAS_PUBLICAS = [
   "/cookies",
 ] as const;
 
-/** Datos estructurados Organization + LocalBusiness de NoderIA (sin teléfono ni email hasta tener dominio propio). */
+/** Datos estructurados Organization + LocalBusiness de NoderIA, con el teléfono y el email de contacto. */
 export function datosEstructuradosEmpresa(base: URL) {
   const url = base.toString();
   const direccion = {
@@ -56,6 +58,8 @@ export function datosEstructuradosEmpresa(base: URL) {
         logo: new URL("/marca/isotipo.png", base).toString(),
         description: DESCRIPCION,
         address: direccion,
+        telephone: TELEFONO_INTERNACIONAL,
+        email: EMAIL,
       },
       {
         "@type": "LocalBusiness",
@@ -66,6 +70,8 @@ export function datosEstructuradosEmpresa(base: URL) {
         description:
           "Software para talleres mecánicos y de neumáticos: web y sistema de gestión a medida, implantación y acompañamiento.",
         address: direccion,
+        telephone: TELEFONO_INTERNACIONAL,
+        email: EMAIL,
         areaServed: { "@type": "Country", name: "España" },
         parentOrganization: { "@id": `${url}#organizacion` },
       },
