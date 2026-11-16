@@ -232,3 +232,11 @@ Cambios de producto respecto a lo anterior:
 - Vercel Web Analytics deja de usarse (no funciona fuera de Vercel).
 - Nada cambia para el visitante: mismas páginas, cinta, animaciones, vídeos, formulario, redirección 301 de `/presupuesto`, sitemap, robots y metadata.
 - Pruebas: nunca el e2e completo ni Lighthouse contra producción; contra producción solo una prueba de humo de 5–6 tests al cerrar y una pasada de Lighthouse por ruta.
+
+## 16. Fase V8: despliegue con wrangler (orden del 2026-11-16 09:31)
+
+- Mientras la integración de Workers Builds con GitHub falle en el panel de Cloudflare, Skynet despliega a mano con wrangler (cuenta `admin.noderia@gmail.com`): tras cada fusión a `main`, build de OpenNext + `npm run deploy` + prueba de humo contra la URL publicada.
+- URL de producción: `https://noderia-web.admin-noderia.workers.dev` (subdominio de workers.dev que ya tenía la cuenta). `NEXT_PUBLIC_SITE_URL` = esa URL.
+- `NEXT_PUBLIC_SUPABASE_URL` y `NEXT_PUBLIC_SUPABASE_ANON_KEY` salen de `.env.local` y van también como variables de ejecución del Worker. `IP_HASH_SALT` y `RESEND_API_KEY` los pone Dani con `npx wrangler secret put`; Skynet no los inventa.
+- El Worker no debe llevar ninguna otra variable de `.env.local` (el build se hace desde una copia limpia sin archivos `.env*`).
+- Para el visitante no cambia nada.
