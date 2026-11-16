@@ -1,11 +1,13 @@
 #!/usr/bin/env bash
 # Despliega la web en Cloudflare Workers con wrangler, sin Workers Builds (orden del 2026-11-16).
 #
-# Uso:  scripts/desplegar-cloudflare.sh [ref]        (por defecto origin/main)
-#       SIN_HUMO=1 scripts/desplegar-cloudflare.sh   (sin la prueba de humo final)
+# Uso:  npm run deploy                         (despliega origin/main; es este script)
+#       npm run deploy -- <ref>                (otra rama o commit)
+#       SIN_HUMO=1 npm run deploy              (sin la prueba de humo final)
 #
 # Requisitos: `npx wrangler login` hecho con la cuenta de Cloudflare de NoderIA y `.env.local` con
-# NEXT_PUBLIC_SUPABASE_URL y NEXT_PUBLIC_SUPABASE_ANON_KEY.
+# NEXT_PUBLIC_SUPABASE_URL y NEXT_PUBLIC_SUPABASE_ANON_KEY. Para usar otro proyecto de Supabase sin
+# tocar `.env.local`, exporta DESPLIEGUE_SUPABASE_URL y DESPLIEGUE_SUPABASE_ANON_KEY antes de lanzarlo.
 #
 # Por qué una copia limpia: `opennextjs-cloudflare build` copia TODOS los archivos `.env*` del proyecto
 # dentro del Worker (`.open-next/cloudflare/next-env.mjs`), y `.env.local` tiene secretos que no deben
@@ -23,10 +25,10 @@ leer_env_local() {
   grep -E "^$1=" .env.local | tail -n 1 | cut -d= -f2- | sed -E 's/^"(.*)"$/\1/; s/^'"'"'(.*)'"'"'$/\1/'
 }
 
-SUPABASE_URL="$(leer_env_local NEXT_PUBLIC_SUPABASE_URL)"
-SUPABASE_ANON_KEY="$(leer_env_local NEXT_PUBLIC_SUPABASE_ANON_KEY)"
+SUPABASE_URL="${DESPLIEGUE_SUPABASE_URL:-$(leer_env_local NEXT_PUBLIC_SUPABASE_URL)}"
+SUPABASE_ANON_KEY="${DESPLIEGUE_SUPABASE_ANON_KEY:-$(leer_env_local NEXT_PUBLIC_SUPABASE_ANON_KEY)}"
 if [[ -z "$SUPABASE_URL" || -z "$SUPABASE_ANON_KEY" ]]; then
-  echo "Falta NEXT_PUBLIC_SUPABASE_URL o NEXT_PUBLIC_SUPABASE_ANON_KEY en .env.local" >&2
+  echo "Falta NEXT_PUBLIC_SUPABASE_URL o NEXT_PUBLIC_SUPABASE_ANON_KEY (en .env.local o DESPLIEGUE_SUPABASE_*)" >&2
   exit 1
 fi
 
@@ -60,7 +62,7 @@ if grep -qvE '^export const (production|development|test) = \{\};$' "$ENV_WORKER
   exit 1
 fi
 
-# Igual que `npm run deploy` (build + deploy), pero partido en dos para hacer la comprobación de arriba.
+# Igual que el `deploy` estándar de OpenNext (build + deploy), partido en dos para la comprobación de arriba.
 # Las dos de Supabase también como variables de ejecución del Worker (son públicas). Los secretos
 # (IP_HASH_SALT, RESEND_API_KEY) se ponen con `npx wrangler secret put` y `keep_vars` no los toca.
 limpio npx opennextjs-cloudflare deploy -- \
