@@ -208,6 +208,17 @@ export function HiloConductor() {
     });
     listas.forEach((ol) => ol.setAttribute("data-animado", ""));
 
+    // Tarjetas que la cinta enciende al pasar (orden 2026-11-16 11:01, punto 1: «Lo que gana tu taller»). Cada una se
+    // enciende cuando la punta llega a un tercio de su alto.
+    const grupos = [...document.querySelectorAll<HTMLElement>("[data-cinta-enciende]")].filter(visible);
+    const tarjetas = grupos.flatMap((g) =>
+      [...g.querySelectorAll<HTMLElement>(":scope > li")].map((li) => {
+        const r = li.getBoundingClientRect();
+        return { li, y: r.top + window.scrollY + r.height / 3 };
+      }),
+    );
+    grupos.forEach((g) => g.setAttribute("data-animado", ""));
+
     trazos.forEach((t) => (t.style.strokeDasharray = `${total} ${total}`));
     const estado = { l: 0 };
     const pintar = () => {
@@ -216,6 +227,7 @@ export function HiloConductor() {
       punta.current?.setAttribute("transform", `translate(${p.x} ${p.y})`);
       paradas.forEach((c, i) => c.toggleAttribute("data-encendida", estado.l >= longitudesParadas[i] - 2));
       nodos.forEach((n) => n.li.toggleAttribute("data-encendido", estado.l >= n.longitud));
+      tarjetas.forEach((t) => t.li.toggleAttribute("data-encendido", p.y >= t.y));
     };
     const ir = gsap.quickTo(estado, "l", { duration: 0.5, ease: "power3.out", onUpdate: pintar });
     const disparador = ScrollTrigger.create({
@@ -232,6 +244,8 @@ export function HiloConductor() {
       // Sin la cinta que los enciende, los nodos vuelven a verse encendidos (como sin JavaScript).
       listas.forEach((ol) => ol.removeAttribute("data-animado"));
       nodos.forEach((n) => n.li.setAttribute("data-encendido", ""));
+      grupos.forEach((g) => g.removeAttribute("data-animado"));
+      tarjetas.forEach((t) => t.li.setAttribute("data-encendido", ""));
     };
   }, [geo]);
 

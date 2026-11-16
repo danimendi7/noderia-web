@@ -2,7 +2,7 @@ import { expect, test } from "@playwright/test";
 import { CLAVE_CARGA_VISTA } from "../src/lib/pantallaCarga";
 
 // SPEC v2, G2 y G3: ritmo oscuro/claro de la home y escala de los H2.
-const RITMO = ["midnight", "midnight", "blanco", "mist", "midnight", "blanco", "blanco", "mist", "midnight"];
+const RITMO = ["midnight", "midnight", "mist", "blanco", "mist", "midnight", "blanco", "blanco", "mist", "midnight"];
 
 test.beforeEach(async ({ page }) => {
   await page.addInitScript((clave) => sessionStorage.setItem(clave, "1"), CLAVE_CARGA_VISTA);

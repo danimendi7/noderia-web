@@ -1019,3 +1019,177 @@
     transform: none;
   }
 }
+
+/* «Lo que gana tu taller» (orden 2026-11-16 11:01, punto 1). Lo que se pinta sin animar es el estado final de cada
+   animación: así se ve sin JavaScript y con movimiento reducido. Las animaciones solo corren con `data-anima` (lo pone
+   AnimacionBeneficio si no hay movimiento reducido), se paran en pausa, fuera de pantalla o con la tarjeta aún apagada.
+   La cinta de la home (HiloConductor) marca la lista con `data-animado` y enciende cada tarjeta al llegar. */
+.tarjeta-beneficio {
+  transition: border-color 0.6s ease, box-shadow 0.6s ease;
+}
+.beneficio-lienzo {
+  transition: opacity 0.6s ease, filter 0.6s ease;
+}
+.beneficios[data-animado] > li:not([data-encendido]) .beneficio-lienzo {
+  opacity: 0.45;
+  filter: grayscale(1);
+}
+.beneficios[data-animado] > li[data-encendido] .tarjeta-beneficio {
+  border-color: rgb(0 176 240 / 0.4);
+  box-shadow: 0 0 0 1px rgb(0 229 240 / 0.15), 0 20px 44px -22px rgb(0 104 224 / 0.45);
+}
+
+.beneficio-lienzo svg * {
+  transform-box: view-box;
+}
+.beneficio-lienzo .ba-llegada,
+.beneficio-lienzo .ba-punto,
+.beneficio-lienzo .ba-destello,
+.beneficio-lienzo .ba-estrella {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+.beneficio-lienzo .ba-campana {
+  transform-box: fill-box;
+  transform-origin: 50% 0;
+}
+.beneficio-lienzo .ba-barra {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+}
+.ba-manecilla {
+  transform-origin: 150px 150px;
+}
+.ba-orbita {
+  transform-origin: 160px 100px;
+  transform: rotate(270deg);
+}
+.ba-papeleo,
+.ba-borrador {
+  opacity: 0;
+}
+.ba-brillo {
+  transform: translateX(440px) skewX(-18deg);
+}
+
+.beneficio-lienzo[data-anima] .ba {
+  animation-duration: 7s;
+  animation-iteration-count: infinite;
+  animation-timing-function: cubic-bezier(0.45, 0, 0.2, 1);
+  animation-delay: var(--retardo, 0s);
+  animation-fill-mode: both;
+}
+.beneficio-lienzo[data-pausado] .ba,
+.beneficio-anim[data-fuera] .ba,
+.beneficios[data-animado] > li:not([data-encendido]) .ba {
+  animation-play-state: paused;
+}
+
+.beneficio-lienzo[data-anima] .ba-manecilla { animation-name: ba-girar; animation-timing-function: linear; }
+.beneficio-lienzo[data-anima] .ba-papeleo { animation-name: ba-papeleo; }
+.beneficio-lienzo[data-anima] .ba-arco { animation-name: ba-arco; }
+.beneficio-lienzo[data-anima] .ba-hora { animation-name: ba-llegar; }
+.beneficio-lienzo[data-anima] .ba-orbita { animation-name: ba-orbita; }
+.beneficio-lienzo[data-anima] .ba-campana { animation-name: ba-campana; }
+.beneficio-lienzo[data-anima] .ba-punto { animation-name: ba-punto; }
+.beneficio-lienzo[data-anima] .ba-llegada { animation-name: ba-llegada; }
+.beneficio-lienzo[data-anima] .ba-borrador { animation-name: ba-borrador; }
+.beneficio-lienzo[data-anima] .ba-brillo { animation-name: ba-brillo; }
+.beneficio-lienzo[data-anima] .ba-destello { animation-name: ba-destello; }
+.beneficio-lienzo[data-anima] .ba-estrella { animation-name: ba-estrella; animation-duration: 3s; }
+.beneficio-lienzo[data-anima] .ba-cita { animation-name: ba-llegar; }
+.beneficio-lienzo[data-anima] .ba-check { animation-name: ba-check; }
+.beneficio-lienzo[data-anima] .ba-fila { animation-name: ba-fila; }
+.beneficio-lienzo[data-anima] .ba-estado { animation-name: ba-estado; }
+.beneficio-lienzo[data-anima] .ba-barra { animation-name: ba-barra; }
+
+@keyframes ba-girar {
+  to { transform: rotate(360deg); }
+}
+@keyframes ba-papeleo {
+  0%, 18% { opacity: 1; }
+  38%, 90% { opacity: 0; }
+  100% { opacity: 1; }
+}
+@keyframes ba-arco {
+  0%, 25% { stroke-dashoffset: 100; opacity: 1; }
+  55%, 90% { stroke-dashoffset: 0; opacity: 1; }
+  98% { stroke-dashoffset: 0; opacity: 0; }
+  100% { stroke-dashoffset: 100; opacity: 0; }
+}
+/* Una pieza sale de (--dx, --dy) y llega a su sitio; al final del ciclo se desvanece para volver a empezar. */
+@keyframes ba-llegar {
+  0%, 18% { transform: translate(var(--dx, 0), var(--dy, 0)) scale(0.5); opacity: 0; }
+  26% { opacity: 1; }
+  52%, 90% { transform: none; opacity: 1; }
+  100% { transform: none; opacity: 0; }
+}
+@keyframes ba-orbita {
+  0%, 12% { transform: rotate(270deg); }
+  88%, 100% { transform: rotate(630deg); }
+}
+@keyframes ba-campana {
+  0%, 42%, 60%, 100% { transform: rotate(0); }
+  46% { transform: rotate(16deg); }
+  50% { transform: rotate(-14deg); }
+  54% { transform: rotate(9deg); }
+}
+@keyframes ba-punto {
+  0%, 42% { transform: scale(0); }
+  50%, 94% { transform: scale(1); }
+  100% { transform: scale(0); }
+}
+@keyframes ba-llegada {
+  0% { opacity: 1; transform: scale(1); }
+  10%, 82% { opacity: 0; transform: scale(0.6); }
+  92% { opacity: 1; transform: scale(1.2); }
+  100% { opacity: 1; transform: scale(1); }
+}
+@keyframes ba-borrador {
+  0%, 15% { opacity: 1; }
+  40%, 90% { opacity: 0; }
+  100% { opacity: 1; }
+}
+@keyframes ba-brillo {
+  0%, 34% { transform: translateX(0) skewX(-18deg); }
+  58%, 100% { transform: translateX(440px) skewX(-18deg); }
+}
+@keyframes ba-destello {
+  0%, 48% { transform: scale(0); }
+  58% { transform: scale(1.25); }
+  66%, 92% { transform: scale(1); }
+  100% { transform: scale(0); }
+}
+@keyframes ba-estrella {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.25; }
+}
+@keyframes ba-check {
+  0%, 52% { stroke-dashoffset: 1; }
+  64%, 100% { stroke-dashoffset: 0; }
+}
+@keyframes ba-fila {
+  0%, 12% { transform: translateY(var(--dy, 0)); }
+  45%, 90% { transform: none; }
+  100% { transform: translateY(var(--dy, 0)); }
+}
+@keyframes ba-estado {
+  0%, 45% { opacity: 0; }
+  56%, 92% { opacity: 1; }
+  100% { opacity: 0; }
+}
+@keyframes ba-barra {
+  0%, 40% { transform: scaleY(0.25); }
+  70%, 92% { transform: scaleY(1); }
+  100% { transform: scaleY(0.25); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .beneficio-lienzo .ba {
+    animation: none !important;
+  }
+  .tarjeta-beneficio,
+  .beneficio-lienzo {
+    transition: none;
+  }
+}
