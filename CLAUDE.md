@@ -7,7 +7,7 @@
 - Supabase: Postgres + Auth. Clientes en src/lib/supabase (client.ts y server.ts)
 - Vitest + Testing Library para unidad (archivos *.test.ts(x) junto al código)
 - Playwright para e2e (carpeta e2e/), en escritorio y móvil
-- Despliegue: Cloudflare Workers con OpenNext vía GitHub (Workers Builds, producción = main). Guía: docs/DESPLIEGUE-CLOUDFLARE.md
+- Despliegue: Cloudflare Workers con OpenNext, a mano con wrangler mientras no funcione Workers Builds con GitHub (producción = main, https://noderia-web.admin-noderia.workers.dev). Guía: docs/DESPLIEGUE-CLOUDFLARE.md
 
 ## Comandos
 - Instalar: `npm ci`
@@ -22,6 +22,11 @@
 - Aplicar migraciones a staging: `npx supabase db push --yes --remote="$STAGING_DB_URL"`
 
 Las variables de .env.local ya están cargadas en el entorno cuando trabajas desde run.sh.
+
+## Despliegue (mientras no haya despliegue automático)
+- Cada vez que fusiones algo en main: `npm run deploy` (scripts/desplegar-cloudflare.sh: build de OpenNext desde una copia limpia de origin/main, deploy con wrangler y prueba de humo contra producción). Si falla el despliegue o la prueba de humo, arréglalo antes de seguir con otra tarea.
+- Nunca `npx opennextjs-cloudflare build/deploy/upload` desde la carpeta del proyecto: mete `.env.local` entero dentro del Worker.
+- No pongas secretos en el Worker (IP_HASH_SALT, RESEND_API_KEY): los pone Dani con `npx wrangler secret put`.
 
 ## Git
 - Una rama por tarea (`feat/<id>-<nombre>`), commits pequeños y claros.

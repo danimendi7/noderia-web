@@ -1,48 +1,119 @@
 # Despliegue en Cloudflare Workers
 
 La web se publica como un Worker de Cloudflare con el adaptador OpenNext (`@opennextjs/cloudflare`).
-Cloudflare hace el build y el despliegue desde GitHub en cada push a `main` (Workers Builds).
 Configuración en el repo: `wrangler.jsonc`, `open-next.config.ts` y `.node-version` (Node 24).
 
-Cuenta: la nueva de Cloudflare de `admin.noderia@gmail.com`, plan gratuito (Workers Free).
+- **URL de producción:** https://noderia-web.admin-noderia.workers.dev
+  (`noderia-web` es el nombre del Worker en `wrangler.jsonc`; `admin-noderia` es el subdominio de workers.dev de la cuenta).
+- **Cuenta:** la de Cloudflare de `admin.noderia@gmail.com`, plan gratuito (Workers Free).
+- **Cómo se despliega hoy:** a mano con wrangler, desde el equipo de Skynet, después de cada fusión a `main`
+  (orden del 2026-11-16). La integración de Workers Builds con GitHub falla en el panel de Cloudflare
+  (bucle al conectar), así que no hay despliegue automático. Cuando Cloudflare lo arregle: [apartado 2](#2-conectar-github-más-adelante).
 
-## 1. Antes de conectar: la URL de workers.dev
+## 1. Desplegar con wrangler (método actual)
 
-1. Entra en el panel de Cloudflare → **Workers & Pages**.
-2. La primera vez te pide elegir un **subdominio de workers.dev** para la cuenta (por ejemplo `noderia`).
-   Si ya lo tienes, aparece en **Workers & Pages → Overview**, a la derecha, como *Subdomain*.
-3. La URL de la web será: `https://noderia-web.<subdominio>.workers.dev`
-   (`noderia-web` es el nombre del Worker en `wrangler.jsonc`). Apúntala: hace falta en el paso 3.
+### Una vez por equipo
 
-## 2. Importar el repositorio de GitHub
+```bash
+npx wrangler login     # con la cuenta admin.noderia@gmail.com
+npx wrangler whoami    # comprueba que es esa cuenta
+```
 
-1. **Workers & Pages → Create application → Workers → Import a repository**.
-2. **Connect GitHub** y autoriza la app *Cloudflare Workers and Pages* solo para el repositorio `danimendi7/noderia-web`.
-3. Elige el repositorio y rellena:
+`.env.local` tiene que tener `NEXT_PUBLIC_SUPABASE_URL` y `NEXT_PUBLIC_SUPABASE_ANON_KEY`.
+
+### Cada vez que se fusiona algo en `main`
+
+```bash
+npm run deploy               # despliega origin/main y lanza la prueba de humo
+npm run deploy -- <commit>   # otra rama o commit (por ejemplo, para volver atrás)
+SIN_HUMO=1 npm run deploy    # sin la prueba de humo
+```
+
+`npm run deploy` ejecuta `scripts/desplegar-cloudflare.sh` (unos 2 minutos), que:
+
+1. Exporta `origin/main` con `git archive` a una carpeta temporal **sin archivos `.env*`**.
+2. Hace `npm ci` y `npx opennextjs-cloudflare build` con un entorno mínimo que solo lleva
+   `NEXT_PUBLIC_SITE_URL` (la URL de producción) y las dos `NEXT_PUBLIC_SUPABASE_*` de `.env.local`.
+3. Comprueba que `.open-next/cloudflare/next-env.mjs` está vacío. Si no lo está, no despliega.
+4. `npx opennextjs-cloudflare deploy` con `NEXT_PUBLIC_SUPABASE_URL` y `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+   también como **variables de ejecución** del Worker (`--var`; son públicas).
+5. Comprueba que la home responde 200 y lanza la prueba de humo (`e2e/humo.spec.ts`, 6 tests) contra la URL publicada.
+
+**Por qué una copia limpia.** `opennextjs-cloudflare build` copia **todos** los archivos `.env*` del proyecto
+dentro del Worker. Desde la carpeta del proyecto se subiría `.env.local` entero, con secretos como la URL de la
+base de datos de staging. Por eso no hay que lanzar `npx opennextjs-cloudflare build && npx opennextjs-cloudflare deploy`
+(ni `npm run upload`) desde la carpeta del proyecto: hazlo siempre con `npm run deploy`.
+
+**Otro proyecto de Supabase.** Las `NEXT_PUBLIC_SUPABASE_*` de `.env.local` son las del proyecto de staging.
+Para que la web use el de producción sin tocar `.env.local`:
+
+```bash
+DESPLIEGUE_SUPABASE_URL=<url de producción> DESPLIEGUE_SUPABASE_ANON_KEY=<clave anon de producción> npm run deploy
+```
+
+### Secretos (los pone Dani, una sola vez)
+
+```bash
+npx wrangler secret put IP_HASH_SALT     # sal del hash de la IP (openssl rand -hex 32 si no tienes la de Vercel)
+npx wrangler secret put RESEND_API_KEY   # aviso por email de cada solicitud
+```
+
+Cada comando pide el valor por teclado y lo guarda cifrado en el Worker; no hace falta volver a desplegar.
+Los despliegues no los borran (`keep_vars: true` en `wrangler.jsonc`). Para ver cuáles hay: `npx wrangler secret list`.
+
+### Volver a una versión anterior
+
+```bash
+npx wrangler deployments list   # despliegues recientes
+npx wrangler rollback           # vuelve al despliegue anterior
+```
+
+### Comprobar contra producción
+
+Solo la prueba de humo (ya la lanza `npm run deploy`) y, si hace falta, una pasada de Lighthouse por ruta:
+
+```bash
+BASE_URL=https://noderia-web.admin-noderia.workers.dev npx playwright test e2e/humo.spec.ts --project=escritorio
+U=https://noderia-web.admin-noderia.workers.dev; BASE_URL=$U PRODUCTION_URL=$U LIGHTHOUSE_PASADAS=1 LIGHTHOUSE_RUTA=/ npm run lighthouse
+```
+
+Nunca el e2e completo ni Lighthouse con varias pasadas contra producción (DECISIONS.md, 2026-11-15).
+El e2e completo va contra local: `npm run e2e:cloudflare` (build de OpenNext y la web en el runtime de Workers).
+Tras el primer despliegue, envía tú una solicitud de prueba desde `/contacto` y mira que llega a Supabase y el email.
+
+## 2. Conectar GitHub más adelante
+
+Si Cloudflare arregla la integración, el Worker ya existe y se conecta desde él (no hace falta crear otro):
+
+1. **Workers & Pages → `noderia-web` → Settings → Build → Git repository → Connect**.
+2. Autoriza la app *Cloudflare Workers and Pages* solo para el repositorio `danimendi7/noderia-web` y elige la rama `main`.
+3. Rellena la configuración de build:
 
 | Campo | Valor |
 | --- | --- |
-| Project name (nombre del Worker) | `noderia-web` (tiene que coincidir con `name` de `wrangler.jsonc`) |
-| Production branch | `main` |
 | Build command | `npx opennextjs-cloudflare build` |
 | Deploy command | `npx opennextjs-cloudflare deploy` |
 | Non-production branch deploy command (opcional, previews de las PR) | `npx opennextjs-cloudflare upload` |
 | Root directory / Path | `/` (déjalo vacío) |
 
-4. **Versión de Node:** no hace falta tocar nada; el archivo `.node-version` del repo fija Node 24.
-   Si quieres dejarlo también en el panel, añade la variable de build `NODE_VERSION` = `24` (paso 3).
-5. Antes de pulsar **Deploy**, abre **Advanced settings → Build variables and secrets** y pon las variables de build del paso 3.
-   Si el primer build arranca sin ellas, fallará con «Falta NEXT_PUBLIC_SITE_URL…»: añádelas y pulsa **Retry build**.
+4. En **Settings → Build → Variables and secrets** pon las variables de build del apartado 3.
+   Allí no hay `.env.local`, así que el problema de la copia limpia no existe. Si el build arranca sin
+   `NEXT_PUBLIC_SITE_URL`, se para con el mensaje «Falta NEXT_PUBLIC_SITE_URL…».
+5. Las variables de ejecución y los secretos que ya tiene el Worker se mantienen.
+6. **Versión de Node:** el archivo `.node-version` del repo fija Node 24 (opcional: variable de build `NODE_VERSION` = `24`).
+7. Haz un push a `main` (o **Retry build**) y comprueba la prueba de humo.
+8. Pide a Skynet (orden en `docs/ORDENES.md`) que deje de desplegar a mano: hay que quitar la regla de CLAUDE.md y anotarlo en DECISIONS.md.
 
 ## 3. Variables de entorno (solo nombres; los valores no van nunca al repo)
 
-En Workers **no** se comparten las variables de build y las de ejecución: hay dos listas.
+Con `npm run deploy`, las variables de build las pone el script; las de ejecución, el script (las dos de Supabase)
+y Dani (los secretos, con `npx wrangler secret put`). Con GitHub conectado, todo se pone en el panel. En Workers **no** se comparten las variables de build y las de ejecución: hay dos listas.
 
 ### Variables de build — Settings → Build → Variables and secrets
 
 | Variable | Valor | Tipo |
 | --- | --- | --- |
-| `NEXT_PUBLIC_SITE_URL` | `https://noderia-web.<subdominio>.workers.dev` (sin `/` al final) | Text |
+| `NEXT_PUBLIC_SITE_URL` | `https://noderia-web.admin-noderia.workers.dev` (sin `/` al final) | Text |
 | `NEXT_PUBLIC_SUPABASE_URL` | URL del proyecto de Supabase de **producción** | Text |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Clave *anon* / publicable de Supabase de **producción** | Secret |
 | `NODE_VERSION` (opcional) | `24` | Text |
@@ -69,29 +140,7 @@ Dónde están los valores: en Vercel → proyecto `noderia-web` → **Settings �
 
 `wrangler.jsonc` lleva `"keep_vars": true`, así que los despliegues no borran las variables que pongas en el panel.
 
-## 4. Comprobar el primer despliegue
-
-1. Cuando el build termine, abre `https://noderia-web.<subdominio>.workers.dev`.
-2. En tu `.env.local`, cambia `PRODUCTION_URL` a esa URL.
-3. Prueba de humo (6 tests, la única prueba que se lanza contra producción):
-
-   ```bash
-   BASE_URL="$PRODUCTION_URL" npx playwright test e2e/humo.spec.ts --project=escritorio
-   ```
-
-   Comprueba la home, las páginas principales, el formulario de `/contacto`, la redirección 301 de
-   `/presupuesto`, que canonical, sitemap y robots usan `NEXT_PUBLIC_SITE_URL`, la imagen para compartir y el logo.
-4. Envía tú una solicitud de prueba desde `/contacto` y mira que llega a Supabase de producción y el email.
-5. Lighthouse, una pasada por ruta:
-
-   ```bash
-   BASE_URL="$PRODUCTION_URL" LIGHTHOUSE_PASADAS=1 LIGHTHOUSE_RUTA=/ npm run lighthouse
-   ```
-
-Nunca el e2e completo ni Lighthouse con varias pasadas contra producción (DECISIONS.md, 2026-11-15).
-El e2e completo va contra local: `npm run e2e:cloudflare` (build de OpenNext y la web en el runtime de Workers).
-
-## 5. Límites del plan gratuito
+## 4. Límites del plan gratuito
 
 - **Tamaño del Worker:** 3 MiB comprimido. Hoy ocupa unos 2292 KiB comprimido (medido con
   `npx opennextjs-cloudflare build && npx wrangler deploy --dry-run --outdir /tmp/cf`).
@@ -102,7 +151,7 @@ El e2e completo va contra local: `npm run e2e:cloudflare` (build de OpenNext y l
   (JS, CSS, imágenes, vídeos, fuentes) se sirven sin pasar por el Worker y no cuentan.
 - Imágenes: no se usa Cloudflare Images (de pago) ni la optimización de `next/image`; ya están en AVIF/WebP.
 
-## 6. Después
+## 5. Después
 
 - **Vercel:** la PR sigue mostrando el check «Vercel — Account is blocked». No impide fusionar. Para quitarlo,
   desconecta el repositorio en Vercel (Settings → Git → Disconnect) o borra el proyecto cuando ya no lo necesites.
@@ -111,5 +160,3 @@ El e2e completo va contra local: `npm run e2e:cloudflare` (build de OpenNext y l
 - **Analítica (opcional):** Vercel Web Analytics ya no está. Cloudflare Web Analytics es gratuita y sin cookies;
   si la quieres, pide a Skynet una orden para añadirla con el token de la cuenta.
 - **Logs:** la observabilidad está activada en `wrangler.jsonc`: Worker → **Observability**.
-- **Desplegar a mano** (sin el panel): `npx wrangler login` y `npm run deploy`, con las variables de build
-  exportadas en la terminal.
