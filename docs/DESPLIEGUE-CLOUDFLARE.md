@@ -168,8 +168,8 @@ Dónde están los valores: en Vercel → proyecto `noderia-web` → **Settings �
   `wrangler deploy` los crea en la zona `noderia.es` de la cuenta, con su registro (de tipo «Worker») y su certificado.
   Solo se pueden crear si el nombre no tiene ya un registro A, AAAA o CNAME; los MX, SPF, DKIM y DMARC de Zoho Mail
   no chocan y no se tocan. La primera vez el certificado tarda unos minutos: `npm run deploy` espera hasta 10.
-- **301 a `https://noderia.es`** (`worker.ts` + `src/lib/dominio.ts`): todo lo que llega por `www.noderia.es` o por
-  cualquier `*.workers.dev` (la URL antigua y las de previews de versión) se redirige a la misma ruta y query en
+- **301 a `https://noderia.es`** (`worker.ts` + `src/lib/dominio.ts`): todo lo que llega por `www.noderia.es`, por
+  cualquier `*.workers.dev` (la URL antigua y las de previews de versión) o por `http://noderia.es` se redirige a la misma ruta y query en
   `noderia.es`. Las páginas, `robots.txt`, `sitemap.xml` y las imágenes OG pasan siempre por el Worker, así que no
   queda ninguna página duplicada. Los archivos estáticos (`/_next/static/…`, imágenes y vídeos de `public/`) los sirve
   Cloudflare antes del Worker y en www o workers.dev siguen respondiendo 200: no son páginas y ninguna página los
@@ -177,7 +177,7 @@ Dónde están los valores: en Vercel → proyecto `noderia-web` → **Settings �
   Rules → plantilla «Redirect from WWW to root»** (301, conservando la ruta y la query); no toca el DNS.
 - **`NEXT_PUBLIC_SITE_URL` = `https://noderia.es`** (lo pone `npm run deploy` en el build): canonical, sitemap,
   robots, Open Graph y JSON-LD usan el dominio nuevo.
-- `npm run deploy` comprueba al final que `https://noderia.es/` da 200 y que `www` y workers.dev dan 301 a
+- `npm run deploy` comprueba al final que `https://noderia.es/` da 200 y que `www`, workers.dev y `http://noderia.es` dan 301 a
   `https://noderia.es/contacto?x=1` cuando se pide `/contacto?x=1`.
 - Para no redirigir workers.dev y apagarlo del todo: `"workers_dev": false` en `wrangler.jsonc` (la URL antigua dejaría
   de responder en vez de llevar a noderia.es).

@@ -32,7 +32,12 @@ describe("destinoRedireccion", () => {
     );
   });
 
-  it("noderia.es, localhost y el preview local no se redirigen", () => {
+  it("http://noderia.es pasa a https con la misma ruta y query", () => {
+    expect(destino("http://noderia.es/")).toBe("https://noderia.es/");
+    expect(destino("http://noderia.es/contacto?x=1")).toBe("https://noderia.es/contacto?x=1");
+  });
+
+  it("https://noderia.es, localhost y el preview local no se redirigen", () => {
     expect(destino("https://noderia.es/contacto")).toBeNull();
     expect(destino("http://localhost:8787/")).toBeNull();
     expect(destino("http://localhost:3000/contacto")).toBeNull();
