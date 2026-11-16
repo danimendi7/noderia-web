@@ -7,7 +7,7 @@
 - Supabase: Postgres + Auth. Clientes en src/lib/supabase (client.ts y server.ts)
 - Vitest + Testing Library para unidad (archivos *.test.ts(x) junto al código)
 - Playwright para e2e (carpeta e2e/), en escritorio y móvil
-- Despliegue: Cloudflare Workers con OpenNext, a mano con wrangler mientras no funcione Workers Builds con GitHub (producción = main, https://noderia-web.admin-noderia.workers.dev). Guía: docs/DESPLIEGUE-CLOUDFLARE.md
+- Despliegue: Cloudflare Workers con OpenNext, a mano con wrangler mientras no funcione Workers Builds con GitHub (producción = main, https://noderia.es; www y la URL antigua de workers.dev redirigen con 301). Guía: docs/DESPLIEGUE-CLOUDFLARE.md
 
 ## Comandos
 - Instalar: `npm ci`
