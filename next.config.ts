@@ -4,7 +4,7 @@ import type { NextConfig } from "next";
 // Open Graph apuntarían a localhost. Se lee en el build, así que se pone en «Build variables and secrets».
 if (process.env.WORKERS_CI === "1" && !process.env.NEXT_PUBLIC_SITE_URL) {
   throw new Error(
-    "Falta NEXT_PUBLIC_SITE_URL en las variables de build de Cloudflare (p. ej. https://noderia-web.<subdominio>.workers.dev). Ver docs/DESPLIEGUE-CLOUDFLARE.md.",
+    "Falta NEXT_PUBLIC_SITE_URL en las variables de build de Cloudflare (p. ej. https://noderia.es). Ver docs/DESPLIEGUE-CLOUDFLARE.md.",
   );
 }
 

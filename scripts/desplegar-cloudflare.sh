@@ -15,7 +15,9 @@
 # y el build y el deploy se ejecutan con un entorno mínimo que solo lleva las tres variables públicas.
 set -euo pipefail
 
-URL_PRODUCCION="${URL_PRODUCCION:-https://noderia-web.admin-noderia.workers.dev}"
+URL_PRODUCCION="${URL_PRODUCCION:-https://noderia.es}"
+# Hosts que el Worker redirige con un 301 a URL_PRODUCCION (worker.ts): se comprueban tras desplegar.
+URLS_REDIRIGIDAS=(https://www.noderia.es https://noderia-web.admin-noderia.workers.dev)
 REF="${1:-origin/main}"
 RAIZ="$(git rev-parse --show-toplevel)"
 cd "$RAIZ"
@@ -70,9 +72,30 @@ limpio npx opennextjs-cloudflare deploy -- \
   --var "NEXT_PUBLIC_SUPABASE_ANON_KEY:$SUPABASE_ANON_KEY" \
   2>&1 | sed -e "s|$SUPABASE_ANON_KEY|<anon key>|g"
 
-estado="$(curl -s -o /dev/null -w '%{http_code}' "$URL_PRODUCCION/")"
+# La primera vez que se crea un Custom Domain, Cloudflare tarda unos minutos en emitir el certificado:
+# se reintenta hasta 10 minutos antes de dar el despliegue por fallido.
+estado=""
+for intento in $(seq 1 40); do
+  estado="$(curl -s -o /dev/null -w '%{http_code}' "$URL_PRODUCCION/" || true)"
+  [[ "$estado" == "200" ]] && break
+  echo "  … $URL_PRODUCCION/ → ${estado:-sin respuesta} (intento $intento/40), reintento en 15 s"
+  sleep 15
+done
 echo "▶ $URL_PRODUCCION/ → $estado"
 [[ "$estado" == "200" ]] || { echo "La web no responde 200 tras desplegar." >&2; exit 1; }
+
+# www y workers.dev: 301 a la misma ruta en URL_PRODUCCION (sin contenido duplicado indexable).
+for origen in "${URLS_REDIRIGIDAS[@]}"; do
+  respuesta=""
+  for intento in $(seq 1 40); do
+    respuesta="$(curl -s -o /dev/null -w '%{http_code} %{redirect_url}' "$origen/contacto?x=1" || true)"
+    [[ "$respuesta" == "301 $URL_PRODUCCION/contacto?x=1" ]] && break
+    echo "  … $origen/contacto?x=1 → ${respuesta:-sin respuesta} (intento $intento/40), reintento en 15 s"
+    sleep 15
+  done
+  echo "▶ $origen/contacto?x=1 → $respuesta"
+  [[ "$respuesta" == "301 $URL_PRODUCCION/contacto?x=1" ]] || { echo "$origen no redirige con 301 a $URL_PRODUCCION." >&2; exit 1; }
+done
 
 if [[ "${SIN_HUMO:-}" != "1" ]]; then
   echo "▶ Prueba de humo contra $URL_PRODUCCION"

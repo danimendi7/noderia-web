@@ -1,7 +1,7 @@
 # Proyecto
 
 Creado con la plantilla del sistema autónomo (Next.js + Supabase). Se aloja en Cloudflare Workers con OpenNext
-(https://noderia-web.admin-noderia.workers.dev): ver [docs/DESPLIEGUE-CLOUDFLARE.md](docs/DESPLIEGUE-CLOUDFLARE.md).
+(https://noderia.es): ver [docs/DESPLIEGUE-CLOUDFLARE.md](docs/DESPLIEGUE-CLOUDFLARE.md).
 
 - Qué es y qué debe hacer: [docs/SPEC.md](docs/SPEC.md)
 - Estado del trabajo: [PROGRESS.md](PROGRESS.md)

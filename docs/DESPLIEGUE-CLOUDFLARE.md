@@ -3,8 +3,10 @@
 La web se publica como un Worker de Cloudflare con el adaptador OpenNext (`@opennextjs/cloudflare`).
 Configuración en el repo: `wrangler.jsonc`, `open-next.config.ts` y `.node-version` (Node 24).
 
-- **URL de producción:** https://noderia-web.admin-noderia.workers.dev
-  (`noderia-web` es el nombre del Worker en `wrangler.jsonc`; `admin-noderia` es el subdominio de workers.dev de la cuenta).
+- **URL de producción:** https://noderia.es (orden del 2026-11-16 12:50). El Worker `noderia-web` está conectado a
+  `noderia.es` y `www.noderia.es` como Custom Domains (`routes` en `wrangler.jsonc`), y `worker.ts` redirige con un
+  **301** a `https://noderia.es` (misma ruta y query) lo que llega por `www.noderia.es` o por la URL antigua
+  `https://noderia-web.admin-noderia.workers.dev`. Ver [apartado 6](#6-dominio-propio).
 - **Cuenta:** la de Cloudflare de `admin.noderia@gmail.com`, plan gratuito (Workers Free).
 - **Cómo se despliega hoy:** a mano con wrangler, desde el equipo de Skynet, después de cada fusión a `main`
   (orden del 2026-11-16). La integración de Workers Builds con GitHub falla en el panel de Cloudflare
@@ -73,8 +75,8 @@ npx wrangler rollback           # vuelve al despliegue anterior
 Solo la prueba de humo (ya la lanza `npm run deploy`) y, si hace falta, una pasada de Lighthouse por ruta:
 
 ```bash
-BASE_URL=https://noderia-web.admin-noderia.workers.dev npx playwright test e2e/humo.spec.ts --project=escritorio
-U=https://noderia-web.admin-noderia.workers.dev; BASE_URL=$U PRODUCTION_URL=$U LIGHTHOUSE_PASADAS=1 LIGHTHOUSE_RUTA=/ npm run lighthouse
+BASE_URL=https://noderia.es npx playwright test e2e/humo.spec.ts --project=escritorio
+U=https://noderia.es; BASE_URL=$U PRODUCTION_URL=$U LIGHTHOUSE_PASADAS=1 LIGHTHOUSE_RUTA=/ npm run lighthouse
 ```
 
 Nunca el e2e completo ni Lighthouse con varias pasadas contra producción (DECISIONS.md, 2026-11-15).
@@ -113,7 +115,7 @@ y Dani (los secretos, con `npx wrangler secret put`). Con GitHub conectado, todo
 
 | Variable | Valor | Tipo |
 | --- | --- | --- |
-| `NEXT_PUBLIC_SITE_URL` | `https://noderia-web.admin-noderia.workers.dev` (sin `/` al final) | Text |
+| `NEXT_PUBLIC_SITE_URL` | `https://noderia.es` (sin `/` al final) | Text |
 | `NEXT_PUBLIC_SUPABASE_URL` | URL del proyecto de Supabase de **producción** | Text |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Clave *anon* / publicable de Supabase de **producción** | Secret |
 | `NODE_VERSION` (opcional) | `24` | Text |
@@ -155,8 +157,27 @@ Dónde están los valores: en Vercel → proyecto `noderia-web` → **Settings �
 
 - **Vercel:** la PR sigue mostrando el check «Vercel — Account is blocked». No impide fusionar. Para quitarlo,
   desconecta el repositorio en Vercel (Settings → Git → Disconnect) o borra el proyecto cuando ya no lo necesites.
-- **Dominio propio** (cuando lo haya): Worker → **Settings → Domains & Routes → Add → Custom domain** (el dominio
-  tiene que estar en Cloudflare). Después cambia `NEXT_PUBLIC_SITE_URL` (build) y vuelve a desplegar.
+- **Dominio propio:** ya está, ver [apartado 6](#6-dominio-propio).
 - **Analítica (opcional):** Vercel Web Analytics ya no está. Cloudflare Web Analytics es gratuita y sin cookies;
   si la quieres, pide a Skynet una orden para añadirla con el token de la cuenta.
 - **Logs:** la observabilidad está activada en `wrangler.jsonc`: Worker → **Observability**.
+
+## 6. Dominio propio
+
+- **Custom Domains** (`routes` con `custom_domain: true` en `wrangler.jsonc`): `noderia.es` y `www.noderia.es`.
+  `wrangler deploy` los crea en la zona `noderia.es` de la cuenta, con su registro (de tipo «Worker») y su certificado.
+  Solo se pueden crear si el nombre no tiene ya un registro A, AAAA o CNAME; los MX, SPF, DKIM y DMARC de Zoho Mail
+  no chocan y no se tocan. La primera vez el certificado tarda unos minutos: `npm run deploy` espera hasta 10.
+- **301 a `https://noderia.es`** (`worker.ts` + `src/lib/dominio.ts`): todo lo que llega por `www.noderia.es` o por
+  cualquier `*.workers.dev` (la URL antigua y las de previews de versión) se redirige a la misma ruta y query en
+  `noderia.es`. Las páginas, `robots.txt`, `sitemap.xml` y las imágenes OG pasan siempre por el Worker, así que no
+  queda ninguna página duplicada. Los archivos estáticos (`/_next/static/…`, imágenes y vídeos de `public/`) los sirve
+  Cloudflare antes del Worker y en www o workers.dev siguen respondiendo 200: no son páginas y ninguna página los
+  enlaza con esos hosts. Si se quiere redirigir también eso en www: panel → zona `noderia.es` → **Rules → Redirect
+  Rules → plantilla «Redirect from WWW to root»** (301, conservando la ruta y la query); no toca el DNS.
+- **`NEXT_PUBLIC_SITE_URL` = `https://noderia.es`** (lo pone `npm run deploy` en el build): canonical, sitemap,
+  robots, Open Graph y JSON-LD usan el dominio nuevo.
+- `npm run deploy` comprueba al final que `https://noderia.es/` da 200 y que `www` y workers.dev dan 301 a
+  `https://noderia.es/contacto?x=1` cuando se pide `/contacto?x=1`.
+- Para no redirigir workers.dev y apagarlo del todo: `"workers_dev": false` en `wrangler.jsonc` (la URL antigua dejaría
+  de responder en vez de llevar a noderia.es).

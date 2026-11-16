@@ -2,7 +2,8 @@
 // Guía: https://opennext.js.org/cloudflare/get-started · Despliegue: docs/DESPLIEGUE-CLOUDFLARE.md
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "main": ".open-next/worker.js",
+  // Entrada propia: redirige www y workers.dev a https://noderia.es y pasa el resto a .open-next/worker.js
+  "main": "worker.ts",
   "name": "noderia-web",
   "compatibility_date": "2026-11-13",
   "compatibility_flags": [
@@ -22,6 +23,15 @@
       "service": "noderia-web",
     },
   ],
+  // Dominio propio (orden del 2026-11-16 12:50): Custom Domains en la zona noderia.es de la cuenta.
+  // Cloudflare crea sus registros y el certificado; no se toca ningún registro DNS existente (MX/SPF/DKIM/DMARC
+  // de Zoho). www responde 301 a noderia.es desde worker.ts.
+  "routes": [
+    { "pattern": "noderia.es", "custom_domain": true },
+    { "pattern": "www.noderia.es", "custom_domain": true },
+  ],
+  // La URL de workers.dev se mantiene, pero solo para redirigir con un 301 a noderia.es (worker.ts).
+  "workers_dev": true,
   // Las variables puestas en el panel de Cloudflare no se borran al desplegar (no hay "vars" aquí).
   "keep_vars": true,
   "observability": {
