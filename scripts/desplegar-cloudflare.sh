@@ -17,7 +17,7 @@ set -euo pipefail
 
 URL_PRODUCCION="${URL_PRODUCCION:-https://noderia.es}"
 # Hosts que el Worker redirige con un 301 a URL_PRODUCCION (worker.ts): se comprueban tras desplegar.
-URLS_REDIRIGIDAS=(https://www.noderia.es https://noderia-web.admin-noderia.workers.dev)
+URLS_REDIRIGIDAS=(https://www.noderia.es https://noderia-web.admin-noderia.workers.dev http://noderia.es)
 REF="${1:-origin/main}"
 RAIZ="$(git rev-parse --show-toplevel)"
 cd "$RAIZ"
@@ -84,7 +84,7 @@ done
 echo "▶ $URL_PRODUCCION/ → $estado"
 [[ "$estado" == "200" ]] || { echo "La web no responde 200 tras desplegar." >&2; exit 1; }
 
-# www y workers.dev: 301 a la misma ruta en URL_PRODUCCION (sin contenido duplicado indexable).
+# www, workers.dev y http: 301 a la misma ruta en URL_PRODUCCION (sin contenido duplicado indexable).
 for origen in "${URLS_REDIRIGIDAS[@]}"; do
   respuesta=""
   for intento in $(seq 1 40); do
