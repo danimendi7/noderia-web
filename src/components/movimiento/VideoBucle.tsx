@@ -16,7 +16,8 @@ export type NombreVideo = keyof typeof VIDEOS;
 
 const ContextoPausa = createContext<boolean>(false);
 
-function useMovimientoReducido() {
+/** `true` con movimiento reducido (y antes de hidratar: así no se anima nada hasta saberlo). */
+export function useMovimientoReducido() {
   const [reducido, setReducido] = useState(true);
   useEffect(() => {
     const consulta = window.matchMedia("(prefers-reduced-motion: reduce)");

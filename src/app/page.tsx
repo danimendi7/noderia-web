@@ -10,6 +10,7 @@ import { Comparacion } from "@/components/inicio/Comparacion";
 import { ComoTrabajamos } from "@/components/inicio/ComoTrabajamos";
 import { HiloConductor } from "@/components/inicio/HiloConductor";
 import { Hero } from "@/components/inicio/Hero";
+import { LoQueGana } from "@/components/inicio/LoQueGana";
 import { Preguntas } from "@/components/inicio/Preguntas";
 import { Presupuesto } from "@/components/inicio/Presupuesto";
 import { Problema } from "@/components/inicio/Problema";
@@ -32,6 +33,7 @@ export default function Inicio() {
         }
       />
       <Problema />
+      <LoQueGana />
 
       <ComoFunciona />
       <QueIncluye />

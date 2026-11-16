@@ -49,7 +49,7 @@ export function ComoFunciona() {
       data-fondo="blanco"
       className="relative isolate overflow-x-clip bg-white text-midnight"
     >
-      <Fundido desde="midnight" hacia="blanco" />
+      <Fundido desde="mist" hacia="blanco" />
       <AnimacionPasos className={`${CONTENEDOR} ${ESPACIADO_SECCION}`}>
         <CabeceraSeccion
           etiqueta="Cómo funciona"
