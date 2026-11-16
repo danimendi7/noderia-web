@@ -1,6 +1,7 @@
 import { enviarSolicitud } from "@/app/acciones/presupuesto";
 import { FormularioPresupuesto } from "@/components/inicio/FormularioPresupuesto";
 import { RazonesPresupuesto } from "@/components/inicio/RazonesPresupuesto";
+import { TarjetaContactoDirecto } from "@/components/contacto/DatosContacto";
 import { TituloPagina } from "@/components/paginas/TituloPagina";
 import { Migas } from "@/components/ui/Migas";
 import { CONTENEDOR } from "@/components/ui/Seccion";
@@ -8,7 +9,10 @@ import { metadatosPagina, migasDe, PAGINAS } from "@/lib/seo";
 
 export const metadata = metadatosPagina(PAGINAS.contacto);
 
-/** Página de contacto (SPEC §12; antes `/presupuesto`): el mismo formulario de la home, solo, con tres razones al lado. */
+/**
+ * Página de contacto (SPEC §12; antes `/presupuesto`): el mismo formulario de la home, solo, con tres razones al lado y
+ * la tarjeta «¿Prefieres hablar directamente?» (orden 2026-11-16 11:01, punto 2).
+ */
 export default function PaginaContacto() {
   return (
     <section data-fondo="midnight" className="relative isolate overflow-hidden bg-midnight text-white">
@@ -32,6 +36,7 @@ export default function PaginaContacto() {
           />
           <h2 className="sr-only">Por qué NoderIA</h2>
           <RazonesPresupuesto className="mt-12" />
+          <TarjetaContactoDirecto className="mt-10" />
         </div>
         <div className="lg:col-span-7 lg:pt-16">
           <h2 className="sr-only">Formulario de contacto</h2>

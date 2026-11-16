@@ -30,4 +30,11 @@ describe("datosEstructuradosEmpresa", () => {
       addressCountry: "ES",
     });
   });
+
+  it("Organization y LocalBusiness llevan el teléfono y el email de contacto (orden 2026-11-16 11:01, punto 2)", () => {
+    const datos = datosEstructuradosEmpresa(new URL("https://noderia.es"));
+    for (const nodo of datos["@graph"].slice(1)) {
+      expect(nodo).toMatchObject({ telephone: "+34603583341", email: "contacto@noderia.es" });
+    }
+  });
 });
