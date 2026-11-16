@@ -24,7 +24,7 @@ export default function NoEncontrada() {
         <div className="mt-9 flex flex-wrap items-center gap-x-8 gap-y-4">
           <Boton href="/">Volver al inicio</Boton>
           <Boton href={ENLACE_CONTACTO} variante="enlace" fondo="oscuro">
-            Hablemos de tu taller
+            Solicita tu demo gratuita
           </Boton>
         </div>
       </div>

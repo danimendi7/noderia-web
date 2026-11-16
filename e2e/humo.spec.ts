@@ -22,7 +22,7 @@ test.describe("humo", () => {
   test("/contacto muestra el formulario", async ({ page }) => {
     await page.goto("/contacto");
     await expect(page.getByLabel("Tu nombre")).toBeVisible();
-    await expect(page.getByRole("button", { name: "Hablemos de tu taller" })).toBeVisible();
+    await expect(page.getByRole("button", { name: "Solicitar demo gratuita" })).toBeVisible();
   });
 
   test("/presupuesto redirige con 301 a /contacto", async ({ request }) => {

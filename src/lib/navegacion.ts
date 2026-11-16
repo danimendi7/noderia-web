@@ -9,11 +9,11 @@ export const ANCLAS = {
   presupuesto: "presupuesto",
 } as const;
 
-/** Todos los "Hablemos de tu taller" llevan a `/contacto` (SPEC §12); el formulario sigue también al final de la home. */
+/** Todos los "Solicita tu demo gratuita" llevan a `/contacto` (SPEC §12); el formulario sigue también al final de la home. */
 export const ENLACE_CONTACTO = PAGINAS.contacto.ruta;
 
 /** Línea que acompaña al botón principal del hero y al formulario (SPEC §12). */
-export const PRIMERA_CONSULTA = "Primera consulta gratuita y sin compromiso";
+export const NOTA_DEMO = "Sin compromiso y a la medida de tu taller";
 
 /** Desplegable "Soluciones" del menú (SPEC v3 §1). */
 export const SOLUCIONES = [

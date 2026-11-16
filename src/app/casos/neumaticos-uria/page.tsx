@@ -148,9 +148,9 @@ export default function CasoNeumaticosUria() {
             <h2 id="titulo-cta-caso" className="text-3xl font-bold sm:text-4xl">
               ¿Quieres lo mismo para tu taller?
             </h2>
-            <p className="mt-3 text-lg text-white/80">Te preparamos un presupuesto a medida, sin compromiso.</p>
+            <p className="mt-3 text-lg text-white/80">Te enseñamos cómo funcionaría en tu taller, sin compromiso.</p>
           </div>
-          <Boton href={ENLACE_CONTACTO}>Hablemos de tu taller</Boton>
+          <Boton href={ENLACE_CONTACTO}>Solicita tu demo gratuita</Boton>
         </div>
       </section>
     </article>

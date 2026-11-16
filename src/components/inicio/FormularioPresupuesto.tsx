@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { createContext, type FormEvent, type ReactNode, useActionState, useContext, useEffect, useId, useRef, useState } from "react";
-import { PRIMERA_CONSULTA } from "@/lib/navegacion";
+import { NOTA_DEMO } from "@/lib/navegacion";
 import { ESTADO_INICIAL, type EstadoFormulario, MENSAJE_GRACIAS } from "@/lib/presupuesto/estado";
 import {
   CAMPO_TRAMPA,
@@ -283,7 +283,7 @@ export function FormularioPresupuesto({ accion, origen = "home#presupuesto" }: P
               className="mt-0.5 size-6 shrink-0 accent-aqua focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aqua"
             />
             <label htmlFor={idCampo(p, "consentimiento")} className="pl-3 text-white/85">
-              Acepto que <span translate="no">NoderIA</span> use estos datos para preparar mi presupuesto y contactarme, según la{" "}
+              Acepto que <span translate="no">NoderIA</span> use estos datos para preparar mi demo y contactarme, según la{" "}
               <Link href="/privacidad" className="font-medium text-aqua underline underline-offset-2 hover:text-white">
                 política de privacidad
               </Link>
@@ -299,9 +299,9 @@ export function FormularioPresupuesto({ accion, origen = "home#presupuesto" }: P
             disabled={enviando}
             className="inline-flex min-h-12 w-full items-center justify-center rounded-xl bg-electric px-6 py-3 font-semibold text-white shadow-[0_8px_28px_-6px_rgb(0_104_224/0.75)] transition-[background-color,box-shadow] hover:bg-royal hover:shadow-[0_10px_32px_-6px_rgb(0_176_240/0.6)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-aqua disabled:cursor-wait disabled:opacity-70 sm:w-auto"
           >
-            {enviando ? "Enviando…" : "Hablemos de tu taller"}
+            {enviando ? "Enviando…" : "Solicitar demo gratuita"}
           </button>
-          <p className="text-sm text-white/75">{PRIMERA_CONSULTA}</p>
+          <p className="text-sm text-white/75">{NOTA_DEMO}</p>
         </div>
       </form>
     </PrefijoIds>

@@ -22,7 +22,7 @@ export const PAGINAS = {
     nombre: "Diseño web",
     titulo: "Diseño web para talleres mecánicos y citas online | NoderIA",
     descripcion:
-      "Webs a medida para talleres mecánicos: rápidas, preparadas para Google y con reservas online conectadas a tu agenda. Hablemos de tu taller.",
+      "Webs a medida para talleres mecánicos: rápidas, preparadas para Google y con reservas online conectadas a tu agenda. Solicita tu demo gratuita.",
   },
   automatizaciones: {
     ruta: "/automatizaciones-talleres",
@@ -48,9 +48,9 @@ export const PAGINAS = {
   contacto: {
     ruta: "/contacto",
     nombre: "Contacto",
-    titulo: "Contacto: hablemos de tu taller | NoderIA",
+    titulo: "Solicita tu demo gratuita | NoderIA",
     descripcion:
-      "Primera consulta gratuita y sin compromiso. Cuéntanos cómo trabajas y te preparamos una propuesta y un presupuesto a medida.",
+      "Solicita tu demo gratuita: te enseñamos cómo funcionaría NoderIA en tu taller, sin compromiso. Cuéntanos cómo trabajas y te llamamos.",
   },
 } as const;
 

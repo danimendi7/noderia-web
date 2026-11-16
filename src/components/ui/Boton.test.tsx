@@ -4,8 +4,8 @@ import { Boton } from "./Boton";
 
 describe("Boton", () => {
   it("con href se renderiza como enlace", () => {
-    render(<Boton href="#presupuesto">Hablemos de tu taller</Boton>);
-    const enlace = screen.getByRole("link", { name: "Hablemos de tu taller" });
+    render(<Boton href="#presupuesto">Solicita tu demo gratuita</Boton>);
+    const enlace = screen.getByRole("link", { name: "Solicita tu demo gratuita" });
     expect(enlace).toHaveAttribute("href", "#presupuesto");
   });
 
@@ -72,7 +72,7 @@ describe("Boton", () => {
   });
 
   it("con aria-label da el nombre completo a un texto abreviado", () => {
-    render(<Boton href="/contacto" aria-label="Hablemos de tu taller">Hablemos</Boton>);
-    expect(screen.getByRole("link", { name: "Hablemos de tu taller" })).toHaveTextContent("Hablemos");
+    render(<Boton href="/contacto" aria-label="Pide tu demo gratuita">Pide tu demo</Boton>);
+    expect(screen.getByRole("link", { name: "Pide tu demo gratuita" })).toHaveTextContent("Pide tu demo");
   });
 });

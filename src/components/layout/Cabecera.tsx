@@ -5,7 +5,7 @@ import { EnlaceMenu } from "./EnlaceMenu";
 import { MenuMovil } from "./MenuMovil";
 import { MenuSoluciones } from "./MenuSoluciones";
 
-/** Menú fijo superior (SPEC v3 §1): logo · Soluciones ▾ · Caso de éxito · Quiénes somos · "Hablemos" (→ /contacto, SPEC §12). */
+/** Menú fijo superior (SPEC v3 §1): logo · Soluciones ▾ · Caso de éxito · Quiénes somos · "Pide tu demo" (→ /contacto; orden 2026-11-16 11:01, punto 3). */
 export function Cabecera() {
   return (
     <header className="fixed inset-x-0 top-0 z-50 border-b border-white/10 bg-midnight">
@@ -32,17 +32,17 @@ export function Cabecera() {
         </nav>
 
         <div className="hidden lg:block">
-          <Boton href={ENLACE_CONTACTO} className="min-h-11 py-2 text-sm" aria-label="Hablemos de tu taller">
-            Hablemos
+          <Boton href={ENLACE_CONTACTO} className="min-h-11 whitespace-nowrap py-2 text-sm" aria-label="Pide tu demo gratuita">
+            Pide tu demo
           </Boton>
         </div>
 
         {/* En móvil, la llamada principal también a mano (revisión T48); desde 380 px para que quepa con el logo. */}
         <div className="ml-auto hidden min-[380px]:block lg:hidden">
-          <Boton href={ENLACE_CONTACTO} className="min-h-11 px-2.5 py-2 text-[0.8125rem] sm:px-4 sm:text-sm"
-            aria-label="Hablemos de tu taller"
+          <Boton href={ENLACE_CONTACTO} className="min-h-11 whitespace-nowrap px-2.5 py-2 text-[0.8125rem] sm:px-4 sm:text-sm"
+            aria-label="Pide tu demo gratuita"
           >
-            Hablemos
+            Pide tu demo
           </Boton>
         </div>
         <MenuMovil />

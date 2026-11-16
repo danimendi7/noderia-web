@@ -38,7 +38,7 @@ export default function AvisoLegal() {
       <h2>Para qué sirve esta web</h2>
       <p>
         Esta web presenta los servicios de NoderIA: diseño de webs y sistemas de gestión a medida para
-        talleres, su implantación y su mantenimiento. Desde ella puedes pedirnos un presupuesto.
+        talleres, su implantación y su mantenimiento. Desde ella puedes pedirnos una demo gratuita o un presupuesto.
       </p>
 
       <h2>Condiciones de uso</h2>

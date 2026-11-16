@@ -21,10 +21,10 @@ describe("MenuMovil", () => {
     expect(boton()).toHaveAttribute("aria-expanded", "true");
     const panel = document.getElementById(boton().getAttribute("aria-controls")!)!;
     expect(panel).toBeVisible();
-    for (const nombre of ["Caso de éxito", "Hablemos de tu taller"]) {
+    for (const nombre of ["Caso de éxito", "Solicita tu demo gratuita"]) {
       expect(screen.getByRole("link", { name: nombre })).toBeVisible();
     }
-    expect(screen.getByRole("link", { name: "Hablemos de tu taller" })).toHaveAttribute("href", "/contacto");
+    expect(screen.getByRole("link", { name: "Solicita tu demo gratuita" })).toHaveAttribute("href", "/contacto");
   });
 
   it("tiene un desplegable Soluciones con las tres páginas de servicio", () => {

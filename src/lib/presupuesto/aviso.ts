@@ -13,7 +13,7 @@ const textoDe = (lista: readonly { valor: string; texto: string }[], valor: stri
 
 export function textoAviso(s: SolicitudPresupuesto): string {
   return [
-    "Nueva solicitud de presupuesto desde la web.",
+    "Nueva solicitud de demo gratuita desde la web.",
     "",
     `Nombre: ${s.nombre}`,
     `Taller: ${s.taller}`,
@@ -43,7 +43,7 @@ export function crearAviso(
         from: entorno.AVISO_EMAIL_DE || REMITENTE_POR_DEFECTO,
         to: [entorno.AVISO_EMAIL_PARA || DESTINO_POR_DEFECTO],
         reply_to: solicitud.email,
-        subject: `Nueva solicitud de presupuesto: ${solicitud.taller}`,
+        subject: `Nueva solicitud de demo: ${solicitud.taller}`,
         text: textoAviso(solicitud),
       }),
       signal: AbortSignal.timeout(5000),

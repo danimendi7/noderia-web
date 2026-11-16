@@ -5,7 +5,7 @@ import { Hueco, PaginaLegal } from "@/components/legal/PaginaLegal";
 export const metadata: Metadata = {
   title: "Política de privacidad",
   description:
-    "Cómo trata NoderIA los datos que nos envías con el formulario de presupuesto: finalidad, base legal, plazos y tus derechos.",
+    "Cómo trata NoderIA los datos que nos envías con el formulario de contacto: finalidad, base legal, plazos y tus derechos.",
   alternates: { canonical: "/privacidad" },
 };
 
@@ -13,7 +13,7 @@ export default function Privacidad() {
   return (
     <PaginaLegal titulo="Política de privacidad" actualizado="12 de noviembre de 2026">
       <p>
-        Aquí te explicamos qué hacemos con los datos que nos das al pedir un presupuesto, conforme al
+        Aquí te explicamos qué hacemos con los datos que nos das al pedir una demo o un presupuesto, conforme al
         Reglamento General de Protección de Datos (RGPD) y la Ley Orgánica 3/2018 (LOPDGDD).
       </p>
 
@@ -35,7 +35,7 @@ export default function Privacidad() {
 
       <h2>Qué datos tratamos</h2>
       <p>
-        Los que escribes en el <Link href="/#presupuesto">formulario de presupuesto</Link>: nombre, nombre
+        Los que escribes en el <Link href="/#presupuesto">formulario de contacto</Link>: nombre, nombre
         del taller, teléfono, email y, si los indicas, provincia o ciudad, tipo de taller, número de
         personas y lo que te gustaría mejorar. Para evitar abusos guardamos además un código cifrado e
         irreversible derivado de tu dirección IP; nunca la IP en sí.
@@ -43,7 +43,7 @@ export default function Privacidad() {
 
       <h2>Para qué los usamos</h2>
       <p>
-        Solo para contactarte y prepararte el presupuesto que nos pides. No los usamos para enviarte
+        Solo para contactarte y prepararte la demo o el presupuesto que nos pides. No los usamos para enviarte
         publicidad ni tomamos decisiones automatizadas con ellos.
       </p>
 

@@ -30,9 +30,9 @@ export default function PaginaContacto() {
           <TituloPagina
             className="mt-10"
             etiqueta="Contacto"
-            titulo="Hablemos de tu taller"
-            destacado="tu taller"
-            intro="Primera consulta gratuita y sin compromiso. Cuéntanos cómo trabajas y te preparamos una propuesta y un presupuesto a medida."
+            titulo="Solicita tu demo gratuita"
+            destacado="demo gratuita"
+            intro="Te enseñamos cómo funcionaría en tu taller, sin compromiso."
           />
           <h2 className="sr-only">Por qué NoderIA</h2>
           <RazonesPresupuesto className="mt-12" />

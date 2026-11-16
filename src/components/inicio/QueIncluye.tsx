@@ -199,7 +199,7 @@ function BloqueCierre() {
         </p>
       </div>
       <Boton href={ENLACE_CONTACTO} variante="enlace" fondo="oscuro" className="shrink-0 text-lg">
-        Hablemos de tu taller
+        Solicita tu demo gratuita
       </Boton>
     </TarjetaSpotlight>
   );

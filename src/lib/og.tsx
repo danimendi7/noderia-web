@@ -64,7 +64,7 @@ export async function imagenOg({ etiqueta, titulo, destacado }: ImagenOgProps) {
               maxWidth: 1000,
             }}
           >
-            <span>{resaltado ? `${inicio} ` : inicio}</span>
+            <span>{resaltado ? `${inicio.trimEnd()} ` : inicio}</span>
             {resaltado ? (
               <span style={{ backgroundImage: DEGRADADO, backgroundClip: "text", color: "transparent" }}>
                 {resaltado}

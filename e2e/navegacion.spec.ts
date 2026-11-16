@@ -1,6 +1,6 @@
 import { test, expect, type Page } from "@playwright/test";
 
-/** Menú de la SPEC v3 §1 y §12: logo · Soluciones ▾ · Caso de éxito · Quiénes somos · Hablemos (→ /contacto). */
+/** Menú de la SPEC v3 §1 y §12: logo · Soluciones ▾ · Caso de éxito · Quiénes somos · Pide tu demo (→ /contacto; orden 2026-11-16 11:01, punto 3). */
 const SOLUCIONES = [
   { texto: "Software de gestión", ruta: "/software-gestion-talleres" },
   { texto: "Diseño web", ruta: "/diseno-web-talleres" },
@@ -55,12 +55,12 @@ test.describe("menú superior", () => {
     await expect(page).toHaveURL(/\/quienes-somos$/);
   });
 
-  test("el botón Hablemos del menú lleva a /contacto", async ({ page, isMobile }) => {
+  test("el botón Pide tu demo del menú lleva a /contacto", async ({ page, isMobile }) => {
     await page.goto("/");
     const cabecera = await abrirMenu(page, isMobile);
-    await cabecera.getByRole("link", { name: "Hablemos de tu taller" }).filter({ visible: true }).last().click();
+    await cabecera.getByRole("link", { name: /demo gratuita/ }).filter({ visible: true }).last().click();
     await expect(page).toHaveURL(/\/contacto$/);
-    await expect(page.getByRole("heading", { level: 1 })).toHaveText("Hablemos de tu taller");
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("Solicita tu demo gratuita");
   });
 
   test("en móvil el menú se cierra con Escape", async ({ page, isMobile }) => {
@@ -96,14 +96,14 @@ test("el pie enlaza las soluciones y las páginas legales", async ({ page }) => 
   await expect(pie).toContainText("Donostia / San Sebastián");
 });
 
-// Revisión final (T48): en móvil el botón "Hablemos" y el de menú caben enteros en la cabecera.
+// Revisión final (T48): en móvil el botón "Pide tu demo" y el de menú caben enteros en la cabecera.
 for (const ancho of [380, 390, 414]) {
-  test(`a ${ancho} px la cabecera muestra Hablemos y el botón de menú enteros`, async ({ page }, info) => {
+  test(`a ${ancho} px la cabecera muestra Pide tu demo y el botón de menú enteros`, async ({ page }, info) => {
     test.skip(info.project.name === "movil", "Los anchos se fijan a mano: basta con una pasada");
     await page.setViewportSize({ width: ancho, height: 800 });
     await page.goto("/");
     const cabecera = page.getByRole("banner");
-    for (const control of [cabecera.getByRole("link", { name: "Hablemos de tu taller", exact: true }).filter({ visible: true }), cabecera.getByRole("button", { name: "Abrir menú" })]) {
+    for (const control of [cabecera.getByRole("link", { name: "Pide tu demo gratuita", exact: true }).filter({ visible: true }), cabecera.getByRole("button", { name: "Abrir menú" })]) {
       const caja = (await control.boundingBox())!;
       expect(caja.x).toBeGreaterThanOrEqual(0);
       expect(caja.x + caja.width).toBeLessThanOrEqual(ancho);

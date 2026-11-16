@@ -15,9 +15,9 @@ test("el caso tiene la cita exacta y lleva a pedir presupuesto", async ({ page }
   await expect(page.getByRole("heading", { level: 1 })).toHaveCount(1);
   await expect(page.locator("blockquote")).toHaveText(`«${CITA}»`);
   await expect(page.locator("figcaption")).toHaveText("Mónica, Neumáticos Uría (Hernani)");
-  await page.getByRole("main").getByRole("link", { name: "Hablemos de tu taller" }).last().click();
+  await page.getByRole("main").getByRole("link", { name: "Solicita tu demo gratuita" }).last().click();
   await expect(page).toHaveURL(/\/contacto$/);
-  await expect(page.getByRole("heading", { level: 1 })).toHaveText("Hablemos de tu taller");
+  await expect(page.getByRole("heading", { level: 1 })).toHaveText("Solicita tu demo gratuita");
 });
 
 // T63 (orden 2026-11-14 17:30, punto 6; desbloqueada por la orden 2026-11-15 11:13): captura de la web de Uría en un
