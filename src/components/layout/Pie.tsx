@@ -50,7 +50,7 @@ export function Pie() {
             ))}
             <li>
               <Link href={ENLACE_CONTACTO} className="inline-flex min-h-11 items-center hover:text-aqua">
-                Hablemos de tu taller
+                Solicita tu demo gratuita
               </Link>
             </li>
           </ul>

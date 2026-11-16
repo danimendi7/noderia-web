@@ -139,7 +139,7 @@ export function MenuMovil() {
           onClick={cerrar}
           className="mt-4 flex min-h-12 items-center justify-center rounded-xl bg-electric px-6 font-semibold text-white hover:bg-royal"
         >
-          Hablemos de tu taller
+          Solicita tu demo gratuita
         </Link>
       </nav>
     </div>

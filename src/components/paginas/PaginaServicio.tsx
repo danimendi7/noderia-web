@@ -61,7 +61,7 @@ export function PaginaServicio({ clave }: { clave: ClaveServicio }) {
                 intro={servicio.intro}
               />
               <div className="mt-9 flex flex-wrap items-center gap-x-8 gap-y-4">
-                <Boton href={PAGINAS.contacto.ruta}>Hablemos de tu taller</Boton>
+                <Boton href={PAGINAS.contacto.ruta}>Solicita tu demo gratuita</Boton>
                 <Boton href="#preguntas" variante="enlace" fondo="oscuro">
                   Preguntas frecuentes
                 </Boton>

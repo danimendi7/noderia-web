@@ -155,9 +155,9 @@ export default function QuienesSomos() {
             <h2 id="titulo-cierre" className="titulo-seccion">
               ¿Hablamos de tu <span className="texto-marca-claro">taller</span>?
             </h2>
-            <p className="texto-entradilla mt-5 text-midnight/75">Te preparamos un presupuesto a medida, sin compromiso.</p>
+            <p className="texto-entradilla mt-5 text-midnight/75">Te enseñamos cómo funcionaría en tu taller, sin compromiso.</p>
             <div className="mt-8">
-              <Boton href={PAGINAS.contacto.ruta}>Hablemos de tu taller</Boton>
+              <Boton href={PAGINAS.contacto.ruta}>Solicita tu demo gratuita</Boton>
             </div>
           </div>
           <nav aria-label="Soluciones para tu taller" className="w-full max-w-md">

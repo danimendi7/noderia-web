@@ -31,11 +31,11 @@ export function Presupuesto({ desde = "mist", origen }: { desde?: Fondo; origen?
             titulo="Cuéntanos cómo es tu taller"
             destacado="taller"
             idTitulo="titulo-presupuesto"
-            entradilla="Te preparamos una propuesta y un presupuesto a medida."
+            entradilla="Te enseñamos cómo funcionaría en tu taller, sin compromiso."
             tono="oscuro"
           />
           <p className="mt-8 max-w-[62ch] text-white/70">
-            Rellena el formulario y te llamamos nosotros para conocer tu taller y lo que necesitas.
+            Rellena el formulario y te llamamos nosotros para conocer tu taller y preparar tu demo.
           </p>
           <RazonesPresupuesto className="mt-10" />
         </div>

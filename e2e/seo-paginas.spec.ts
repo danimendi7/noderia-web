@@ -38,8 +38,8 @@ const PAGINAS = [
   },
   {
     ruta: "/contacto",
-    titulo: "Contacto: hablemos de tu taller | NoderIA",
-    h1: "Hablemos de tu taller",
+    titulo: "Solicita tu demo gratuita | NoderIA",
+    h1: "Solicita tu demo gratuita",
     tipos: ["BreadcrumbList"],
   },
 ];
@@ -92,7 +92,7 @@ test("el sitemap incluye todas las páginas nuevas", async ({ request }) => {
 
 test("/contacto tiene el formulario y tres razones", async ({ page }) => {
   await page.goto("/contacto");
-  await expect(page.getByRole("button", { name: "Hablemos de tu taller" })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Solicitar demo gratuita" })).toBeVisible();
   for (const razon of ["A tu medida", "Base probada en un taller real", "Equipo cercano en Gipuzkoa"]) {
     await expect(page.getByRole("heading", { level: 3, name: razon })).toBeVisible();
   }
@@ -107,10 +107,10 @@ for (const servicio of SERVICIOS) {
     for (const otra of SERVICIOS.filter((s) => s !== servicio)) {
       await expect(main.locator(`a[href="${otra.ruta}"]`).first()).toBeVisible();
     }
-    await expect(main.getByRole("link", { name: "Hablemos de tu taller" }).first()).toHaveAttribute("href", "/contacto");
+    await expect(main.getByRole("link", { name: "Solicita tu demo gratuita" }).first()).toHaveAttribute("href", "/contacto");
     const preguntas = page.locator("#preguntas");
     expect(await preguntas.locator("h3 button").count()).toBeGreaterThanOrEqual(3);
-    await expect(page.getByRole("button", { name: "Hablemos de tu taller" })).toBeVisible();
+    await expect(page.getByRole("button", { name: "Solicitar demo gratuita" })).toBeVisible();
     // Las ilustraciones con contenido tienen texto alternativo descriptivo (nada de "imagen 1").
     const alts = await main.locator("[data-ilustracion] img[alt]:not([alt=''])").evaluateAll((imgs) => imgs.map((i) => i.getAttribute("alt")!));
     expect(alts.length).toBeGreaterThanOrEqual(2);
