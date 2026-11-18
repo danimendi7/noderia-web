@@ -253,3 +253,13 @@ Cambios de producto respecto a lo anterior:
 - `https://www.noderia.es/<ruta>` y `https://noderia-web.admin-noderia.workers.dev/<ruta>` responden **301** a `https://noderia.es/<ruta>` (con la misma query), para que no quede contenido duplicado indexable.
 - `NEXT_PUBLIC_SITE_URL` = `https://noderia.es`: canonical, sitemap, robots, Open Graph y JSON-LD usan el dominio nuevo. Sustituye la URL de producción de §16.
 - Contra producción, solo la prueba de humo y una pasada de Lighthouse por ruta, además de comprobar las 301 y que el formulario sigue enviando.
+
+## 19. Fase V11: textos legales provisionales (orden del 2026-11-18 10:09)
+
+- Versión provisional hasta la constitución de la SL. En `/aviso-legal`, `/privacidad` y `/cookies` no puede quedar ningún hueco visible en producción.
+- Titular y responsable: **Noderia Tech, S.L. (en constitución)**. En lugar de NIF, domicilio y datos registrales, una sola línea: «Datos identificativos completos disponibles en cuanto finalice la constitución de la sociedad.» Ubicación: Donostia / San Sebastián (Gipuzkoa).
+- Email de contacto y de privacidad: `contacto@noderia.es`, desde el archivo central de datos de contacto.
+- Conservación de las solicitudes del formulario: 12 meses desde el último contacto si no llega a ser cliente; si lo es, durante la relación y los plazos legales después.
+- Encargados del tratamiento comprobados con datos reales: Cloudflare (alojamiento), Supabase (base de datos, con la región del proyecto), Resend (avisos por email) y Zoho Mail (correo, servidores en la UE). La garantía de las transferencias fuera de la UE (Marco de Privacidad de Datos UE-EE. UU. o cláusulas contractuales tipo) solo se indica si se confirma en la documentación del proveedor.
+- El componente `Hueco` queda solo para desarrollo; un test falla si alguna página pública lo renderiza.
+- Razón social, CIF, domicilio y datos registrales viven en un solo archivo de datos de la empresa, para completarlos con un cambio mínimo cuando exista la sociedad.
