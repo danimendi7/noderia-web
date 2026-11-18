@@ -25,10 +25,20 @@ export function PaginaLegal({
   );
 }
 
-/** Dato pendiente de confirmar por Dani (la SL está en constitución). Se ve marcado en la página. */
-export function Hueco({ children }: { children: ReactNode }) {
+/**
+ * Dato pendiente de confirmar, marcado en la página. Solo para desarrollo (orden 2026-11-18 10:09, punto 5): en
+ * producción lanza un error, así que el build falla y nunca se publica una página con un hueco. Además,
+ * `src/app/sin-huecos.test.tsx` falla si alguna página pública lo renderiza.
+ */
+export function Hueco({ children }: { children: string }) {
+  if (process.env.NODE_ENV === "production") {
+    throw new Error(`Hueco sin rellenar en una página pública: «${children}». Completa el dato antes de publicar.`);
+  }
   return (
-    <mark className="rounded-md bg-sky/15 px-1.5 py-0.5 font-medium text-midnight [box-decoration-break:clone]">
+    <mark
+      data-hueco=""
+      className="rounded-md bg-sky/15 px-1.5 py-0.5 font-medium text-midnight [box-decoration-break:clone]"
+    >
       [{children}]
     </mark>
   );
