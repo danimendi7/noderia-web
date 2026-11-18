@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Hueco, PaginaLegal } from "@/components/legal/PaginaLegal";
+import { DatosTitular } from "@/components/legal/DatosTitular";
+import { PaginaLegal } from "@/components/legal/PaginaLegal";
+import { EMAIL, ENLACES_CONTACTO } from "@/lib/contenido/contacto";
 
 export const metadata: Metadata = {
   title: "Aviso legal",
@@ -10,27 +12,16 @@ export const metadata: Metadata = {
 
 export default function AvisoLegal() {
   return (
-    <PaginaLegal titulo="Aviso legal" actualizado="12 de noviembre de 2026">
+    <PaginaLegal titulo="Aviso legal" actualizado="18 de noviembre de 2026">
       <h2>Quién es el titular de esta web</h2>
       <p>
         En cumplimiento de la Ley 34/2002, de servicios de la sociedad de la información y de comercio
         electrónico (LSSI-CE), te informamos de los datos del titular de esta web:
       </p>
       <ul>
+        <DatosTitular rol="Titular" />
         <li>
-          Titular: <Hueco>razón social de la SL, en constitución; titular provisional a confirmar</Hueco>
-        </li>
-        <li>
-          NIF: <Hueco>NIF</Hueco>
-        </li>
-        <li>
-          Domicilio: <Hueco>dirección completa</Hueco>, Donostia / San Sebastián (Gipuzkoa)
-        </li>
-        <li>
-          Datos registrales: <Hueco>Registro Mercantil de Gipuzkoa, tomo, folio, hoja</Hueco>
-        </li>
-        <li>
-          Contacto: <Hueco>email de contacto con dominio propio</Hueco> o el{" "}
+          Contacto: <a href={ENLACES_CONTACTO.email}>{EMAIL}</a> o el{" "}
           <Link href="/#presupuesto">formulario de la web</Link>
         </li>
       </ul>

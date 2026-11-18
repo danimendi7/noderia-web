@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { DatosTitular } from "@/components/legal/DatosTitular";
 import { Hueco, PaginaLegal } from "@/components/legal/PaginaLegal";
+import { EMAIL, ENLACES_CONTACTO } from "@/lib/contenido/contacto";
 
 export const metadata: Metadata = {
   title: "Política de privacidad",
@@ -11,7 +13,7 @@ export const metadata: Metadata = {
 
 export default function Privacidad() {
   return (
-    <PaginaLegal titulo="Política de privacidad" actualizado="12 de noviembre de 2026">
+    <PaginaLegal titulo="Política de privacidad" actualizado="18 de noviembre de 2026">
       <p>
         Aquí te explicamos qué hacemos con los datos que nos das al pedir una demo o un presupuesto, conforme al
         Reglamento General de Protección de Datos (RGPD) y la Ley Orgánica 3/2018 (LOPDGDD).
@@ -19,17 +21,9 @@ export default function Privacidad() {
 
       <h2>Responsable del tratamiento</h2>
       <ul>
+        <DatosTitular rol="Responsable" />
         <li>
-          Responsable: <Hueco>razón social de la SL, en constitución; titular provisional a confirmar</Hueco>
-        </li>
-        <li>
-          NIF: <Hueco>NIF</Hueco>
-        </li>
-        <li>
-          Domicilio: <Hueco>dirección completa</Hueco>, Donostia / San Sebastián (Gipuzkoa)
-        </li>
-        <li>
-          Contacto para privacidad: <Hueco>email de contacto con dominio propio</Hueco>
+          Contacto para privacidad: <a href={ENLACES_CONTACTO.email}>{EMAIL}</a>
         </li>
       </ul>
 
@@ -55,9 +49,9 @@ export default function Privacidad() {
 
       <h2>Cuánto tiempo los guardamos</h2>
       <p>
-        El tiempo necesario para atender tu solicitud y, si no llegamos a trabajar juntos, como máximo{" "}
-        <Hueco>plazo a confirmar, p. ej. 12 meses</Hueco>. Después los borramos. Si nos lo pides, los
-        borramos antes.
+        Si no llegas a ser cliente, 12 meses desde nuestro último contacto; después los borramos. Si llegas a ser
+        cliente, durante toda nuestra relación y, después, durante los plazos legales que correspondan. Si nos lo
+        pides, los borramos antes, salvo los que la ley nos obligue a conservar.
       </p>
 
       <h2>Con quién los compartimos</h2>
@@ -80,7 +74,7 @@ export default function Privacidad() {
       <p>
         Puedes pedirnos acceder a tus datos, corregirlos, borrarlos, limitar su uso, oponerte a su
         tratamiento o recibirlos en un formato portable. Escríbenos a{" "}
-        <Hueco>email de contacto con dominio propio</Hueco> indicando qué derecho quieres ejercer.
+        <a href={ENLACES_CONTACTO.email}>{EMAIL}</a> indicando qué derecho quieres ejercer.
       </p>
       <p>
         Si crees que no hemos tratado bien tus datos, puedes reclamar ante la Agencia Española de
