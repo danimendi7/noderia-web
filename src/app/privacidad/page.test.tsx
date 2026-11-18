@@ -20,3 +20,15 @@ describe("/privacidad (orden 2026-11-18 10:09)", () => {
     expect(seccion?.querySelector("mark")).toBeNull();
   });
 });
+
+describe("/privacidad, proveedores (orden 2026-11-18 10:09, punto 4)", () => {
+  it("lista cada proveedor con su función y sin huecos", () => {
+    const { container } = render(<Privacidad />);
+    const lista = screen.getByRole("heading", { name: "Con quién los compartimos" }).parentElement!;
+    for (const nombre of ["Cloudflare", "Supabase", "Resend", "Zoho Mail", "Google (Gmail)"]) {
+      expect(lista.textContent).toContain(nombre);
+    }
+    expect(container.querySelector("mark")).toBeNull();
+    expect(container.textContent).not.toContain("[");
+  });
+});

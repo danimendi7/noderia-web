@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { DatosTitular } from "@/components/legal/DatosTitular";
-import { Hueco, PaginaLegal } from "@/components/legal/PaginaLegal";
+import { PaginaLegal } from "@/components/legal/PaginaLegal";
 import { EMAIL, ENLACES_CONTACTO } from "@/lib/contenido/contacto";
+import { PROVEEDORES } from "@/lib/contenido/proveedores";
 
 export const metadata: Metadata = {
   title: "Política de privacidad",
@@ -56,19 +57,16 @@ export default function Privacidad() {
 
       <h2>Con quién los compartimos</h2>
       <p>
-        No cedemos tus datos a terceros. Los tratan, por cuenta nuestra y con contrato de encargo, los
-        proveedores técnicos que hacen funcionar la web:
+        No cedemos tus datos a terceros. Los tratan, por cuenta nuestra y solo para prestarnos su servicio, los
+        proveedores técnicos que hacen funcionar la web y el correo:
       </p>
       <ul>
-        <li>Cloudflare (alojamiento de la web).</li>
-        <li>Supabase (base de datos donde se guarda tu solicitud).</li>
-        <li>El proveedor de correo que nos avisa de cada solicitud nueva, si está activado (Resend).</li>
+        {PROVEEDORES.map((p) => (
+          <li key={p.nombre}>
+            <strong>{p.nombre}</strong>, que {p.funcion}. {p.donde}
+          </li>
+        ))}
       </ul>
-      <p>
-        Alguno de estos proveedores puede tratar datos fuera del Espacio Económico Europeo; en ese caso
-        lo hace con las garantías que exige el RGPD, como las cláusulas contractuales tipo de la Comisión
-        Europea. <Hueco>Confirmar región de cada proveedor</Hueco>
-      </p>
 
       <h2>Tus derechos</h2>
       <p>
